@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="行李整理">
+<meta name="theme-color" content="#8A5F41">
+<title>行李整理工具</title>
+<style>
+:root {
+  --bg:        #F3E4C9;
+  --card:      #FFFFFF;
+  --card-alt:  #FAF3E8;
+  --hdr:       #8A5F41;
+  --hdr-dk:    #6B4423;
+  --brown:     #8A5F41;
+  --mid:       #A77F60;
+  --lime:      #CCD67F;
+  --lime-dk:   #7A8A28;
+  --border:    #D8C4A0;
+  --border-lt: #EAD8B8;
+  --txt:       #3D2B1A;
+  --txt-mid:   #6B4B30;
+  --txt-muted: #9B7858;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Header ── */
+.hdr {
+  background: var(--hdr);
+  color: #fff;
+  padding: max(12px, env(safe-area-inset-top)) 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 2px 10px rgba(90,40,10,0.35);
+}
+
+.hdr-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: -0.1px;
+}
+
+.hbtn {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #fff;
+  padding: 6px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: background 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hbtn:hover  { background: rgba(255,255,255,0.23); }
+.hbtn.active { background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.45); }
+
+/* ── Progress ── */
+.prog-wrap {
+  background: var(--hdr-dk);
+  padding: 7px 15px 9px;
+  position: sticky;
+  top: 48px;
+  z-index: 29;
+}
+.prog-label {
+  font-size: 0.72rem;
+  color: #D8C4A0;
+  margin-bottom: 4px;
+  letter-spacing: 0.1px;
+}
+.prog-track {
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--lime);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ── Tabs ── */
+.tabs {
+  background: var(--card);
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1.5px solid var(--border-lt);
+  position: sticky;
+  top: 87px;
+  z-index: 28;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--txt-muted);
+  border-bottom: 2.5px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+.tab:hover { color: var(--txt-mid); background: var(--card-alt); }
+.tab.active { color: var(--brown); border-bottom-color: var(--brown); font-weight: 600; }
+
+.cnt {
+  background: var(--bg);
+  color: var(--txt-muted);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+}
+.tab.active .cnt { background: var(--brown); color: #fff; }
+
+/* ── Main ── */
+.main { padding: 11px; max-width: 640px; margin: 0 auto; }
+
+/* ── Category card ── */
+.cat-card {
+  background: var(--card);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(90,50,20,0.1), 0 2px 8px rgba(90,50,20,0.05);
+  overflow: hidden;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cat-head {
+  padding: 10px 13px;
+  background: var(--card-alt);
+  border-bottom: 1px solid var(--border-lt);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cat-title {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--hdr);
+  flex: 1;
+  min-width: 60px;
+}
+.cat-prog { font-size: 0.7rem; color: var(--txt-muted); }
+
+.bulk-wrap { display: flex; gap: 4px; flex-shrink: 0; }
+
+.bbtn {
+  padding: 4px 9px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.69rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.bbtn.bp     { background: #E6EFA8; color: #4A5810; }
+.bbtn.bp.on  { background: var(--lime); color: #3A4808; }
+.bbtn.bl     { background: #EDD9C2; color: var(--hdr-dk); }
+.bbtn.bl.on  { background: var(--mid); color: #fff; }
+.bbtn.bs     { background: #EDE8E0; color: #6B5840; border: 1px solid var(--border-lt); }
+.bbtn.bs.on  { background: #9B8878; color: #fff; border-color: #9B8878; }
+.bbtn:hover  { filter: brightness(0.92); }
+
+/* ── Item row ── */
+.item-row {
+  display: flex;
+  align-items: center;
+  padding: 9px 13px;
+  border-bottom: 1px solid #F5EEE0;
+  gap: 9px;
+  transition: background 0.1s;
+}
+.item-row:last-child { border-bottom: none; }
+.item-row:hover { background: var(--card-alt); }
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.s-packed .dot { background: var(--lime-dk); }
+.s-later  .dot { background: var(--mid); }
+.s-skip   .dot { background: #9B8878; }
+
+.item-name {
+  flex: 1;
+  font-size: 0.84rem;
+  color: var(--txt);
+  transition: color 0.2s;
+}
+.s-packed .item-name { color: #4A5810; }
+.s-later  .item-name { color: var(--hdr-dk); }
+.s-skip   .item-name { color: #9B8878; text-decoration: line-through; }
+
+.item-btns { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+
+.ibtn {
+  padding: 5px 9px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1.5px solid transparent;
+  background: transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ibtn.ip     { border-color: #BBCC60; color: #4A5810; }
+.ibtn.ip.on  { background: var(--lime); border-color: var(--lime); color: #3A4808; }
+.ibtn.il     { border-color: #C8A880; color: var(--hdr-dk); }
+.ibtn.il.on  { background: var(--mid); border-color: var(--mid); color: #fff; }
+.ibtn.is     { border-color: var(--border); color: var(--txt-muted); }
+.ibtn.is.on  { background: #9B8878; border-color: #9B8878; color: #fff; }
+.ibtn.ih     { border-color: #8FAF6A; color: #3F5A24; }
+.ibtn.ih.on  { background: #9CC97A; border-color: #9CC97A; color: #1F3A0C; }
+.ibtn.it     { border-color: #B99A6A; color: #6B4B20; }
+.ibtn.it.on  { background: #C9A76A; border-color: #C9A76A; color: #3A2408; }
+.ibtn:hover:not(.on) { background: var(--bg); }
+
+.home-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 9px 13px;
+  margin-bottom: 10px;
+  font-size: 0.76rem;
+  color: var(--txt-mid);
+  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+}
+.home-summary b { color: var(--txt); }
+
+/* ── Complete / Result view ── */
+.complete-banner {
+  background: linear-gradient(135deg, var(--hdr-dk) 0%, var(--brown) 100%);
+  color: #fff;
+  padding: 18px 16px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.complete-banner h2 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.complete-banner p { font-size: 0.76rem; color: #D8C4A0; margin-top: 4px; }
+
+.readjust-btn {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.28);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  margin-top: 10px;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.readjust-btn:hover { background: rgba(255,255,255,0.23); }
+
+.result-card {
+  background: var(--card);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+  overflow: hidden;
+  animation: fadein 0.18s ease;
+}
+
+.result-head {
+  padding: 11px 14px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rh-packed { background: #E8F0A0; color: #3A4808; }
+.rh-later  { background: #EDD9C2; color: #5A3010; }
+.rh-skip   { background: #EDE8E0; color: #5A4E42; }
+
+.result-head-label { display: flex; align-items: center; gap: 7px; }
+.result-head-count { font-weight: 400; font-size: 0.75rem; opacity: 0.7; }
+
+.result-item {
+  padding: 8px 14px;
+  border-bottom: 1px solid #F5EEE0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--txt);
+}
+.result-item:last-child { border-bottom: none; }
+.ri-name { flex: 1; }
+.ri-tag {
+  font-size: 0.68rem;
+  background: var(--bg);
+  color: var(--txt-muted);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  border: 1px solid var(--border-lt);
+}
+
+/* ── Edit mode ── */
+.edit-panel {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+}
+
+.edit-sec-title {
+  font-size: 0.7rem;
+  color: var(--txt-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.edit-cat {
+  border: 1.5px solid var(--border-lt);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.edit-cat-head {
+  background: var(--card-alt);
+  padding: 9px 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-lt);
+}
+
+.edit-cat-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--brown);
+  outline: none;
+  min-width: 0;
+}
+.edit-cat-input:focus { background: #fff; border-radius: 4px; padding: 1px 6px; }
+
+.edit-items-list { padding: 8px 11px; }
+
+.edit-item-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.edit-item-input {
+  flex: 1;
+  border: 1.5px solid var(--border-lt);
+  border-radius: 7px;
+  padding: 6px 9px;
+  font-size: 0.83rem;
+  outline: none;
+  color: var(--txt);
+  min-width: 0;
+  background: var(--card);
+}
+.edit-item-input:focus { border-color: var(--brown); }
+
+.delbtn {
+  background: none;
+  border: none;
+  color: #C07060;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.delbtn:hover { background: #FDE8E0; }
+
+.add-item-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: 1.5px dashed var(--border);
+  color: var(--txt-muted);
+  padding: 6px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  text-align: center;
+}
+.add-item-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
+
+.add-cat-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: 1.5px dashed var(--border);
+  color: var(--txt-muted);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  text-align: center;
+  margin-top: 4px;
+}
+.add-cat-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
+
+.danger-zone {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-lt);
+}
+
+.danger-btn {
+  background: none;
+  border: 1.5px solid #E0A898;
+  color: #B05840;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.danger-btn:hover { background: #B05840; color: #fff; }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 52px 20px;
+  color: var(--txt-muted);
+}
+.empty-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+.empty-text { font-size: 0.84rem; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  /* The header height can change on small phones, so avoid fixed sticky offsets. */
+  .prog-wrap,
+  .tabs {
+    position: static;
+  }
+
+  .hdr {
+    gap: 6px;
+  }
+
+  .hdr-title {
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+
+  .main {
+    padding: 9px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 7px minmax(0, 1fr);
+    align-items: center;
+    gap: 7px 9px;
+    padding: 10px;
+  }
+
+  .item-name {
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+
+  .item-btns {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 5px;
+  }
+
+  .ibtn {
+    min-height: 36px;
+    padding: 6px 4px;
+    justify-content: center;
+  }
+
+  .cat-head {
+    padding: 9px 10px;
+  }
+
+  .bulk-wrap {
+    flex-basis: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .bbtn {
+    min-height: 32px;
+  }
+
+  .home-summary {
+    gap: 6px 12px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 400px) {
+  .ibtn { padding: 5px 3px; font-size: 0.68rem; }
+  .bbtn { padding: 3px 7px; }
+  .hbtn { padding: 5px 8px; font-size: 0.74rem; }
+  .hdr { padding-left: 9px; padding-right: 9px; }
+  .hdr-title { font-size: 0; }
+  .hdr-title svg { width: 20px; height: 20px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title" id="hdrTitle"></div>
+  <button class="hbtn" id="editBtn" onclick="toggleEdit()"></button>
+  <button class="hbtn" id="resetBtn" onclick="confirmReset()"></button>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-label" id="progLabel">載入中...</div>
+  <div class="prog-track">
+    <div class="prog-fill" id="progFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div class="main" id="main"></div>
+
+<script>
+'use strict';
+
+// ── SVG icons ─────────────────────────────────────────────────────────────
+const P = {
+  luggage:  `<rect x="3" y="9" width="18" height="13" rx="2"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/>`,
+  pencil:   `<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>`,
+  checkdone:`<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
+  refresh:  `<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-6.5"/>`,
+  check:    `<polyline points="20 6 9 17 4 12"/>`,
+  clock:    `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
+  ban:      `<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>`,
+  inbox:    `<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>`,
+  star:     `<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>`,
+  warning:  `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
+  list:     `<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>`,
+  home:     `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`,
+};
+
+function ic(name, sz=15, extra='') {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;${extra}">${P[name]}</svg>`;
+}
+
+// ── Constants ──────────────────────────────────────────────────────────────
+const KEY = 'packingTool_v3';
+const configParams = new URLSearchParams(location.search);
+const SUPABASE_URL = configParams.get('supabaseUrl');
+const SUPABASE_KEY = configParams.get('supabaseKey');
+if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error('Missing Supabase configuration');
+const packingDb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const S = { P:'pending', K:'packed', L:'later', X:'skip' };
+const LABEL = { pending:'尚未區分', packed:'已收進行李', later:'待會再收', skip:'這次不需要' };
+
+const TABS_DEF = [
+  { id:'all', label:'全部' },
+  { id:S.P,   label:LABEL.pending },
+  { id:S.K,   label:LABEL.packed  },
+  { id:S.L,   label:LABEL.later   },
+  { id:S.X,   label:LABEL.skip    },
+];
+
+// ── Default list ───────────────────────────────────────────────────────────
+const DEFAULTS = [
+  { id:'clothes', name:'衣服', items:[
+    '外出衣','睡衣','內衣褲','襪子','毛巾',
+    '保暖用品：圍巾、帽子','皮帶','拖鞋','塑膠袋'
+  ]},
+  { id:'makeup', name:'化妝品', items:[
+    '粉底','遮瑕/細節刷','蜜粉/粉刷','眼影','修容/眼影刷',
+    '腮紅/修容刷','眼線膠筆','眉粉','睫毛膏/燙睫毛','口紅','護唇膏'
+  ]},
+  { id:'toiletries', name:'盥洗用品', items:[
+    '棉花棒','化妝棉','護墊/棉條','化妝水',
+    '隱眼/隱眼盒/隱眼藥水','眼鏡盒','太陽眼鏡',
+    '臉乳液','身體乳液','防曬','牙刷、牙膏、牙杯',
+    '梳子','髮圈/髮夾','耳環/戒指',
+    '劉海捲','離子夾','指甲用品：假指甲？指甲油？去光水？'
+  ]},
+  { id:'daily', name:'生活用品', items:[
+    '充電線（type-C, lightening）','行動電源','電腦','電子書？',
+    '雨傘','轉接插頭','手機/手機掛繩','Sim卡針'
+  ]},
+  { id:'travel', name:'旅行用品', items:[
+    '包包（小包）','止痛藥','證件','現金'
+  ]},
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let cats     = [];
+let curTab   = 'all';
+let editMode = false;
+let catView  = false;
+
+// ── Persistence ─────────────────────────────────────────────────────────────
+function mkDefault() {
+  return DEFAULTS.map(c => ({
+    id: c.id, name: c.name,
+    items: c.items.map((n,i) => ({ id:`${c.id}_${i}`, name:n, status:S.P, home:null }))
+  }));
+}
+
+async function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY)||'null');
+    if (d && Array.isArray(d.cats)) cats = d.cats;
+  } catch(e) {}
+  try {
+    const { data } = await packingDb.from('packing_state').select('data').eq('id', 1).maybeSingle();
+    if (data?.data?.cats && Array.isArray(data.data.cats)) cats = data.data.cats;
+  } catch(e) { console.warn('Supabase load failed; using local copy', e); }
+  if (!cats.length) cats = mkDefault();
+  localStorage.setItem(KEY, JSON.stringify({ cats }));
+}
+
+let saveTimer;
+function save() {
+  const data = { cats };
+  localStorage.setItem(KEY, JSON.stringify(data));
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      await packingDb.from('packing_state').upsert({ id: 1, data, updated_at: new Date().toISOString() });
+    } catch(e) { console.warn('Supabase sync failed; saved locally', e); }
+  }, 350);
+}
+
+// ── Stats ──────────────────────────────────────────────────────────────────
+function stats() {
+  const s = { total:0, pending:0, packed:0, later:0, skip:0 };
+  cats.forEach(c => c.items.forEach(i => { s.total++; s[i.status]++; }));
+  return s;
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+function setItem(cid, iid, status) {
+  const c = cats.find(c=>c.id===cid); if(!c) return;
+  const i = c.items.find(i=>i.id===iid); if(!i) return;
+  i.status = (i.status===status) ? S.P : status;
+  if (i.status !== S.K) i.home = null;
+  catView = false;
+  save(); render();
+}
+
+function setCat(cid, status) {
+  const c = cats.find(c=>c.id===cid); if(!c) return;
+  const allSame = c.items.every(i=>i.status===status);
+  c.items.forEach(i=>{
+    i.status = allSame ? S.P : status;
+    if (i.status !== S.K) i.home = null;
+  });
+  catView = false;
+  save(); render();
+}
+
+function setHome(cid, iid, home) {
+  const c = cats.find(c=>c.id===cid); if(!c) return;
+  const i = c.items.find(i=>i.id===iid); if(!i || i.status!==S.K) return;
+  i.home = (i.home===home) ? null : home;
+  save(); render();
+}
+
+function setCatHome(cid, home) {
+  const c = cats.find(c=>c.id===cid); if(!c) return;
+  const packed = c.items.filter(i=>i.status===S.K); if(!packed.length) return;
+  const allSame = packed.every(i=>i.home===home);
+  packed.forEach(i=>{ i.home = allSame ? null : home; });
+  save(); render();
+}
+
+function confirmReset() {
+  if (!confirm('確定要重置所有物品的狀態嗎？\n（清單不變，只把所有狀態清回「尚未區分」）')) return;
+  cats.forEach(c=>c.items.forEach(i=>{ i.status=S.P; i.home=null; }));
+  catView = false;
+  save(); render();
+}
+
+function toggleEdit() {
+  if (editMode) {
+    cats = cats.filter(c=>c.name.trim());
+    cats.forEach(c=>{ c.items=c.items.filter(i=>i.name.trim()); });
+    save();
+  }
+  editMode = !editMode;
+  updateStaticUI();
+  render();
+}
+
+function switchTab(id) { curTab = id; render(); }
+
+function updCat(id,v)       { const c=cats.find(c=>c.id===id); if(c){c.name=v;save();} }
+function updItem(cid,iid,v) {
+  const c=cats.find(c=>c.id===cid); if(!c) return;
+  const i=c.items.find(i=>i.id===iid); if(i){i.name=v;save();}
+}
+function delCat(id) {
+  if(!confirm('確定刪除這個分類？')) return;
+  cats=cats.filter(c=>c.id!==id); save(); render();
+}
+function delItem(cid,iid) {
+  const c=cats.find(c=>c.id===cid); if(!c) return;
+  c.items=c.items.filter(i=>i.id!==iid); save(); render();
+}
+function addItem(cid) {
+  const c=cats.find(c=>c.id===cid); if(!c) return;
+  c.items.push({ id:cid+'_'+Date.now(), name:'', status:S.P, home:null });
+  save(); render();
+  queueMicrotask(()=>{ const el=document.querySelectorAll('.edit-item-input'); el[el.length-1]?.focus(); });
+}
+function addCat() {
+  cats.push({ id:'cat_'+Date.now(), name:'', items:[] });
+  save(); render();
+  queueMicrotask(()=>{ const el=document.querySelectorAll('.edit-cat-input'); el[el.length-1]?.focus(); });
+}
+function hardReset() {
+  if(!confirm('確定要清除所有資料並還原成預設清單嗎？')) return;
+  localStorage.removeItem(KEY);
+  cats=mkDefault(); editMode=false; catView=false;
+  updateStaticUI(); save(); render();
+}
+
+// ── Static UI ──────────────────────────────────────────────────────────────
+function updateStaticUI() {
+  document.getElementById('hdrTitle').innerHTML = `${ic('luggage',17)} 行李整理工具`;
+  const eb = document.getElementById('editBtn');
+  if (editMode) {
+    eb.innerHTML = `${ic('checkdone',13)} 完成編輯`;
+    eb.classList.add('active');
+  } else {
+    eb.innerHTML = `${ic('pencil',13)} 編輯清單`;
+    eb.classList.remove('active');
+  }
+  document.getElementById('resetBtn').innerHTML = `${ic('refresh',13)} 重置狀態`;
+}
+
+// ── Render ──────────────────────────────────────────────────────────────────
+function render() {
+  const scrollY = window.scrollY;
+  const st   = stats();
+  const done = st.total - st.pending;
+  const pct  = st.total ? Math.round(done/st.total*100) : 0;
+
+  document.getElementById('progLabel').textContent = `${done} / ${st.total} 項已分類　${pct}%`;
+  document.getElementById('progFill').style.width = pct+'%';
+
+  document.getElementById('tabs').innerHTML = TABS_DEF.map(t => {
+    const n = t.id==='all' ? st.total : st[t.id];
+    return `<div class="tab ${curTab===t.id?'active':''}" onclick="switchTab('${t.id}')">
+      ${t.label}<span class="cnt">${n}</span></div>`;
+  }).join('');
+
+  const main     = document.getElementById('main');
+  if (editMode) { main.innerHTML = renderEdit(); window.scrollTo(0, scrollY); return; }
+
+  const complete = st.pending===0 && st.total>0;
+  if (complete && curTab==='all' && !catView) { main.innerHTML = renderResult(); window.scrollTo(0, scrollY); return; }
+
+  const isPackedTab = curTab === S.K;
+
+  const visCats = cats.map(c=>({
+    ...c, items: curTab==='all' ? c.items : c.items.filter(i=>i.status===curTab)
+  })).filter(c=>c.items.length);
+
+  if (!visCats.length) {
+    main.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">${ic('inbox',40)}</div>
+      <div class="empty-text">這個狀態目前沒有物品</div>
+    </div>`;
+    window.scrollTo(0, scrollY);
+    return;
+  }
+
+  let html = '';
+
+  if (isPackedTab) {
+    const packedAll = cats.flatMap(c=>c.items.filter(i=>i.status===S.K));
+    const homeN  = packedAll.filter(i=>i.home==='home').length;
+    const laterN = packedAll.filter(i=>i.home==='later').length;
+    html += `<div class="home-summary">
+      <span>${ic('home',13)} 已帶回家 <b>${homeN}</b></span>
+      <span>${ic('clock',12)} 稍後帶回家 <b>${laterN}</b></span>
+      <span>共 <b>${packedAll.length}</b> 項</span>
+    </div>`;
+  }
+
+  html += visCats.map(c => {
+    const orig = cats.find(x=>x.id===c.id);
+    const d  = orig.items.filter(i=>i.status!==S.P).length;
+    const aK = orig.items.every(i=>i.status===S.K);
+    const aL = orig.items.every(i=>i.status===S.L);
+    const aX = orig.items.every(i=>i.status===S.X);
+    const packedInCat = orig.items.filter(i=>i.status===S.K);
+    const aHome  = isPackedTab && packedInCat.length && packedInCat.every(i=>i.home==='home');
+    const aLater = isPackedTab && packedInCat.length && packedInCat.every(i=>i.home==='later');
+    return `
+<div class="cat-card">
+  <div class="cat-head">
+    <span class="cat-title">${esc(c.name)}</span>
+    <span class="cat-prog">${d}/${orig.items.length}</span>
+    <div class="bulk-wrap">
+      <button class="bbtn bp ${aK?'on':''}" onclick="setCat('${c.id}','${S.K}')">全已收</button>
+      <button class="bbtn bl ${aL?'on':''}" onclick="setCat('${c.id}','${S.L}')">全待收</button>
+      <button class="bbtn bs ${aX?'on':''}" onclick="setCat('${c.id}','${S.X}')">全不需</button>
+      ${isPackedTab ? `
+      <button class="bbtn bp ${aHome?'on':''}" onclick="setCatHome('${c.id}','home')">全帶回家</button>
+      <button class="bbtn bl ${aLater?'on':''}" onclick="setCatHome('${c.id}','later')">全稍後</button>
+      ` : ``}
+    </div>
+  </div>
+  ${c.items.map(item=>`
+  <div class="item-row s-${item.status}">
+    <span class="dot"></span>
+    <span class="item-name">${esc(item.name)}</span>
+    <div class="item-btns">
+      <button class="ibtn ip ${item.status===S.K?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',11)} 已收</button>
+      <button class="ibtn il ${item.status===S.L?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',11)} 待收</button>
+      <button class="ibtn is ${item.status===S.X?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',11)} 不需要</button>
+      ${isPackedTab ? `
+      <button class="ibtn ih ${item.home==='home'?'on':''}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',11)} 已帶回家</button>
+      <button class="ibtn it ${item.home==='later'?'on':''}" onclick="setHome('${c.id}','${item.id}','later')">${ic('clock',11)} 稍後帶回家</button>
+      ` : ``}
+    </div>
+  </div>`).join('')}
+</div>`;
+  }).join('');
+
+  main.innerHTML = html;
+  window.scrollTo(0, scrollY);
+}
+
+function renderResult() {
+  const groups = [
+    { st:S.K, label:'已收進行李', cls:'rh-packed', icon:'check' },
+    { st:S.L, label:'待會再收',   cls:'rh-later',  icon:'clock' },
+    { st:S.X, label:'這次不需要', cls:'rh-skip',   icon:'ban'   },
+  ];
+
+  let html = `<div class="complete-banner">
+    <h2>${ic('star',17,'margin-right:2px')} 全部分類完成！</h2>
+    <p>以下是依照狀態整理的結果</p>
+    <button class="readjust-btn" onclick="catView=true;render()">${ic('list',12)} 切回分類檢視</button>
+  </div>`;
+
+  groups.forEach(g => {
+    const entries=[];
+    cats.forEach(c=>c.items.filter(i=>i.status===g.st).forEach(i=>entries.push({name:i.name,cat:c.name})));
+    if(!entries.length) return;
+    html += `<div class="result-card">
+      <div class="result-head ${g.cls}">
+        <span class="result-head-label">${ic(g.icon,14)} ${g.label}</span>
+        <span class="result-head-count">${entries.length} 項</span>
+      </div>
+      ${entries.map(e=>`<div class="result-item">
+        <span class="ri-name">${esc(e.name)}</span>
+        <span class="ri-tag">${esc(e.cat)}</span>
+      </div>`).join('')}
+    </div>`;
+  });
+  return html;
+}
+
+function renderEdit() {
+  let html = `<div class="edit-panel">
+    <div class="edit-sec-title">編輯清單　點擊名稱直接修改</div>`;
+
+  cats.forEach(c => {
+    html += `<div class="edit-cat">
+      <div class="edit-cat-head">
+        <input class="edit-cat-input" value="${esc(c.name)}" placeholder="分類名稱"
+          oninput="updCat('${c.id}',this.value)" />
+        <button class="delbtn" onclick="delCat('${c.id}')" title="刪除分類">✕</button>
+      </div>
+      <div class="edit-items-list">
+        ${c.items.map(i=>`<div class="edit-item-row">
+          <input class="edit-item-input" value="${esc(i.name)}" placeholder="物品名稱"
+            oninput="updItem('${c.id}','${i.id}',this.value)" />
+          <button class="delbtn" onclick="delItem('${c.id}','${i.id}')" title="刪除物品">✕</button>
+        </div>`).join('')}
+        <button class="add-item-btn" onclick="addItem('${c.id}')">＋ 新增物品</button>
+      </div>
+    </div>`;
+  });
+
+  html += `<button class="add-cat-btn" onclick="addCat()">＋ 新增分類</button>
+    <div class="danger-zone">
+      <button class="danger-btn" onclick="hardReset()">${ic('warning',13)} 還原預設清單</button>
+    </div>
+  </div>`;
+  return html;
+}
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s??'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+async function boot() {
+  await load();
+  updateStaticUI();
+  render();
+}
+boot();
+</script>
+</body>
+</html>

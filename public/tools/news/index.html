@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>News Feed</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Roboto:wght@400;500&display=swap');
+
+  :root {
+    --blue: #1762F0;
+    --green: #1D9E75;
+    --green-bg: #E1F5EE;
+    --cyan: #378ADD;
+    --cyan-bg: #E6F1FB;
+    --text-primary: #111;
+    --text-secondary: #555;
+    --text-tertiary: #999;
+    --border: #E8E8E8;
+    --bg: #FAFAFA;
+    --white: #fff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Roboto', 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .header {
+    position: sticky; top: 0;
+    background: rgba(250,250,250,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 10;
+    padding-top: env(safe-area-inset-top);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 0;
+  }
+
+  .header-title { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: baseline; gap: 8px; }
+  .article-count { font-size: 13px; font-weight: 400; color: var(--text-tertiary); }
+
+  .ebb-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border-radius: 16px;
+    border: 0.5px solid var(--border);
+    background: var(--white);
+    font-size: 12px; font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer; font-family: inherit;
+  }
+
+  .ebb-btn.loading { color: var(--text-tertiary); }
+  .ebb-btn.done { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+
+  .shuffle-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border-radius: 16px;
+    border: 0.5px solid var(--border);
+    background: var(--white);
+    font-size: 12px; font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer; font-family: inherit;
+  }
+  .shuffle-btn.active { border-color: var(--blue); color: var(--blue); background: #EFF6FF; }
+  .header-buttons { display: flex; gap: 6px; align-items: center; }
+
+  .tabs { display: flex; padding: 0 18px; }
+  .tab {
+    flex: 1; padding: 10px 0;
+    font-size: 13.5px; font-weight: 500;
+    text-align: center; color: var(--text-tertiary);
+    cursor: pointer; border: none; background: none;
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+  }
+  .tab.active { color: var(--text-primary); border-bottom: 2px solid var(--text-primary); }
+
+  .view { padding: 0 18px 32px; display: none; }
+  .view.active { display: block; }
+
+  .article { border-bottom: 0.5px solid var(--border); position: relative; overflow: hidden; }
+  .article:last-child { border-bottom: none; }
+  .swipe-indicator {
+    position: absolute; inset: 0;
+    background: #E8E8E8;
+    display: flex; align-items: center; padding-left: 22px; gap: 8px;
+    color: var(--text-secondary); font-size: 13px; font-weight: 500;
+  }
+  .article-inner { padding: 18px 0; background: var(--bg); position: relative; will-change: transform; }
+  .mark-read-btn {
+    position: absolute; top: 15px; right: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 0.5px solid var(--border); background: var(--white);
+    cursor: pointer; color: var(--text-tertiary);
+    align-items: center; justify-content: center; display: none;
+    padding: 0;
+  }
+  @media (hover: hover) {
+    .article:not(.read):hover .mark-read-btn { display: flex; }
+    .mark-read-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  }
+
+  .article.read .headline { color: var(--text-tertiary) !important; }
+  .article.read .preview,
+  .article.read .source-name,
+  .article.read .time { color: var(--text-tertiary); }
+  .article.read .source-dot { opacity: 0.35; }
+  .article.read .action-btn:not(.active-keep):not(.active-revisit) {
+    border-color: var(--border); color: #bbb; background: var(--white);
+  }
+
+  .source-row { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+  .source-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #F3F4F6; border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: var(--text-secondary); flex-shrink: 0;
+  }
+  .source-name { font-size: 13px; color: var(--text-secondary); }
+  .time { font-size: 13px; color: var(--text-tertiary); margin-left: auto; }
+
+  .tag-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 6px;
+    border-radius: 4px; background: #EFF6FF; color: var(--blue);
+    letter-spacing: 0.03em;
+  }
+
+  .headline {
+    font-size: 18px; font-weight: 500; line-height: 1.45;
+    color: var(--blue); margin-bottom: 8px; cursor: pointer;
+    letter-spacing: -0.1px; text-decoration: none; display: block;
+    padding-left: 29px;
+  }
+  .preview {
+    font-size: 15px; color: var(--text-secondary);
+    line-height: 1.75; margin-bottom: 14px;
+    padding-left: 29px;
+  }
+
+  .actions { display: flex; align-items: center; gap: 6px; justify-content: flex-end; padding-left: 29px; }
+  .action-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 13px; border-radius: 20px;
+    border: 0.5px solid var(--border); background: var(--white);
+    cursor: pointer; font-size: 13px; color: var(--text-secondary);
+    font-family: inherit; font-weight: 500;
+  }
+  .action-btn:active { transform: scale(0.96); }
+  .action-btn.active-keep { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .action-btn.active-revisit { border-color: var(--cyan); color: #185FA5; background: var(--cyan-bg); }
+
+  .section-header {
+    font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.07em; padding: 20px 0 10px;
+  }
+  .saved-item {
+    padding: 14px; background: var(--white);
+    border-radius: 12px; margin-bottom: 8px;
+    border: 0.5px solid var(--border);
+  }
+  .saved-title { font-size: 15px; font-weight: 500; color: var(--blue); line-height: 1.45; margin-bottom: 8px; }
+  .saved-meta {
+    font-size: 12px; color: var(--text-tertiary);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-tertiary); font-size: 13px; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  .empty-state {
+    padding: 60px 0; text-align: center;
+    color: var(--text-tertiary); font-size: 14px; line-height: 1.8;
+  }
+  .empty-icon { margin-bottom: 12px; }
+
+  .loading-state {
+    padding: 40px 0; text-align: center;
+    color: var(--text-tertiary); font-size: 14px;
+  }
+
+  .error-state {
+    padding: 20px 0; text-align: center;
+    color: #E55; font-size: 13px;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div class="header-title">News <span id="article-count" class="article-count"></span></div>
+    <div class="header-buttons">
+      <button class="shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        Shuffle
+      </button>
+      <button class="ebb-btn" id="ebb-btn" onclick="fetchEBB()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        EBB
+      </button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('feed')">Feed</button>
+    <button class="tab" onclick="showTab('keep')">Keep <span id="keep-count"></span></button>
+    <button class="tab" onclick="showTab('revisit')">Revisit <span id="revisit-count"></span></button>
+  </div>
+</div>
+
+<div id="feed-view" class="view active">
+  <div class="loading-state">Loading...</div>
+</div>
+<div id="keep-view" class="view"></div>
+<div id="revisit-view" class="view"></div>
+
+<script>
+// ─── Config ───────────────────────────────────────────────
+const RSS_PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const SOURCES = [
+  { url: 'https://feeds.feedburner.com/rsscna/politics',       label: '中央社', tag: '政治' },
+  { url: 'https://feeds.feedburner.com/rsscna/intworld',       label: '中央社', tag: '國際' },
+  { url: 'https://feeds.feedburner.com/rsscna/mainland',       label: '中央社', tag: '兩岸' },
+];
+
+// Future keyword filters go here:
+// { source: 'defensenews.com', keywords: ['Japan', 'Taiwan'] }
+const FILTERS = [];
+
+const configParams = new URLSearchParams(location.search);
+const SUPABASE_URL = configParams.get('supabaseUrl');
+const SUPABASE_KEY = configParams.get('supabaseKey');
+if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error('Missing Supabase configuration');
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const EBB_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/ebb`;
+const FUNCTION_HEADERS = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+
+// ─── State ────────────────────────────────────────────────
+let articles = [];
+let currentTab = 'feed';
+let shuffled = false;
+let shuffleOrder = [];
+let dbState = {};    // url → { read, keep, revisit } loaded from Supabase
+let dbArticles = []; // kept/revisited articles no longer in live feed
+
+// Persist keep/revisit/read in localStorage
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('nf-state') || '{}'); } catch { return {}; }
+}
+function saveState() {
+  const state = {};
+  articles.forEach(a => {
+    if (a.keep || a.revisit || a.read) state[a.id] = { keep: a.keep, revisit: a.revisit, read: a.read };
+  });
+  localStorage.setItem('nf-state', JSON.stringify(state));
+}
+function applyState(a) {
+  const state = dbState[a.id] || loadState()[a.id];
+  if (state) Object.assign(a, { read: state.read, keep: state.keep, revisit: state.revisit });
+  return a;
+}
+
+// ─── Supabase ─────────────────────────────────────────────
+async function loadFromSupabase() {
+  try {
+    const { data } = await db.from('article_states').select('*');
+    if (!data) return;
+    data.forEach(r => { dbState[r.url] = { read: r.read, keep: r.keep, revisit: r.revisit }; });
+    dbArticles = data.filter(r => r.keep || r.revisit).map(r => ({
+      id: r.url, url: r.url, headline: r.title,
+      source: r.source, sourceFull: r.source_full,
+      tag: r.tag || '', time: r.time_label || '', preview: r.preview || '',
+      keep: r.keep, revisit: r.revisit, read: r.read, savedOnly: true,
+    }));
+  } catch (e) { console.warn('Supabase load failed', e); }
+}
+
+async function syncToSupabase(a) {
+  try {
+    await db.from('article_states').upsert({
+      url: a.id, read: !!a.read, keep: !!a.keep, revisit: !!a.revisit,
+      title: a.headline, source: a.source, source_full: a.sourceFull,
+      tag: a.tag || '', time_label: a.time || '', preview: a.preview || '',
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'url' });
+  } catch (e) { console.warn('Supabase sync failed', e); }
+}
+
+// ─── RSS Fetching ─────────────────────────────────────────
+function timeAgo(dateStr) {
+  const diff = (Date.now() - new Date(dateStr)) / 1000;
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function applyFilters(article) {
+  if (!FILTERS.length) return true;
+  const match = FILTERS.find(f => article.source.includes(f.source));
+  if (!match) return true;
+  if (!match.keywords || !match.keywords.length) return true;
+  const text = (article.title + ' ' + article.preview).toLowerCase();
+  return match.keywords.some(k => text.includes(k.toLowerCase()));
+}
+
+async function fetchRSS(source) {
+  const res = await fetch(RSS_PROXY + encodeURIComponent(source.url));
+  const data = await res.json();
+  if (!data.items) return [];
+  return data.items.map((item, i) => applyState({
+    id: item.link,
+    source: item.author || source.label,
+    sourceFull: source.label,
+    tag: source.tag,
+    time: timeAgo(item.pubDate),
+    headline: item.title,
+    preview: item.description?.replace(/<[^>]+>/g, '').slice(0, 160) + '...' || '',
+    url: item.link,
+    keep: false, revisit: false, read: false,
+  })).filter(applyFilters);
+}
+
+async function init() {
+  document.getElementById('feed-view').innerHTML = '<div class="loading-state">Loading...</div>';
+  const btn = document.getElementById('ebb-btn');
+  btn.className = 'ebb-btn loading';
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Loading...`;
+
+  try {
+    await loadFromSupabase();
+
+    const [rssResults, ebbData] = await Promise.all([
+      Promise.all(SOURCES.map(fetchRSS)),
+      fetch(EBB_FUNCTION_URL, { headers: FUNCTION_HEADERS }).then(r => r.json()).catch(() => ({ articles: [] }))
+    ]);
+
+    const rssArticles = rssResults.flat().sort((a, b) => a.time.localeCompare(b.time));
+    const ebbArticles = (ebbData.articles || [])
+      .map(a => applyState({ ...a, headline: a.title, keep: false, revisit: false, read: false }))
+      .filter(applyFilters);
+
+    articles = [...ebbArticles, ...rssArticles];
+
+    // Append kept/revisited articles from DB that are no longer in the live feed
+    const feedUrls = new Set(articles.map(a => a.id));
+    const extra = dbArticles.filter(a => !feedUrls.has(a.id));
+    articles = [...articles, ...extra];
+
+    if (ebbArticles.length > 0) {
+      btn.className = 'ebb-btn done';
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Updated ${ebbArticles.length}`;
+    } else {
+      btn.className = 'ebb-btn';
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> EBB`;
+    }
+
+    // Auto-shuffle all feed articles on load, grouped by read/keep/revisit status
+    shuffleOrder = computeShuffleOrder(articles.filter(a => !a.savedOnly));
+    shuffled = true;
+    document.getElementById('shuffle-btn').className = 'shuffle-btn active';
+    renderFeed();
+
+  } catch (e) {
+    document.getElementById('feed-view').innerHTML = '<div class="error-state">Failed to load. Try again.</div>';
+    btn.className = 'ebb-btn';
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> EBB`;
+  }
+}
+
+// ─── EBB Fetching ─────────────────────────────────────────
+async function fetchEBB() {
+  const btn = document.getElementById('ebb-btn');
+  btn.className = 'ebb-btn loading';
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Loading...`;
+
+  try {
+    const res = await fetch(EBB_FUNCTION_URL, { headers: FUNCTION_HEADERS });
+    const data = await res.json();
+    if (data.articles && data.articles.length) {
+      const ebbNew = data.articles.map(a => applyState({ ...a, headline: a.title, keep: false, revisit: false, read: false })).filter(applyFilters);
+      articles = [...ebbNew, ...articles.filter(a => a.tag !== 'EBB')];
+      renderFeed();
+      btn.className = 'ebb-btn done';
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Updated ${ebbNew.length}`;
+    }
+  } catch (e) {
+    btn.className = 'ebb-btn';
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> EBB`;
+  }
+}
+
+// ─── Actions ──────────────────────────────────────────────
+function toggleKeep(id) {
+  const a = articles.find(x => x.id === id);
+  a.keep = !a.keep;
+  if (a.keep) { a.revisit = false; a.read = true; }
+  saveState(); syncToSupabase(a);
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) {
+    const btns = el.querySelectorAll('.action-btn');
+    btns[0].className = `action-btn ${a.keep ? 'active-keep' : ''}`;
+    btns[1].className = `action-btn ${a.revisit ? 'active-revisit' : ''}`;
+    if (a.read) el.classList.add('read');
+  }
+  updateCounts();
+  if (currentTab === 'keep') renderKeep();
+}
+
+function toggleRevisit(id) {
+  const a = articles.find(x => x.id === id);
+  a.revisit = !a.revisit;
+  if (a.revisit) a.keep = false;
+  saveState(); syncToSupabase(a);
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) {
+    const btns = el.querySelectorAll('.action-btn');
+    btns[0].className = `action-btn ${a.keep ? 'active-keep' : ''}`;
+    btns[1].className = `action-btn ${a.revisit ? 'active-revisit' : ''}`;
+  }
+  updateCounts();
+  if (currentTab === 'revisit') renderRevisit();
+}
+
+function markRead(id) {
+  const a = articles.find(x => x.id === id);
+  if (a && !a.read) {
+    a.read = true;
+    saveState(); syncToSupabase(a);
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if (el) el.classList.add('read');
+    updateCounts();
+  }
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['feed','keep','revisit'][i] === tab);
+  });
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(tab + '-view').classList.add('active');
+  if (tab === 'keep') renderKeep();
+  if (tab === 'revisit') renderRevisit();
+}
+
+function updateCounts() {
+  const kc = articles.filter(x => x.keep).length;
+  const rc = articles.filter(x => x.revisit).length;
+  const feed = articles.filter(x => !x.savedOnly);
+  const unread = feed.filter(x => !x.read).length;
+  const total = feed.length;
+  document.getElementById('keep-count').textContent = kc > 0 ? `(${kc})` : '';
+  document.getElementById('revisit-count').textContent = rc > 0 ? `(${rc})` : '';
+  const countEl = document.getElementById('article-count');
+  if (countEl && total > 0) countEl.textContent = `${total - unread}/${total}`;
+}
+
+// Ordering tiers: 0 unread/no-tag, 1 revisit+unread, 2 revisit+read,
+// 3 keep+read, 4 keep+unread, 5 read/no-tag
+function groupRank(a) {
+  if (!a.read && !a.keep && !a.revisit) return 0;
+  if (a.revisit && !a.read) return 1;
+  if (a.revisit && a.read) return 2;
+  if (a.keep && a.read) return 3;
+  if (a.keep && !a.read) return 4;
+  return 5;
+}
+
+function computeShuffleOrder(list) {
+  const groups = [[], [], [], [], [], []];
+  list.forEach(a => groups[groupRank(a)].push(a));
+  groups.forEach(g => g.sort(() => Math.random() - 0.5));
+  return groups.flat().map(a => a.id);
+}
+
+function toggleShuffle() {
+  const feed = articles.filter(a => !a.savedOnly);
+  shuffleOrder = computeShuffleOrder(feed);
+  shuffled = true;
+  document.getElementById('shuffle-btn').className = 'shuffle-btn active';
+  renderFeed();
+}
+
+function getDisplayArticles() {
+  const feed = articles.filter(a => !a.savedOnly);
+  if (!shuffled || !shuffleOrder.length) return feed;
+  const byId = new Map(feed.map(a => [a.id, a]));
+  const ordered = shuffleOrder.map(id => byId.get(id)).filter(Boolean);
+  const newArticles = feed.filter(a => !shuffleOrder.includes(a.id));
+  return [...ordered, ...newArticles];
+}
+
+// ─── Render ───────────────────────────────────────────────
+const pinIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>`;
+const findIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+
+const checkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function articleHTML(a) {
+  return `
+    <div class="article ${a.read ? 'read' : ''}" data-id="${a.id}">
+      <div class="swipe-indicator">${checkIcon} Read</div>
+      <div class="article-inner">
+        <div class="source-row">
+          <div class="source-dot">${(a.sourceFull || a.source)[0]}</div>
+          <span class="source-name">${a.sourceFull || a.source}</span>
+          ${a.tag ? `<span class="tag-badge">${a.tag}</span>` : ''}
+          <span class="time">${a.time}</span>
+        </div>
+        <a class="headline" href="${a.url}" target="_blank" onclick="markRead('${a.id}')">${a.headline}</a>
+        ${a.preview ? `<div class="preview">${a.preview}</div>` : ''}
+        <div class="actions">
+          <button class="action-btn ${a.keep ? 'active-keep' : ''}" onclick="toggleKeep('${a.id}')">${pinIcon} Keep</button>
+          <button class="action-btn ${a.revisit ? 'active-revisit' : ''}" onclick="toggleRevisit('${a.id}')">${findIcon} Revisit</button>
+        </div>
+      </div>
+      <button class="mark-read-btn" onclick="markRead('${a.id}')" title="Mark as read">${checkIcon}</button>
+    </div>`;
+}
+
+function attachSwipeListeners() {
+  document.querySelectorAll('#feed-view .article:not(.read)').forEach(el => {
+    const id = el.dataset.id;
+    let startX = 0, startY = 0, active = false, locked = false;
+    const inner = el.querySelector('.article-inner');
+
+    el.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      active = false; locked = false;
+      inner.style.transition = 'none';
+    }, { passive: true });
+
+    el.addEventListener('touchmove', e => {
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if (!locked) {
+        if (Math.abs(dy) > Math.abs(dx)) return;
+        locked = true;
+      }
+      if (dx > 0) {
+        active = true;
+        e.preventDefault();
+        inner.style.transform = `translateX(${Math.min(dx * 0.65, 96)}px)`;
+      }
+    }, { passive: false });
+
+    el.addEventListener('touchend', e => {
+      if (!active) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      inner.style.transition = 'transform 0.22s ease';
+      inner.style.transform = '';
+      if (dx > 80) {
+        setTimeout(() => markRead(id), 220);
+      }
+      active = false;
+    }, { passive: true });
+  });
+}
+
+function renderFeed() {
+  const display = getDisplayArticles();
+  document.getElementById('feed-view').innerHTML = display.length
+    ? display.map(articleHTML).join('')
+    : '<div class="empty-state">No articles</div>';
+  updateCounts();
+  attachSwipeListeners();
+}
+
+function renderKeep() {
+  const items = articles.filter(x => x.keep);
+  document.getElementById('keep-view').innerHTML = items.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">${pinIcon}</div>No pinned articles yet.<br>Pin articles from Feed to see them here.</div>`
+    : `<div class="section-header">${items.length} article${items.length === 1 ? '' : 's'}</div>${items.map(a => `
+        <div class="saved-item">
+          <a class="saved-title" href="${a.url}" target="_blank" style="text-decoration:none;display:block">${a.headline}</a>
+          <div class="saved-meta">
+            <span>${a.sourceFull || a.source} · ${a.tag || ''} · ${a.time}</span>
+            <div style="display:flex;gap:8px">
+              <button class="remove-btn" onclick="toggleRevisit('${a.id}');renderKeep()" style="color:var(--cyan)">${findIcon} Revisit</button>
+              <button class="remove-btn" onclick="toggleKeep('${a.id}')">Remove</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
+}
+
+function renderRevisit() {
+  const items = articles.filter(x => x.revisit);
+  document.getElementById('revisit-view').innerHTML = items.length === 0
+    ? `<div class="empty-state"><div class="empty-icon">${findIcon}</div>Nothing to revisit yet.<br>Mark articles from Feed to see them here.</div>`
+    : `<div class="section-header">${items.length} article${items.length === 1 ? '' : 's'}</div>${items.map(a => `
+        <div class="saved-item">
+          <a class="saved-title" href="${a.url}" target="_blank" style="text-decoration:none;display:block">${a.headline}</a>
+          <div class="saved-meta">
+            <span>${a.sourceFull || a.source} · ${a.tag || ''} · ${a.time}</span>
+            <div style="display:flex;gap:8px">
+              <button class="remove-btn" onclick="toggleKeep('${a.id}');renderRevisit()" style="color:var(--green)">${pinIcon} Keep</button>
+              <button class="remove-btn" onclick="toggleRevisit('${a.id}')">Remove</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
+}
+
+// ─── Init ─────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

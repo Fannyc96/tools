@@ -44,3 +44,36 @@ create policy "anyone can delete recipes" on recipes for delete using (true);
 
 create policy "anyone can read settings" on app_settings for select using (true);
 create policy "anyone can update settings" on app_settings for update using (true);
+
+-- Newsfeed 已讀、收藏與稍後閱讀狀態
+create table if not exists article_states (
+  url text primary key,
+  read boolean not null default false,
+  keep boolean not null default false,
+  revisit boolean not null default false,
+  title text not null default '',
+  source text not null default '',
+  source_full text not null default '',
+  tag text not null default '',
+  time_label text not null default '',
+  preview text not null default '',
+  updated_at timestamptz not null default now()
+);
+
+alter table article_states enable row level security;
+create policy "anyone can read article states" on article_states for select using (true);
+create policy "anyone can insert article states" on article_states for insert with check (true);
+create policy "anyone can update article states" on article_states for update using (true);
+create policy "anyone can delete article states" on article_states for delete using (true);
+
+-- Packing Tool 共用清單；瀏覽器仍保留 localStorage 作為離線備份
+create table if not exists packing_state (
+  id integer primary key default 1 check (id = 1),
+  data jsonb not null default '{"cats": []}',
+  updated_at timestamptz not null default now()
+);
+
+alter table packing_state enable row level security;
+create policy "anyone can read packing state" on packing_state for select using (true);
+create policy "anyone can insert packing state" on packing_state for insert with check (true);
+create policy "anyone can update packing state" on packing_state for update using (true);

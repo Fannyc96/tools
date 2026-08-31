@@ -35,6 +35,39 @@ body {
   min-height: 100vh;
 }
 
+.app-content { padding-bottom: 68px; min-height: 100dvh; }
+
+.global-nav {
+  position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%); z-index: 1000; display: flex; gap: 3px;
+  padding: 5px; border: 1px solid rgba(24,95,165,.16); border-radius: 18px;
+  background: rgba(255,255,255,.94); box-shadow: 0 10px 35px rgba(29,49,70,.18);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+.global-nav a { min-width: 66px; padding: 8px 10px; border-radius: 13px; text-align: center; text-decoration: none; color: #66788b; font-size: 12px; font-weight: 600; }
+.global-nav a:hover, .global-nav a.active { color: #185FA5; background: #E4EFFF; }
+.global-nav .nav-home { min-width: 42px; }
+
+.home-page { max-width: 900px; margin: 0 auto; padding: 13vh 24px 90px; }
+.home-kicker { color: #7A99B8; font-size: 11px; letter-spacing: .18em; font-weight: 600; }
+.home-page h1 { margin-top: 10px; font: 600 clamp(34px,7vw,62px)/1.1 var(--font-display); letter-spacing: -.04em; }
+.home-intro { margin-top: 14px; color: var(--text2); font-size: 16px; }
+.tool-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 44px; }
+.tool-card { min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px; border-radius: 22px; text-decoration: none; border: 1px solid rgba(0,0,0,.06); box-shadow: 0 12px 35px rgba(30,50,70,.08); transition: transform .18s ease, box-shadow .18s ease; }
+.tool-card:hover { transform: translateY(-4px); box-shadow: 0 18px 42px rgba(30,50,70,.14); }
+.tool-card > span:not(.tool-icon) { font: 600 23px/1.2 var(--font-display); }
+.tool-card small { margin-top: 7px; color: rgba(20,35,50,.64); }
+.tool-icon { margin-bottom: auto; font-size: 32px; }
+.tool-news { background: #eef5ff; } .tool-packing { background: #f3e4c9; } .tool-recipes { background: #fff5d6; }
+.embedded-page { width: 100%; height: calc(100dvh - 68px); border: 0; display: block; background: #fafafa; }
+
+@media (max-width: 680px) {
+  .tool-grid { grid-template-columns: 1fr; margin-top: 30px; }
+  .tool-card { min-height: 145px; }
+  .global-nav { width: calc(100% - 20px); justify-content: center; }
+  .global-nav a { flex: 1; min-width: 0; }
+}
+
 button { font-family: var(--font-body); cursor: pointer; }
 input, textarea, select { font-family: var(--font-body); }
 a { color: inherit; }

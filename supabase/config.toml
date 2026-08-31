@@ -1,0 +1,7 @@
+project_id = "life-tools"
+
+[functions.ebb]
+verify_jwt = false
+
+[functions.fetch-url]
+verify_jwt = false

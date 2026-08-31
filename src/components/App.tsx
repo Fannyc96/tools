@@ -471,12 +471,8 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
     if (!url || !url.startsWith('http')) return
     setFetchResults(prev => ({ ...prev, [i]: { status: 'loading' } }))
     try {
-      const res = await fetch('/api/fetch-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      })
-      const data = await res.json()
+      const { data, error } = await supabase.functions.invoke('fetch-url', { body: { url } })
+      if (error) throw error
       if (data.ok) {
         const detected = parseIngredientsFromText(data.description || '')
         if (data.title) {
