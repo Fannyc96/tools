@@ -6,24 +6,32 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="行李整理">
-<meta name="theme-color" content="#8A5F41">
+<meta name="theme-color" content="#9DC4F0">
 <title>行李整理工具</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap');
+
 :root {
-  --bg:        #F3E4C9;
+  --bg:        #FFFBEF;
   --card:      #FFFFFF;
-  --card-alt:  #FAF3E8;
-  --hdr:       #8A5F41;
-  --hdr-dk:    #6B4423;
-  --brown:     #8A5F41;
-  --mid:       #A77F60;
-  --lime:      #CCD67F;
-  --lime-dk:   #7A8A28;
-  --border:    #D8C4A0;
-  --border-lt: #EAD8B8;
-  --txt:       #3D2B1A;
-  --txt-mid:   #6B4B30;
-  --txt-muted: #9B7858;
+  --card-alt:  #FFF5D6;
+  --hdr:       #9DC4F0;
+  --hdr-dk:    #3D5A78;
+  --brown:     #185FA5;
+  --mid:       #3D5A78;
+  --lime:      #9DC4F0;
+  --lime-dk:   #185FA5;
+  --border:    #A8C4E0;
+  --border-lt: #C8DCEF;
+  --txt:       #1A2A3C;
+  --txt-mid:   #3D5A78;
+  --txt-muted: #7A99B8;
+  --packed:    #185FA5;
+  --packed-bg: #E4EFFF;
+  --later:     #A07000;
+  --later-bg:  #FFF5CC;
+  --skip:      #68727D;
+  --skip-bg:   #F0F2F4;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,8 +48,8 @@ body {
 
 /* ── Header ── */
 .hdr {
-  background: var(--hdr);
-  color: #fff;
+  background: var(--packed-bg);
+  color: var(--txt);
   padding: max(12px, env(safe-area-inset-top)) 14px 12px;
   display: flex;
   align-items: center;
@@ -49,23 +57,28 @@ body {
   position: sticky;
   top: 0;
   z-index: 30;
-  box-shadow: 0 2px 10px rgba(90,40,10,0.35);
+  border-bottom: 1px solid var(--border-lt);
+  box-shadow: 0 2px 10px rgba(24,95,165,0.10);
 }
 
 .hdr-title {
-  font-size: 0.98rem;
-  font-weight: 700;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px;
+  font-weight: 600;
   flex: 1;
   display: flex;
   align-items: center;
   gap: 7px;
   letter-spacing: -0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hbtn {
-  background: rgba(255,255,255,0.13);
-  border: 1px solid rgba(255,255,255,0.22);
-  color: #fff;
+  background: var(--hdr);
+  border: 1px solid var(--hdr);
+  color: var(--txt);
   padding: 6px 11px;
   border-radius: 8px;
   cursor: pointer;
@@ -77,8 +90,8 @@ body {
   align-items: center;
   gap: 5px;
 }
-.hbtn:hover  { background: rgba(255,255,255,0.23); }
-.hbtn.active { background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.45); }
+.hbtn:hover  { background: var(--packed-bg); border-color: var(--packed); color: var(--packed); }
+.hbtn.active { background: var(--accent-bg, #E4EFFF); border-color: var(--packed); color: var(--packed); }
 
 /* ── Progress ── */
 .prog-wrap {
@@ -90,7 +103,7 @@ body {
 }
 .prog-label {
   font-size: 0.72rem;
-  color: #D8C4A0;
+  color: #C8DCEF;
   margin-bottom: 4px;
   letter-spacing: 0.1px;
 }
@@ -114,7 +127,7 @@ body {
   overflow-x: auto;
   border-bottom: 1.5px solid var(--border-lt);
   position: sticky;
-  top: 87px;
+  top: 48px;
   z-index: 28;
   scrollbar-width: none;
 }
@@ -156,7 +169,7 @@ body {
   background: var(--card);
   border-radius: 12px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(90,50,20,0.1), 0 2px 8px rgba(90,50,20,0.05);
+  box-shadow: 0 1px 3px rgba(24,95,165,0.10), 0 2px 8px rgba(24,95,165,0.05);
   overflow: hidden;
 }
 
@@ -167,7 +180,7 @@ body {
 
 .cat-head {
   padding: 10px 13px;
-  background: var(--card-alt);
+  background: #E4EFFF;
   border-bottom: 1px solid var(--border-lt);
   display: flex;
   align-items: center;
@@ -178,7 +191,7 @@ body {
 .cat-title {
   font-weight: 700;
   font-size: 0.86rem;
-  color: var(--hdr);
+  color: var(--txt);
   flex: 1;
   min-width: 60px;
 }
@@ -195,12 +208,12 @@ body {
   font-weight: 600;
   transition: all 0.15s;
 }
-.bbtn.bp     { background: #E6EFA8; color: #4A5810; }
-.bbtn.bp.on  { background: var(--lime); color: #3A4808; }
-.bbtn.bl     { background: #EDD9C2; color: var(--hdr-dk); }
-.bbtn.bl.on  { background: var(--mid); color: #fff; }
-.bbtn.bs     { background: #EDE8E0; color: #6B5840; border: 1px solid var(--border-lt); }
-.bbtn.bs.on  { background: #9B8878; color: #fff; border-color: #9B8878; }
+.bbtn.bp     { background: var(--packed-bg); color: var(--packed); border: 1px solid #9DC4F0; }
+.bbtn.bp.on  { background: var(--packed); color: #fff; border-color: var(--packed); }
+.bbtn.bl     { background: var(--later-bg); color: var(--later); border: 1px solid #E7CA72; }
+.bbtn.bl.on  { background: var(--later); color: #fff; border-color: var(--later); }
+.bbtn.bs     { background: var(--skip-bg); color: var(--skip); border: 1px solid #C7CDD3; }
+.bbtn.bs.on  { background: var(--skip); color: #fff; border-color: var(--skip); }
 .bbtn:hover  { filter: brightness(0.92); }
 
 /* ── Item row ── */
@@ -223,9 +236,9 @@ body {
   background: var(--border);
   transition: background 0.2s;
 }
-.s-packed .dot { background: var(--lime-dk); }
-.s-later  .dot { background: var(--mid); }
-.s-skip   .dot { background: #9B8878; }
+.s-packed .dot { background: var(--packed); }
+.s-later  .dot { background: var(--later); }
+.s-skip   .dot { background: var(--skip); }
 
 .item-name {
   flex: 1;
@@ -233,9 +246,9 @@ body {
   color: var(--txt);
   transition: color 0.2s;
 }
-.s-packed .item-name { color: #4A5810; }
-.s-later  .item-name { color: var(--hdr-dk); }
-.s-skip   .item-name { color: #9B8878; text-decoration: line-through; }
+.s-packed .item-name { color: var(--packed); }
+.s-later  .item-name { color: var(--later); }
+.s-skip   .item-name { color: var(--skip); text-decoration: line-through; }
 
 .item-btns { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
 
@@ -253,12 +266,12 @@ body {
   align-items: center;
   gap: 4px;
 }
-.ibtn.ip     { border-color: #BBCC60; color: #4A5810; }
-.ibtn.ip.on  { background: var(--lime); border-color: var(--lime); color: #3A4808; }
-.ibtn.il     { border-color: #C8A880; color: var(--hdr-dk); }
-.ibtn.il.on  { background: var(--mid); border-color: var(--mid); color: #fff; }
-.ibtn.is     { border-color: var(--border); color: var(--txt-muted); }
-.ibtn.is.on  { background: #9B8878; border-color: #9B8878; color: #fff; }
+.ibtn.ip     { border-color: #9DC4F0; color: var(--packed); }
+.ibtn.ip.on  { background: var(--packed); border-color: var(--packed); color: #fff; }
+.ibtn.il     { border-color: #E7CA72; color: var(--later); }
+.ibtn.il.on  { background: var(--later); border-color: var(--later); color: #fff; }
+.ibtn.is     { border-color: #C7CDD3; color: var(--skip); }
+.ibtn.is.on  { background: var(--skip); border-color: var(--skip); color: #fff; }
 .ibtn.ih     { border-color: #8FAF6A; color: #3F5A24; }
 .ibtn.ih.on  { background: #9CC97A; border-color: #9CC97A; color: #1F3A0C; }
 .ibtn.it     { border-color: #B99A6A; color: #6B4B20; }
@@ -275,7 +288,7 @@ body {
   margin-bottom: 10px;
   font-size: 0.76rem;
   color: var(--txt-mid);
-  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
 }
 .home-summary b { color: var(--txt); }
 
@@ -296,7 +309,7 @@ body {
   justify-content: center;
   gap: 8px;
 }
-.complete-banner p { font-size: 0.76rem; color: #D8C4A0; margin-top: 4px; }
+.complete-banner p { font-size: 0.76rem; color: #C8DCEF; margin-top: 4px; }
 
 .readjust-btn {
   background: rgba(255,255,255,0.13);
@@ -318,7 +331,7 @@ body {
   background: var(--card);
   border-radius: 12px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
   overflow: hidden;
   animation: fadein 0.18s ease;
 }
@@ -331,9 +344,9 @@ body {
   align-items: center;
   justify-content: space-between;
 }
-.rh-packed { background: #E8F0A0; color: #3A4808; }
-.rh-later  { background: #EDD9C2; color: #5A3010; }
-.rh-skip   { background: #EDE8E0; color: #5A4E42; }
+.rh-packed { background: var(--packed-bg); color: var(--packed); }
+.rh-later  { background: var(--later-bg); color: var(--later); }
+.rh-skip   { background: var(--skip-bg); color: var(--skip); }
 
 .result-head-label { display: flex; align-items: center; gap: 7px; }
 .result-head-count { font-weight: 400; font-size: 0.75rem; opacity: 0.7; }
@@ -365,7 +378,7 @@ body {
   border-radius: 12px;
   padding: 14px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(90,50,20,0.1);
+  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
 }
 
 .edit-sec-title {
@@ -413,6 +426,15 @@ body {
   gap: 6px;
   margin-bottom: 6px;
 }
+
+.move-controls { display: flex; gap: 3px; flex-shrink: 0; }
+.movebtn {
+  width: 28px; height: 28px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--card); color: var(--packed);
+  font-size: 14px; line-height: 1; cursor: pointer;
+}
+.movebtn:hover:not(:disabled) { background: var(--packed-bg); border-color: var(--packed); }
+.movebtn:disabled { opacity: .28; cursor: default; }
 
 .edit-item-input {
   flex: 1;
@@ -581,8 +603,7 @@ body {
   .bbtn { padding: 3px 7px; }
   .hbtn { padding: 5px 8px; font-size: 0.74rem; }
   .hdr { padding-left: 9px; padding-right: 9px; }
-  .hdr-title { font-size: 0; }
-  .hdr-title svg { width: 20px; height: 20px; }
+  .hdr-title { font-size: 20px; }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -593,13 +614,6 @@ body {
   <div class="hdr-title" id="hdrTitle"></div>
   <button class="hbtn" id="editBtn" onclick="toggleEdit()"></button>
   <button class="hbtn" id="resetBtn" onclick="confirmReset()"></button>
-</div>
-
-<div class="prog-wrap">
-  <div class="prog-label" id="progLabel">載入中...</div>
-  <div class="prog-track">
-    <div class="prog-fill" id="progFill" style="width:0%"></div>
-  </div>
 </div>
 
 <div class="tabs" id="tabs"></div>
@@ -636,7 +650,7 @@ const SUPABASE_KEY = configParams.get('supabaseKey');
 if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error('Missing Supabase configuration');
 const packingDb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const S = { P:'pending', K:'packed', L:'later', X:'skip' };
-const LABEL = { pending:'尚未區分', packed:'已收進行李', later:'待會再收', skip:'這次不需要' };
+const LABEL = { pending:'待思考', packed:'已收起', later:'待收起', skip:'不需要' };
 
 const TABS_DEF = [
   { id:'all', label:'全部' },
@@ -755,7 +769,7 @@ function setCatHome(cid, home) {
 }
 
 function confirmReset() {
-  if (!confirm('確定要重置所有物品的狀態嗎？\n（清單不變，只把所有狀態清回「尚未區分」）')) return;
+  if (!confirm('確定要重置所有物品的狀態嗎？\n（清單不變，只把所有狀態清回「待思考」）')) return;
   cats.forEach(c=>c.items.forEach(i=>{ i.status=S.P; i.home=null; }));
   catView = false;
   save(); render();
@@ -787,6 +801,14 @@ function delItem(cid,iid) {
   const c=cats.find(c=>c.id===cid); if(!c) return;
   c.items=c.items.filter(i=>i.id!==iid); save(); render();
 }
+function moveItem(cid,iid,direction) {
+  const c=cats.find(c=>c.id===cid); if(!c) return;
+  const from=c.items.findIndex(i=>i.id===iid); if(from<0) return;
+  const to=from+direction; if(to<0 || to>=c.items.length) return;
+  const [item]=c.items.splice(from,1);
+  c.items.splice(to,0,item);
+  save(); render();
+}
 function addItem(cid) {
   const c=cats.find(c=>c.id===cid); if(!c) return;
   c.items.push({ id:cid+'_'+Date.now(), name:'', status:S.P, home:null });
@@ -807,7 +829,7 @@ function hardReset() {
 
 // ── Static UI ──────────────────────────────────────────────────────────────
 function updateStaticUI() {
-  document.getElementById('hdrTitle').innerHTML = `${ic('luggage',17)} 行李整理工具`;
+  document.getElementById('hdrTitle').textContent = '行李整理工具';
   const eb = document.getElementById('editBtn');
   if (editMode) {
     eb.innerHTML = `${ic('checkdone',13)} 完成編輯`;
@@ -823,11 +845,6 @@ function updateStaticUI() {
 function render() {
   const scrollY = window.scrollY;
   const st   = stats();
-  const done = st.total - st.pending;
-  const pct  = st.total ? Math.round(done/st.total*100) : 0;
-
-  document.getElementById('progLabel').textContent = `${done} / ${st.total} 項已分類　${pct}%`;
-  document.getElementById('progFill').style.width = pct+'%';
 
   document.getElementById('tabs').innerHTML = TABS_DEF.map(t => {
     const n = t.id==='all' ? st.total : st[t.id];
@@ -886,7 +903,7 @@ function render() {
     <div class="bulk-wrap">
       <button class="bbtn bp ${aK?'on':''}" onclick="setCat('${c.id}','${S.K}')">全已收</button>
       <button class="bbtn bl ${aL?'on':''}" onclick="setCat('${c.id}','${S.L}')">全待收</button>
-      <button class="bbtn bs ${aX?'on':''}" onclick="setCat('${c.id}','${S.X}')">全不需</button>
+      <button class="bbtn bs ${aX?'on':''}" onclick="setCat('${c.id}','${S.X}')">全不用</button>
       ${isPackedTab ? `
       <button class="bbtn bp ${aHome?'on':''}" onclick="setCatHome('${c.id}','home')">全帶回家</button>
       <button class="bbtn bl ${aLater?'on':''}" onclick="setCatHome('${c.id}','later')">全稍後</button>
@@ -900,7 +917,7 @@ function render() {
     <div class="item-btns">
       <button class="ibtn ip ${item.status===S.K?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',11)} 已收</button>
       <button class="ibtn il ${item.status===S.L?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',11)} 待收</button>
-      <button class="ibtn is ${item.status===S.X?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',11)} 不需要</button>
+      <button class="ibtn is ${item.status===S.X?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',11)} 不用</button>
       ${isPackedTab ? `
       <button class="ibtn ih ${item.home==='home'?'on':''}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',11)} 已帶回家</button>
       <button class="ibtn it ${item.home==='later'?'on':''}" onclick="setHome('${c.id}','${item.id}','later')">${ic('clock',11)} 稍後帶回家</button>
@@ -916,9 +933,9 @@ function render() {
 
 function renderResult() {
   const groups = [
-    { st:S.K, label:'已收進行李', cls:'rh-packed', icon:'check' },
-    { st:S.L, label:'待會再收',   cls:'rh-later',  icon:'clock' },
-    { st:S.X, label:'這次不需要', cls:'rh-skip',   icon:'ban'   },
+    { st:S.K, label:'已收起', cls:'rh-packed', icon:'check' },
+    { st:S.L, label:'待收起', cls:'rh-later',  icon:'clock' },
+    { st:S.X, label:'不需要', cls:'rh-skip',   icon:'ban'   },
   ];
 
   let html = `<div class="complete-banner">
@@ -947,7 +964,7 @@ function renderResult() {
 
 function renderEdit() {
   let html = `<div class="edit-panel">
-    <div class="edit-sec-title">編輯清單　點擊名稱直接修改</div>`;
+    <div class="edit-sec-title">編輯清單　修改名稱或用箭頭調整順序</div>`;
 
   cats.forEach(c => {
     html += `<div class="edit-cat">
@@ -957,9 +974,13 @@ function renderEdit() {
         <button class="delbtn" onclick="delCat('${c.id}')" title="刪除分類">✕</button>
       </div>
       <div class="edit-items-list">
-        ${c.items.map(i=>`<div class="edit-item-row">
+        ${c.items.map((i,index)=>`<div class="edit-item-row">
           <input class="edit-item-input" value="${esc(i.name)}" placeholder="物品名稱"
             oninput="updItem('${c.id}','${i.id}',this.value)" />
+          <div class="move-controls" aria-label="調整物品順序">
+            <button class="movebtn" onclick="moveItem('${c.id}','${i.id}',-1)" title="上移" ${index===0?'disabled':''}>↑</button>
+            <button class="movebtn" onclick="moveItem('${c.id}','${i.id}',1)" title="下移" ${index===c.items.length-1?'disabled':''}>↓</button>
+          </div>
           <button class="delbtn" onclick="delItem('${c.id}','${i.id}')" title="刪除物品">✕</button>
         </div>`).join('')}
         <button class="add-item-btn" onclick="addItem('${c.id}')">＋ 新增物品</button>
