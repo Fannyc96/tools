@@ -95,7 +95,6 @@ h1 {
 .chip:hover { border-color: var(--muted); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .chip.pchip { background: var(--accent); border-color: var(--accent); color: #fff; } /* 目前只看某母公司 */
-.btools { scroll-margin-top: 12px; }
 .count { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
 .count b { font-family: var(--f-mono); color: var(--ink); }
 
@@ -180,6 +179,9 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 @media (max-width: 520px) { .bar { grid-template-columns: minmax(0, 1fr) 4em 5.4em; gap: 8px; } }
 
 .btools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+/* 和爭議事件的搜尋列一樣：往下滑時固定在頂端，背景與底線延伸到左右兩邊 */
+.btools { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px; border-bottom: 1px solid var(--line); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
+.btools::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: -1px; border-bottom: 1px solid var(--line); }
 .search.small { flex: 1 1 240px; }
 .search.small input { padding: 8px 0; font-size: 16px; } /* 小於 16px 時 iOS 會在聚焦時放大頁面 */
 .btools .filters { margin-top: 0; }
@@ -1152,7 +1154,9 @@ $("#bsum").addEventListener("click", e => {
   if (!b) return;
   bstate.q = ""; $("#bq").value = ""; bstate.own = "all";
   setParent(b.dataset.p);
-  $(".btools").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  // 捲到品牌列表的開頭（扣掉固定在頂端的搜尋列高度）
+  const top = $(".tbl-wrap").getBoundingClientRect().top + window.scrollY - $(".btools").offsetHeight - 8;
+  window.scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 });
 document.querySelectorAll(".chip[data-own]").forEach(c => c.addEventListener("click", () => { bstate.own = c.dataset.own; bsync(); }));
 renderSummary();
