@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="行李整理">
-<meta name="theme-color" content="#9DC4F0">
+<meta name="apple-mobile-web-app-title" content="家私備忘錄">
+<meta name="theme-color" content="#FFFBEF">
 <title>家私備忘錄</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@800&display=swap');
 
+/* 版面與美妝避雷針一致：奶油底、白卡片、藍色重點；頁首不固定，分頁列往下滑時固定在頂端 */
 :root {
   --bg:        #FFFBEF;
   --card:      #FFFFFF;
@@ -20,251 +21,153 @@
   --brown:     #185FA5;
   --mid:       #3D5A78;
   --lime:      #9DC4F0;
-  --lime-dk:   #185FA5;
   --border:    #A8C4E0;
   --border-lt: #C8DCEF;
   --txt:       #1A2A3C;
   --txt-mid:   #3D5A78;
-  --txt-muted: #7A99B8;
+  --txt-muted: #6F8BA8;
   --packed:    #185FA5;
   --packed-bg: #E4EFFF;
-  --later:     #A07000;
+  --later:     #8A6200;
   --later-bg:  #FFF5CC;
   --skip:      #68727D;
   --skip-bg:   #F0F2F4;
+  --f-display: "Noto Serif TC", "Songti TC", serif;
+  --f-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.6;
   background: var(--bg);
   color: var(--txt);
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; }
+
+.wrap {
+  max-width: 640px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
 /* ── Header ── */
-.hdr {
-  background: var(--packed-bg);
-  color: var(--txt);
-  padding: max(12px, env(safe-area-inset-top)) 14px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  border-bottom: 1px solid var(--border-lt);
-  box-shadow: 0 2px 10px rgba(24,95,165,0.10);
-}
-
+.hdr { padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: 14px; }
 .hdr-title {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 20px;
-  font-weight: 600;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  letter-spacing: -0.1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hbtn {
-  background: var(--hdr);
-  border: 1px solid var(--hdr);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: clamp(30px, 6vw, 44px);
+  line-height: 1.2;
+  letter-spacing: .01em;
   color: var(--txt);
-  padding: 6px 11px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 500;
-  transition: background 0.15s;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
-.hbtn:hover  { background: var(--packed-bg); border-color: var(--packed); color: var(--packed); }
-.hbtn.active { background: var(--accent-bg, #E4EFFF); border-color: var(--packed); color: var(--packed); }
-
-/* ── Progress ── */
-.prog-wrap {
-  background: var(--hdr-dk);
-  padding: 7px 15px 9px;
-  position: sticky;
-  top: 48px;
-  z-index: 29;
+.hdr-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.hbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 500; line-height: 1.5;
+  color: var(--txt); background: var(--card);
+  border: 1px solid var(--border-lt); border-radius: 999px;
+  padding: 5px 14px; cursor: pointer; white-space: nowrap;
+  transition: background .15s, border-color .15s;
 }
-.prog-label {
-  font-size: 0.72rem;
-  color: #C8DCEF;
-  margin-bottom: 4px;
-  letter-spacing: 0.1px;
-}
-.prog-track {
-  height: 4px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.prog-fill {
-  height: 100%;
-  background: var(--lime);
-  border-radius: 2px;
-  transition: width 0.4s ease;
-}
+.hbtn svg { color: var(--packed); }
+.hbtn:hover { border-color: var(--packed); }
+.hbtn.active { background: var(--packed); border-color: var(--packed); color: #fff; }
+.hbtn.active svg { color: #fff; }
 
 /* ── Tabs ── */
-.tabs {
-  background: var(--card);
-  display: flex;
-  overflow-x: auto;
-  border-bottom: 1.5px solid var(--border-lt);
-  position: sticky;
-  top: 48px;
-  z-index: 28;
-  scrollbar-width: none;
+.tabs-bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--border-lt);
 }
+.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-
 .tab {
-  padding: 10px 12px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  color: var(--txt-muted);
-  border-bottom: 2.5px solid transparent;
-  white-space: nowrap;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  user-select: none;
+  flex: none; display: flex; align-items: center; gap: 6px;
+  padding: 12px 10px 10px; margin-bottom: -1px;
+  font-size: 15px; font-weight: 500; color: var(--txt-muted);
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  cursor: pointer; user-select: none; transition: color .15s;
 }
-.tab:hover { color: var(--txt-mid); background: var(--card-alt); }
-.tab.active { color: var(--brown); border-bottom-color: var(--brown); font-weight: 600; }
-
+.tab:first-child { padding-left: 2px; }
+.tab:hover { color: var(--txt-mid); }
+.tab.active { color: var(--brown); border-bottom-color: var(--brown); }
 .cnt {
-  background: var(--bg);
-  color: var(--txt-muted);
-  border-radius: 10px;
-  padding: 1px 6px;
-  font-size: 0.69rem;
-  font-weight: 700;
-  min-width: 18px;
-  text-align: center;
+  font-size: 12px; font-weight: 700; line-height: 1.6;
+  min-width: 22px; padding: 0 6px; border-radius: 999px; text-align: center;
+  background: var(--packed-bg); color: var(--txt-mid);
 }
 .tab.active .cnt { background: var(--brown); color: #fff; }
 
 /* ── Main ── */
-.main { padding: 11px; max-width: 640px; margin: 0 auto; }
+.main { padding-top: 14px; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 4px 16px;
+  font-size: 13px; color: var(--txt-mid); margin: 0 2px 12px;
+}
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend .lp { color: var(--packed); } .legend .ll { color: var(--later); } .legend .ls { color: var(--skip); }
+.legend .lh { color: #3F5A24; } .legend .lt { color: #6B4B20; }
 
 /* ── Category card ── */
 .cat-card {
-  background: var(--card);
-  border-radius: 12px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(24,95,165,0.10), 0 2px 8px rgba(24,95,165,0.05);
-  overflow: hidden;
+  background: var(--card); border: 1px solid var(--border-lt); border-radius: 14px;
+  margin-bottom: 14px; overflow: hidden;
 }
-
-@keyframes fadein {
-  from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
 .cat-head {
-  padding: 10px 13px;
-  background: #E4EFFF;
+  padding: 14px 16px 12px; background: var(--packed-bg);
   border-bottom: 1px solid var(--border-lt);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap;
 }
+.cat-title { font-weight: 700; font-size: 17px; color: var(--txt); flex: 1; min-width: 60px; }
+.cat-prog { font-size: 13px; color: var(--txt-mid); font-variant-numeric: tabular-nums; }
 
-.cat-title {
-  font-weight: 700;
-  font-size: 0.86rem;
-  color: var(--txt);
-  flex: 1;
-  min-width: 60px;
-}
-.cat-prog { font-size: 0.7rem; color: var(--txt-muted); }
-
-.bulk-wrap { display: flex; gap: 4px; flex-shrink: 0; }
-
+.bulk-wrap { flex-basis: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .bbtn {
-  padding: 4px 9px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.69rem;
-  font-weight: 600;
-  transition: all 0.15s;
+  min-height: 34px; padding: 4px 8px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 500; transition: background .15s, color .15s;
 }
-.bbtn.bp     { background: var(--packed-bg); color: var(--packed); border: 1px solid #9DC4F0; }
+.bbtn.bp     { background: var(--card); color: var(--packed); border: 1px solid #9DC4F0; }
 .bbtn.bp.on  { background: var(--packed); color: #fff; border-color: var(--packed); }
 .bbtn.bl     { background: var(--later-bg); color: var(--later); border: 1px solid #E7CA72; }
 .bbtn.bl.on  { background: var(--later); color: #fff; border-color: var(--later); }
 .bbtn.bs     { background: var(--skip-bg); color: var(--skip); border: 1px solid #C7CDD3; }
 .bbtn.bs.on  { background: var(--skip); color: #fff; border-color: var(--skip); }
-.bbtn:hover  { filter: brightness(0.92); }
+.bbtn:hover  { filter: brightness(0.96); }
 
-/* ── Item row ── */
+/* ── Item row：名稱在左、圖示按鈕在右，一行 ── */
 .item-row {
-  display: flex;
-  align-items: center;
-  padding: 9px 13px;
-  border-bottom: 1px solid #F5EEE0;
-  gap: 9px;
-  transition: background 0.1s;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px 10px 16px; border-bottom: 1px solid #F1EBDD;
+  transition: background .1s;
 }
 .item-row:last-child { border-bottom: none; }
-.item-row:hover { background: var(--card-alt); }
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--border);
-  transition: background 0.2s;
-}
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--border); transition: background .2s; }
 .s-packed .dot { background: var(--packed); }
 .s-later  .dot { background: var(--later); }
 .s-skip   .dot { background: var(--skip); }
 
-.item-name {
-  flex: 1;
-  font-size: 0.84rem;
-  color: var(--txt);
-  transition: color 0.2s;
-}
+.item-name { flex: 1; min-width: 0; font-size: 16px; line-height: 1.45; color: var(--txt); overflow-wrap: anywhere; transition: color .2s; }
 .s-packed .item-name { color: var(--packed); }
 .s-later  .item-name { color: var(--later); }
 .s-skip   .item-name { color: var(--skip); text-decoration: line-through; }
 
-.item-btns { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
-
+.item-btns { display: flex; gap: 6px; flex-shrink: 0; }
 .ibtn {
-  padding: 5px 9px;
-  border-radius: 7px;
-  cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 500;
-  border: 1.5px solid transparent;
-  background: transparent;
-  white-space: nowrap;
-  transition: all 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  width: 40px; height: 40px; border-radius: 10px; cursor: pointer;
+  display: inline-grid; place-items: center;
+  border: 1.5px solid transparent; background: var(--card);
+  transition: background .15s, color .15s, border-color .15s;
 }
 .ibtn.ip     { border-color: #9DC4F0; color: var(--packed); }
 .ibtn.ip.on  { background: var(--packed); border-color: var(--packed); color: #fff; }
@@ -277,350 +180,94 @@ body {
 .ibtn.it     { border-color: #B99A6A; color: #6B4B20; }
 .ibtn.it.on  { background: #C9A76A; border-color: #C9A76A; color: #3A2408; }
 .ibtn:hover:not(.on) { background: var(--bg); }
+.ibtn:focus-visible, .bbtn:focus-visible, .hbtn:focus-visible, .tab:focus-visible { outline: 2px solid var(--packed); outline-offset: 2px; }
 
 .home-summary {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 9px 13px;
-  margin-bottom: 10px;
-  font-size: 0.76rem;
-  color: var(--txt-mid);
-  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px;
+  background: var(--card); border: 1px solid var(--border-lt); border-radius: 12px;
+  padding: 10px 16px; margin-bottom: 14px; font-size: 14px; color: var(--txt-mid);
 }
+.home-summary span { display: inline-flex; align-items: center; gap: 5px; }
 .home-summary b { color: var(--txt); }
 
 /* ── Complete / Result view ── */
 .complete-banner {
   background: linear-gradient(135deg, var(--hdr-dk) 0%, var(--brown) 100%);
-  color: #fff;
-  padding: 18px 16px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  text-align: center;
+  color: #fff; padding: 22px 18px; border-radius: 14px; margin-bottom: 14px; text-align: center;
 }
-.complete-banner h2 {
-  font-size: 1.1rem;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.complete-banner p { font-size: 0.76rem; color: #C8DCEF; margin-top: 4px; }
-
+.complete-banner h2 { font-size: 20px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.complete-banner p { font-size: 14px; color: #C8DCEF; margin-top: 4px; }
 .readjust-btn {
-  background: rgba(255,255,255,0.13);
-  border: 1px solid rgba(255,255,255,0.28);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  margin-top: 10px;
-  transition: background 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.28); color: #fff;
+  padding: 7px 16px; border-radius: 999px; cursor: pointer; font-size: 14px; margin-top: 12px;
+  transition: background .15s; display: inline-flex; align-items: center; gap: 6px;
 }
 .readjust-btn:hover { background: rgba(255,255,255,0.23); }
 
-.result-card {
-  background: var(--card);
-  border-radius: 12px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
-  overflow: hidden;
-  animation: fadein 0.18s ease;
-}
-
-.result-head {
-  padding: 11px 14px;
-  font-weight: 700;
-  font-size: 0.84rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+.result-card { background: var(--card); border: 1px solid var(--border-lt); border-radius: 14px; margin-bottom: 14px; overflow: hidden; animation: fadein .18s ease; }
+.result-head { padding: 12px 16px; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: space-between; }
 .rh-packed { background: var(--packed-bg); color: var(--packed); }
 .rh-later  { background: var(--later-bg); color: var(--later); }
 .rh-skip   { background: var(--skip-bg); color: var(--skip); }
-
 .result-head-label { display: flex; align-items: center; gap: 7px; }
-.result-head-count { font-weight: 400; font-size: 0.75rem; opacity: 0.7; }
-
-.result-item {
-  padding: 8px 14px;
-  border-bottom: 1px solid #F5EEE0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: var(--txt);
-}
+.result-head-count { font-weight: 400; font-size: 13px; opacity: .75; }
+.result-item { padding: 10px 16px; border-bottom: 1px solid #F1EBDD; display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--txt); }
 .result-item:last-child { border-bottom: none; }
-.ri-name { flex: 1; }
-.ri-tag {
-  font-size: 0.68rem;
-  background: var(--bg);
-  color: var(--txt-muted);
-  padding: 2px 8px;
-  border-radius: 10px;
-  white-space: nowrap;
-  border: 1px solid var(--border-lt);
-}
+.ri-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ri-tag { font-size: 12px; background: var(--bg); color: var(--txt-mid); padding: 2px 8px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--border-lt); }
 
-/* ── Edit mode ── */
-.edit-panel {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(24,95,165,0.10);
-}
-
-.edit-sec-title {
-  font-size: 0.7rem;
-  color: var(--txt-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.edit-cat {
-  border: 1.5px solid var(--border-lt);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-
-.edit-cat-head {
-  background: var(--card-alt);
-  padding: 9px 11px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border-lt);
-}
-
-.edit-cat-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-weight: 700;
-  font-size: 0.86rem;
-  color: var(--brown);
-  outline: none;
-  min-width: 0;
-}
-.edit-cat-input:focus { background: #fff; border-radius: 4px; padding: 1px 6px; }
-
-.edit-items-list { padding: 8px 11px; }
-
-.edit-item-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.move-controls { display: flex; gap: 3px; flex-shrink: 0; }
-.movebtn {
-  width: 28px; height: 28px; border: 1px solid var(--border);
-  border-radius: 6px; background: var(--card); color: var(--packed);
-  font-size: 14px; line-height: 1; cursor: pointer;
-}
+/* ── Edit mode（輸入框 16px，iOS 點選時不會放大頁面）── */
+.edit-panel { background: var(--card); border: 1px solid var(--border-lt); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+.edit-sec-title { font-size: 13px; color: var(--txt-mid); font-weight: 500; margin-bottom: 12px; }
+.edit-cat { border: 1.5px solid var(--border-lt); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+.edit-cat-head { background: var(--packed-bg); padding: 8px 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-lt); }
+.edit-cat-input { flex: 1; border: none; background: transparent; font-weight: 700; font-size: 17px; color: var(--txt); outline: none; min-width: 0; padding: 2px 6px; border-radius: 6px; }
+.edit-cat-input:focus { background: #fff; }
+.edit-items-list { padding: 10px; }
+.edit-item-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.move-controls { display: flex; gap: 4px; flex-shrink: 0; }
+.movebtn { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--packed); font-size: 15px; line-height: 1; cursor: pointer; }
 .movebtn:hover:not(:disabled) { background: var(--packed-bg); border-color: var(--packed); }
 .movebtn:disabled { opacity: .28; cursor: default; }
-
-.edit-item-input {
-  flex: 1;
-  border: 1.5px solid var(--border-lt);
-  border-radius: 7px;
-  padding: 6px 9px;
-  font-size: 0.83rem;
-  outline: none;
-  color: var(--txt);
-  min-width: 0;
-  background: var(--card);
-}
+.edit-item-input { flex: 1; border: 1.5px solid var(--border-lt); border-radius: 8px; padding: 6px 10px; font-size: 16px; outline: none; color: var(--txt); min-width: 0; background: var(--card); }
 .edit-item-input:focus { border-color: var(--brown); }
-
-.delbtn {
-  background: none;
-  border: none;
-  color: #C07060;
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 5px;
-  font-size: 0.85rem;
-  line-height: 1;
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
+.delbtn { background: none; border: none; color: #C07060; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; font-size: 15px; line-height: 1; flex-shrink: 0; transition: background .15s; }
 .delbtn:hover { background: #FDE8E0; }
-
-.add-item-btn {
-  display: block;
-  width: 100%;
-  background: none;
-  border: 1.5px dashed var(--border);
-  color: var(--txt-muted);
-  padding: 6px;
-  border-radius: 7px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  transition: all 0.15s;
-  text-align: center;
+.add-item-btn, .add-cat-btn {
+  display: block; width: 100%; background: none; border: 1.5px dashed var(--border); color: var(--txt-mid);
+  padding: 8px; border-radius: 8px; cursor: pointer; font-size: 14px; text-align: center; transition: all .15s;
 }
-.add-item-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
-
-.add-cat-btn {
-  display: block;
-  width: 100%;
-  background: none;
-  border: 1.5px dashed var(--border);
-  color: var(--txt-muted);
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.82rem;
-  transition: all 0.15s;
-  text-align: center;
-  margin-top: 4px;
-}
-.add-cat-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
-
-.danger-zone {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-lt);
-}
-
-.danger-btn {
-  background: none;
-  border: 1.5px solid #E0A898;
-  color: #B05840;
-  padding: 7px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.78rem;
-  transition: all 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+.add-cat-btn { padding: 12px; border-radius: 12px; font-size: 15px; margin-top: 4px; }
+.add-item-btn:hover, .add-cat-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
+.danger-zone { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-lt); }
+.danger-btn { background: none; border: 1.5px solid #E0A898; color: #B05840; padding: 7px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
 .danger-btn:hover { background: #B05840; color: #fff; }
 
 /* ── Empty state ── */
-.empty-state {
-  text-align: center;
-  padding: 52px 20px;
-  color: var(--txt-muted);
-}
-.empty-icon {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
-  opacity: 0.6;
-}
-.empty-text { font-size: 0.84rem; }
-
-/* ── Mobile ── */
-@media (max-width: 600px) {
-  /* The header height can change on small phones, so avoid fixed sticky offsets. */
-  .prog-wrap,
-  .tabs {
-    position: static;
-  }
-
-  .hdr {
-    gap: 6px;
-  }
-
-  .hdr-title {
-    font-size: 0.9rem;
-    min-width: 0;
-  }
-
-  .main {
-    padding: 9px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-  }
-
-  .item-row {
-    display: grid;
-    grid-template-columns: 7px minmax(0, 1fr);
-    align-items: center;
-    gap: 7px 9px;
-    padding: 10px;
-  }
-
-  .item-name {
-    overflow-wrap: anywhere;
-    line-height: 1.35;
-  }
-
-  .item-btns {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    gap: 5px;
-  }
-
-  .ibtn {
-    min-height: 36px;
-    padding: 6px 4px;
-    justify-content: center;
-  }
-
-  .cat-head {
-    padding: 9px 10px;
-  }
-
-  .bulk-wrap {
-    flex-basis: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .bbtn {
-    min-height: 32px;
-  }
-
-  .home-summary {
-    gap: 6px 12px;
-    flex-wrap: wrap;
-  }
-}
+.empty-state { text-align: center; padding: 52px 20px; color: var(--txt-muted); }
+.empty-icon { display: flex; justify-content: center; margin-bottom: 12px; opacity: .6; }
+.empty-text { font-size: 15px; }
 
 @media (max-width: 400px) {
-  .ibtn { padding: 5px 3px; font-size: 0.68rem; }
-  .bbtn { padding: 3px 7px; }
-  .hbtn { padding: 5px 8px; font-size: 0.74rem; }
-  .hdr { padding-left: 9px; padding-right: 9px; }
-  .hdr-title { font-size: 30px; }
-}
-@media (max-width: 640px) {
-  .hdr-title { font-size: 30px; } /* 手機版頁首標題，與美妝避雷針一致 */
+  .item-row { gap: 8px; padding-left: 12px; padding-right: 10px; }
+  .item-btns { gap: 5px; }
+  .ibtn { width: 38px; height: 38px; }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="hdr">
-  <div class="hdr-title" id="hdrTitle"></div>
-  <button class="hbtn" id="editBtn" onclick="toggleEdit()"></button>
-  <button class="hbtn" id="resetBtn" onclick="confirmReset()"></button>
-</div>
+<header class="hdr"><div class="wrap">
+  <h1 class="hdr-title" id="hdrTitle"></h1>
+  <div class="hdr-actions">
+    <button class="hbtn" id="editBtn" type="button" onclick="toggleEdit()"></button>
+    <button class="hbtn" id="resetBtn" type="button" onclick="confirmReset()"></button>
+  </div>
+</div></header>
 
-<div class="tabs" id="tabs"></div>
-<div class="main" id="main"></div>
+<nav class="tabs-bar" aria-label="依狀態篩選"><div class="wrap tabs" id="tabs"></div></nav>
+<main class="wrap main" id="main"></main>
 
 <script>
 'use strict';
@@ -639,6 +286,7 @@ const P = {
   warning:  `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`,
   list:     `<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>`,
   home:     `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`,
+  hourglass:`<path d="M6 2h12M6 22h12"/><path d="M7 2v3.5a5 5 0 0 0 2.5 4.3L12 11.5l2.5-1.7A5 5 0 0 0 17 5.5V2"/><path d="M7 22v-3.5a5 5 0 0 1 2.5-4.3L12 12.5l2.5 1.7a5 5 0 0 1 2.5 4.3V22"/>`,
 };
 
 function ic(name, sz=15, extra='') {
@@ -835,13 +483,13 @@ function updateStaticUI() {
   document.getElementById('hdrTitle').textContent = '家私備忘錄';
   const eb = document.getElementById('editBtn');
   if (editMode) {
-    eb.innerHTML = `${ic('checkdone',13)} 完成編輯`;
+    eb.innerHTML = `${ic('checkdone',16)} 完成編輯`;
     eb.classList.add('active');
   } else {
-    eb.innerHTML = `${ic('pencil',13)} 編輯清單`;
+    eb.innerHTML = `${ic('pencil',16)} 編輯清單`;
     eb.classList.remove('active');
   }
-  document.getElementById('resetBtn').innerHTML = `${ic('refresh',13)} 重置狀態`;
+  document.getElementById('resetBtn').innerHTML = `${ic('refresh',16)} 重置狀態`;
 }
 
 // ── Render ──────────────────────────────────────────────────────────────────
@@ -851,7 +499,7 @@ function render() {
 
   document.getElementById('tabs').innerHTML = TABS_DEF.map(t => {
     const n = t.id==='all' ? st.total : st[t.id];
-    return `<div class="tab ${curTab===t.id?'active':''}" onclick="switchTab('${t.id}')">
+    return `<div class="tab ${curTab===t.id?'active':''}" role="button" tabindex="0" aria-pressed="${curTab===t.id}" onclick="switchTab('${t.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('${t.id}')}">
       ${t.label}<span class="cnt">${n}</span></div>`;
   }).join('');
 
@@ -876,15 +524,18 @@ function render() {
     return;
   }
 
-  let html = '';
+  let html = `<div class="legend" aria-hidden="true">
+    <span class="lp">${ic('check',16)} 已收起</span><span class="ll">${ic('clock',16)} 待收起</span><span class="ls">${ic('ban',16)} 不需要</span>
+    ${isPackedTab ? `<span class="lh">${ic('home',16)} 已帶回家</span><span class="lt">${ic('hourglass',16)} 稍後帶回家</span>` : ''}
+  </div>`;
 
   if (isPackedTab) {
     const packedAll = cats.flatMap(c=>c.items.filter(i=>i.status===S.K));
     const homeN  = packedAll.filter(i=>i.home==='home').length;
     const laterN = packedAll.filter(i=>i.home==='later').length;
     html += `<div class="home-summary">
-      <span>${ic('home',13)} 已帶回家 <b>${homeN}</b></span>
-      <span>${ic('clock',12)} 稍後帶回家 <b>${laterN}</b></span>
+      <span>${ic('home',16)} 已帶回家 <b>${homeN}</b></span>
+      <span>${ic('hourglass',16)} 稍後帶回家 <b>${laterN}</b></span>
       <span>共 <b>${packedAll.length}</b> 項</span>
     </div>`;
   }
@@ -918,12 +569,12 @@ function render() {
     <span class="dot"></span>
     <span class="item-name">${esc(item.name)}</span>
     <div class="item-btns">
-      <button class="ibtn ip ${item.status===S.K?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',11)} 已收</button>
-      <button class="ibtn il ${item.status===S.L?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',11)} 待收</button>
-      <button class="ibtn is ${item.status===S.X?'on':''}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',11)} 不用</button>
+      <button class="ibtn ip ${item.status===S.K?'on':''}" type="button" title="已收起" aria-label="${esc(item.name)}：已收起" aria-pressed="${item.status===S.K}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',19)}</button>
+      <button class="ibtn il ${item.status===S.L?'on':''}" type="button" title="待收起" aria-label="${esc(item.name)}：待收起" aria-pressed="${item.status===S.L}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',19)}</button>
+      <button class="ibtn is ${item.status===S.X?'on':''}" type="button" title="不需要" aria-label="${esc(item.name)}：不需要" aria-pressed="${item.status===S.X}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',19)}</button>
       ${isPackedTab ? `
-      <button class="ibtn ih ${item.home==='home'?'on':''}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',11)} 已帶回家</button>
-      <button class="ibtn it ${item.home==='later'?'on':''}" onclick="setHome('${c.id}','${item.id}','later')">${ic('clock',11)} 稍後帶回家</button>
+      <button class="ibtn ih ${item.home==='home'?'on':''}" type="button" title="已帶回家" aria-label="${esc(item.name)}：已帶回家" aria-pressed="${item.home==='home'}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',19)}</button>
+      <button class="ibtn it ${item.home==='later'?'on':''}" type="button" title="稍後帶回家" aria-label="${esc(item.name)}：稍後帶回家" aria-pressed="${item.home==='later'}" onclick="setHome('${c.id}','${item.id}','later')">${ic('hourglass',19)}</button>
       ` : ``}
     </div>
   </div>`).join('')}
@@ -942,9 +593,9 @@ function renderResult() {
   ];
 
   let html = `<div class="complete-banner">
-    <h2>${ic('star',17,'margin-right:2px')} 全部分類完成！</h2>
+    <h2>${ic('star',20,'margin-right:2px')} 全部分類完成！</h2>
     <p>以下是依照狀態整理的結果</p>
-    <button class="readjust-btn" onclick="catView=true;render()">${ic('list',12)} 切回分類檢視</button>
+    <button class="readjust-btn" onclick="catView=true;render()">${ic('list',15)} 切回分類檢視</button>
   </div>`;
 
   groups.forEach(g => {
@@ -953,7 +604,7 @@ function renderResult() {
     if(!entries.length) return;
     html += `<div class="result-card">
       <div class="result-head ${g.cls}">
-        <span class="result-head-label">${ic(g.icon,14)} ${g.label}</span>
+        <span class="result-head-label">${ic(g.icon,17)} ${g.label}</span>
         <span class="result-head-count">${entries.length} 項</span>
       </div>
       ${entries.map(e=>`<div class="result-item">
@@ -993,7 +644,7 @@ function renderEdit() {
 
   html += `<button class="add-cat-btn" onclick="addCat()">＋ 新增分類</button>
     <div class="danger-zone">
-      <button class="danger-btn" onclick="hardReset()">${ic('warning',13)} 還原預設清單</button>
+      <button class="danger-btn" onclick="hardReset()">${ic('warning',15)} 還原預設清單</button>
     </div>
   </div>`;
   return html;
