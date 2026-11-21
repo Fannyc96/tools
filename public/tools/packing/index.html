@@ -117,7 +117,7 @@ button { font-family: inherit; }
 @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
 .cat-head {
-  padding: 14px 16px 12px; background: var(--packed-bg);
+  padding: 10px 16px; background: var(--packed-bg);
   border-bottom: 1px solid var(--border-lt);
   display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap;
 }
@@ -126,7 +126,7 @@ button { font-family: inherit; }
 
 .bulk-wrap { flex-basis: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .bbtn {
-  min-height: 34px; padding: 4px 8px; border-radius: 8px; cursor: pointer;
+  min-height: 30px; padding: 3px 8px; border-radius: 8px; cursor: pointer;
   font-size: 13px; font-weight: 500; transition: background .15s, color .15s;
 }
 .bbtn.bp     { background: var(--card); color: var(--packed); border: 1px solid #9DC4F0; }
@@ -140,7 +140,7 @@ button { font-family: inherit; }
 /* ── Item row：名稱在左、圖示按鈕在右，一行 ── */
 .item-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px 10px 16px; border-bottom: 1px solid #F1EBDD;
+  padding: 7px 12px 7px 16px; border-bottom: 1px solid #F1EBDD;
   transition: background .1s;
 }
 .item-row:last-child { border-bottom: none; }
@@ -156,7 +156,7 @@ button { font-family: inherit; }
 
 .item-btns { display: flex; gap: 6px; flex-shrink: 0; }
 .ibtn {
-  width: 40px; height: 40px; border-radius: 10px; cursor: pointer;
+  width: 36px; height: 36px; border-radius: 9px; cursor: pointer;
   display: inline-grid; place-items: center;
   border: 1.5px solid transparent; background: var(--card);
   transition: background .15s, color .15s, border-color .15s;
@@ -240,7 +240,7 @@ button { font-family: inherit; }
 @media (max-width: 400px) {
   .item-row { gap: 8px; padding-left: 12px; padding-right: 10px; }
   .item-btns { gap: 5px; }
-  .ibtn { width: 38px; height: 38px; }
+  .ibtn { width: 34px; height: 34px; }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -556,12 +556,12 @@ function render() {
     <span class="dot"></span>
     <span class="item-name">${esc(item.name)}</span>
     <div class="item-btns">
-      <button class="ibtn ip ${item.status===S.K?'on':''}" type="button" title="已收起" aria-label="${esc(item.name)}：已收起" aria-pressed="${item.status===S.K}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',19)}</button>
-      <button class="ibtn il ${item.status===S.L?'on':''}" type="button" title="待收起" aria-label="${esc(item.name)}：待收起" aria-pressed="${item.status===S.L}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',19)}</button>
-      <button class="ibtn is ${item.status===S.X?'on':''}" type="button" title="不需要" aria-label="${esc(item.name)}：不需要" aria-pressed="${item.status===S.X}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',19)}</button>
+      <button class="ibtn ip ${item.status===S.K?'on':''}" type="button" title="已收起" aria-label="${esc(item.name)}：已收起" aria-pressed="${item.status===S.K}" onclick="setItem('${c.id}','${item.id}','${S.K}')">${ic('check',18)}</button>
+      <button class="ibtn il ${item.status===S.L?'on':''}" type="button" title="待收起" aria-label="${esc(item.name)}：待收起" aria-pressed="${item.status===S.L}" onclick="setItem('${c.id}','${item.id}','${S.L}')">${ic('clock',18)}</button>
+      <button class="ibtn is ${item.status===S.X?'on':''}" type="button" title="不需要" aria-label="${esc(item.name)}：不需要" aria-pressed="${item.status===S.X}" onclick="setItem('${c.id}','${item.id}','${S.X}')">${ic('ban',18)}</button>
       ${isPackedTab ? `
-      <button class="ibtn ih ${item.home==='home'?'on':''}" type="button" title="已帶回家" aria-label="${esc(item.name)}：已帶回家" aria-pressed="${item.home==='home'}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',19)}</button>
-      <button class="ibtn it ${item.home==='later'?'on':''}" type="button" title="稍後帶回家" aria-label="${esc(item.name)}：稍後帶回家" aria-pressed="${item.home==='later'}" onclick="setHome('${c.id}','${item.id}','later')">${ic('hourglass',19)}</button>
+      <button class="ibtn ih ${item.home==='home'?'on':''}" type="button" title="已帶回家" aria-label="${esc(item.name)}：已帶回家" aria-pressed="${item.home==='home'}" onclick="setHome('${c.id}','${item.id}','home')">${ic('home',18)}</button>
+      <button class="ibtn it ${item.home==='later'?'on':''}" type="button" title="稍後帶回家" aria-label="${esc(item.name)}：稍後帶回家" aria-pressed="${item.home==='later'}" onclick="setHome('${c.id}','${item.id}','later')">${ic('hourglass',18)}</button>
       ` : ``}
     </div>
   </div>`).join('')}
