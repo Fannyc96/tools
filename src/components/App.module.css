@@ -127,7 +127,7 @@
 .filterModeBtn { padding: 4px 12px; border: none; background: none; font-family: var(--font-body); font-size: 13px; line-height: 1.6; cursor: pointer; color: var(--text2); transition: all 0.15s; }
 .filterModeBtnActive { background: var(--accent) !important; color: #fff !important; }
 .tagChip { display: inline-flex; align-items: center; gap: 3px; padding: 4px 12px; border-radius: 999px; font-family: var(--font-body); font-size: 13px; line-height: 1.6; background: var(--surface); border: 1px solid var(--border); color: var(--text); cursor: pointer; transition: all 0.15s; }
-.tagChipActive { background: var(--accent-bg) !important; border-color: var(--accent-light) !important; color: var(--accent) !important; }
+.tagChipActive { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; } /* 與食材模式的選中樣式一致 */
 .resultCard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; margin-bottom: 10px; }
 .resultCard:hover { border-color: var(--accent-light); background: var(--accent-bg); }
 .resultCardName { font-size: 17px; font-weight: 700; line-height: 1.4; color: var(--text); margin-bottom: 8px; }
