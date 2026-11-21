@@ -637,7 +637,7 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
               <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
                 {vals.map(v=>(
                   <button key={v} className={`${styles.tagChip} ${(searchState.tagFilters[type]||[]).includes(v)?styles.tagChipActive:''}`}
-                    onClick={()=>toggleTagF(type,v)}>{v}{(searchState.tagFilters[type]||[]).includes(v)?' ✕':''}</button>
+                    onClick={()=>toggleTagF(type,v)}>{v}</button>
                 ))}
               </div>
             </div>
@@ -652,7 +652,7 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
                 <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
                   {catIngs.map(ing => (
                     <button key={ing} className={`${styles.tagChip} ${searchState.ingredients.includes(ing)?styles.tagChipActive:''}`}
-                      onClick={()=>toggleIng(ing)}>{ing}{searchState.ingredients.includes(ing)?' ✕':''}</button>
+                      onClick={()=>toggleIng(ing)}>{ing}</button>
                   ))}
                 </div>
               </div>
