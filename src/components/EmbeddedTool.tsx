@@ -1,6 +1,6 @@
 'use client'
 
-export default function EmbeddedTool({ tool, title }: { tool: 'news' | 'packing', title: string }) {
+export default function EmbeddedTool({ tool, title }: { tool: 'news' | 'packing' | 'beauty', title: string }) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
   const params = new URLSearchParams({
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || '',

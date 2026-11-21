@@ -5,8 +5,26 @@
 - `/news/`：新聞閱讀、收藏與稍後查看
 - `/packing/`：行李清單與分類進度
 - `/recipes/`：食譜收藏、搜尋與份量調整
+- `/beauty/`：美妝避雷針，查品牌的主權、動物實驗爭議與所屬集團
 
 前端是可輸出為靜態檔案的 Next.js 網站，由 GitHub Pages 託管；資料庫與伺服器端抓取功能由 Supabase 提供。
+
+## 各工具檔案位置
+
+| 工具 | 頁面外殼 | 工具本體 | Supabase Function |
+|---|---|---|---|
+| 食譜 | `src/app/recipes/` | `src/components/App.tsx` | `fetch-url` |
+| 新聞 | `src/app/news/` | `public/tools/news/index.html` | `ebb` |
+| 行李 | `src/app/packing/` | `public/tools/packing/index.html` | — |
+| 美妝避雷針 | `src/app/beauty/` | `public/tools/beauty/index.html` | — |
+
+舊的獨立版本已移到上層的 `_archive/`，不再維護，請只修改這裡的檔案。
+
+### 新增一個 HTML 工具
+
+1. 放進 `public/tools/<名稱>/index.html`。
+2. 新增 `src/app/<名稱>/page.tsx`：`<EmbeddedTool tool="<名稱>" title="…" />`。
+3. 在 `EmbeddedTool.tsx`（tool 型別）、`ToolIcon.tsx`（圖示）、`AppNav.tsx`（導覽）、`src/app/page.tsx`（首頁卡片）各加一筆。
 
 ## 本機執行
 

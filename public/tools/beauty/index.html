@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>美妝避雷針</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 單欄查詢工具。頂部標題 → 黏性搜尋列 → 事件卡片 → 集團對照 → 法規背景 */
+:root {
+  --bg: #f6f5f8;
+  --surface: #ffffff;
+  --ink: #1d1a24;
+  --muted: #615b6e;
+  --line: #e2dfe8;
+  --accent: #6b2d5c;          /* 深莓色：標題與互動 */
+  --accent-soft: #f3e8f0;
+  --sov: #2f4f8a;             /* 主權爭議 */
+  --sov-soft: #e7ecf6;
+  --ani: #2c6e5a;             /* 動物實驗 */
+  --ani-soft: #e3f0eb;
+  --ext: #8a5a1c;             /* 延伸品牌 */
+  --ext-soft: #f6ecdc;
+  --focus: #6b2d5c;
+  --f-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --f-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15131a; --surface: #1e1b25; --ink: #ece9f1; --muted: #a59fb2; --line: #322e3c;
+    --accent: #e3a3cf; --accent-soft: #3a2535;
+    --sov: #9db8ec; --sov-soft: #1f2a40; --ani: #86cdb5; --ani-soft: #1a3029;
+    --ext: #e2b678; --ext-soft: #33281a; --focus: #e3a3cf;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15131a; --surface: #1e1b25; --ink: #ece9f1; --muted: #a59fb2; --line: #322e3c;
+  --accent: #e3a3cf; --accent-soft: #3a2535;
+  --sov: #9db8ec; --sov-soft: #1f2a40; --ani: #86cdb5; --ani-soft: #1a3029;
+  --ext: #e2b678; --ext-soft: #33281a; --focus: #e3a3cf;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--bg);
+}
+.wrap {
+  max-width: 880px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+/* Header */
+header.top { padding-block: 40px 20px; }
+.eyebrow { font-size: 12px; letter-spacing: .12em; color: var(--muted); font-weight: 500; }
+h1 {
+  font-family: var(--f-display); font-weight: 900; font-size: clamp(30px, 6vw, 44px);
+  line-height: 1.2; margin: 6px 0 10px; text-wrap: balance; letter-spacing: .02em;
+}
+.lede { color: var(--muted); max-width: 60ch; margin: 0; }
+.meta-line { margin-top: 12px; font-size: 13px; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+.meta-line b { color: var(--ink); font-weight: 500; font-family: var(--f-mono); }
+
+/* Toolbar */
+.toolbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 12px; border-bottom: 1px solid var(--line);
+}
+.search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 0 12px;
+}
+.search:focus-within { border-color: var(--accent); }
+.search svg { flex: none; color: var(--muted); }
+.search input {
+  flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink);
+  font: inherit; font-size: 16px; padding: 11px 0; outline: none;
+}
+.search button.clear {
+  border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px;
+  cursor: pointer; padding: 4px 6px;
+}
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+.chip {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; cursor: pointer;
+  line-height: 1.6;
+}
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.sep { width: 1px; height: 18px; background: var(--line); }
+.toggle { font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.toggle input { accent-color: var(--accent); }
+.count { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.count b { font-family: var(--f-mono); color: var(--ink); }
+
+/* Cards */
+main { padding-block: 20px 8px; }
+.list { display: grid; gap: 14px; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 18px 20px; min-width: 0;
+}
+.card-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+.brand { min-width: 0; }
+.brand h2 { font-size: 19px; margin: 0; line-height: 1.4; font-weight: 700; }
+.brand h2 .en { font-weight: 500; color: var(--muted); font-size: 15px; margin-left: 6px; }
+.brand .group { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.year { font-family: var(--f-mono); font-size: 14px; color: var(--muted); white-space: nowrap; padding-top: 3px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag { font-size: 12px; padding: 1px 8px; border-radius: 4px; line-height: 1.8; font-weight: 500; }
+.tag.sov { background: var(--sov-soft); color: var(--sov); }
+.tag.ani { background: var(--ani-soft); color: var(--ani); }
+.tag.ext { background: var(--ext-soft); color: var(--ext); }
+.tag.plain { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.hitnote { margin-top: 10px; font-size: 13px; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 6px; display: inline-block; }
+dl.facts { margin: 14px 0 0; display: grid; grid-template-columns: 4.5em 1fr; gap: 6px 14px; }
+dl.facts dt { font-size: 13px; color: var(--muted); font-weight: 500; padding-top: 2px; }
+dl.facts dd { margin: 0; min-width: 0; }
+.sources { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.sources span { color: var(--muted); }
+.empty { text-align: center; color: var(--muted); padding: 40px 16px; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { margin-top: 10px; }
+@media (max-width: 520px) {
+  dl.facts { grid-template-columns: 1fr; gap: 2px; }
+  dl.facts dd { margin-bottom: 8px; }
+  .card { padding: 16px; }
+  .count { margin-left: 0; width: 100%; }
+}
+
+/* Sections */
+section.block { padding-block: 28px 4px; }
+section.block h3 { font-family: var(--f-display); font-size: 22px; margin: 0 0 4px; }
+section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
+.groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.grp { border-top: 2px solid var(--ink); padding-top: 10px; min-width: 0; }
+.grp h4 { margin: 0; font-size: 15px; }
+.grp h4 .en { color: var(--muted); font-weight: 500; font-size: 13px; margin-left: 4px; }
+.grp .bl { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 8px; }
+.grp .bl button {
+  border: 0; background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+  font: inherit; font-size: 12.5px; padding: 1px 8px; border-radius: 4px; cursor: pointer;
+}
+.grp .bl button:hover { border-color: var(--accent); color: var(--accent); }
+.note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+.bg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .bg-grid { grid-template-columns: 1fr; } }
+.bg-item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+.bg-item h4 { margin: 0 0 6px; font-size: 16px; }
+.bg-item ul { margin: 0; padding-left: 1.2em; }
+.bg-item li { margin-bottom: 4px; }
+.bg-item .src { font-size: 12.5px; margin-top: 8px; color: var(--muted); }
+
+/* Brand ownership table */
+.capbox { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 12px 0 20px; }
+.capbox summary { cursor: pointer; padding: 12px 16px; font-weight: 500; list-style: none; display: flex; align-items: center; gap: 8px; }
+.capbox summary::-webkit-details-marker { display: none; }
+.capbox summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(-45deg); transition: transform .15s; flex: none; }
+.capbox[open] summary::before { transform: rotate(45deg); }
+.capbox .sum { padding: 0 16px 16px; margin: 0; }
+.sum { display: grid; gap: 16px; margin-bottom: 20px; }
+.sum-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.sum-row > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.sum-row b { display: block; font-family: var(--f-mono); font-size: 22px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.sum-row span { font-size: 12.5px; color: var(--muted); }
+@media (max-width: 520px) { .sum-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 11em 1fr 7.5em; gap: 10px; align-items: center; font-size: 13px; }
+.bl-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bl-track { height: 10px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bl-track i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.bl-val { font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.bl-val small { display: block; font-family: var(--f-body); color: var(--muted); font-size: 11px; }
+@media (max-width: 520px) { .bar { grid-template-columns: 7.5em 1fr 6em; } }
+
+.btools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.search.small { flex: 1 1 240px; }
+.search.small input { padding: 8px 0; font-size: 15px; }
+.btools .filters { margin-top: 0; }
+.sort { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.sort select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+
+.tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.btable { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 14px; }
+.btable th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--bg); white-space: nowrap; position: sticky; top: 0; }
+.btable td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.btable tr:last-child td { border-bottom: 0; }
+.btable .num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.btable td.num { font-size: 13.5px; }
+.c-brand { width: 22%; font-weight: 700; }
+.c-who { width: 38%; }
+.blink { border: 0; background: none; padding: 0; font: inherit; font-weight: 700; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: left; }
+.own { font-size: 11.5px; font-weight: 500; margin-top: 4px; display: block; width: fit-content; padding: 0 6px; border-radius: 4px; line-height: 1.8; }
+@media (max-width: 640px) {
+  .tbl-wrap { overflow: visible; background: transparent; border: 0; border-radius: 0; }
+  .btable { min-width: 0; }
+  .btable thead { display: none; }
+  .btable, .btable tbody, .btable tr, .btable td { display: block; width: auto; }
+  .btable tr { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+  .btable td { padding: 0; border: 0; }
+  .btable td.c-brand, .btable td.c-who { grid-column: 1 / -1; }
+  .btable td.num { text-align: left; white-space: normal; }
+  .btable td.num::before { content: attr(data-label); display: block; font-family: var(--f-body); font-size: 11.5px; color: var(--muted); }
+  .val { text-align: left; }
+  .pr { width: 32px; }
+}
+.own-public { background: var(--sov-soft); color: var(--sov); }
+.own-private { background: var(--ext-soft); color: var(--ext); }
+.own-founder { background: var(--ani-soft); color: var(--ani); }
+.pname { font-weight: 500; }
+.tick { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.sub2 { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.srcs a { margin-right: 6px; }
+.flag { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--accent); background: var(--accent-soft); padding: 0 6px; border-radius: 4px; line-height: 1.8; }
+.na { color: var(--muted); font-family: var(--f-body); font-size: 12.5px; }
+.val { font-family: var(--f-body); font-size: 12.5px; white-space: normal; display: inline-block; max-width: 13em; text-align: right; }
+.pr { display: inline-block; width: 44px; height: 6px; background: var(--line); border-radius: 3px; margin-right: 8px; vertical-align: middle; overflow: hidden; }
+.pr i { display: block; height: 100%; background: var(--sov); }
+.tempty { text-align: center; color: var(--muted); padding: 24px; }
+.bcount { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+.notes { margin-top: 18px; font-size: 13.5px; }
+.notes h4 { margin: 0 0 6px; font-size: 14px; }
+.notes ul { margin: 0; padding-left: 1.2em; color: var(--muted); }
+.notes li { margin-bottom: 4px; }
+.notes b { color: var(--ink); font-weight: 500; }
+.notes .src { color: var(--muted); font-size: 12.5px; margin-top: 8px; }
+
+/* Tabs */
+header.top { padding-bottom: 16px; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: none; border: 0; background: transparent; color: var(--muted);
+  font: inherit; font-size: 15px; font-weight: 500; padding: 10px 14px 9px; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+@media (max-width: 420px) { .tab { padding-inline: 10px; font-size: 14px; } }
+.toolbar { border-bottom: 1px solid var(--line); }
+section.block[role="tabpanel"] { padding-top: 24px; }
+
+footer { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+footer p { margin: 0 0 6px; max-width: 70ch; }
+mark { background: var(--accent-soft); color: inherit; border-radius: 2px; padding: 0 1px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } }
+.card:hover { border-color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>美妝避雷針</h1>
+    <div class="meta-line"><span>資料查核日期 <b>2026-10-26</b></span></div>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="頁面分頁">
+    <button class="tab" role="tab" id="tab-groups" data-tab="groups" aria-controls="panel-groups" aria-selected="true" type="button">集團與旗下品牌</button>
+    <button class="tab" role="tab" id="tab-events" data-tab="events" aria-controls="panel-events" aria-selected="false" tabindex="-1" type="button">爭議事件</button>
+  </nav>
+</div>
+
+<div class="toolbar" id="events-bar">
+  <div class="wrap">
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="搜尋品牌、集團或關鍵字，例如：Lancôme、蘭蔻、地圖" autocomplete="off" aria-label="搜尋">
+      <button class="clear" id="clear" type="button" hidden>清除</button>
+    </label>
+    <div class="filters" role="group" aria-label="篩選">
+      <button class="chip" data-cat="all" aria-pressed="true" type="button">全部</button>
+      <button class="chip" data-cat="sov" aria-pressed="false" type="button">主權爭議</button>
+      <button class="chip" data-cat="ani" aria-pressed="false" type="button">動物實驗</button>
+      <span class="sep" aria-hidden="true"></span>
+      <label class="toggle" for="ext"><input type="checkbox" id="ext" checked> 包含延伸品牌（時尚精品）</label>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <main id="panel-events" role="tabpanel" aria-labelledby="tab-events">
+    <div class="list" id="list"></div>
+  </main>
+
+  <section class="block" id="panel-groups" role="tabpanel" aria-labelledby="tab-groups" hidden>
+    <h3>集團與旗下品牌</h3>
+
+    <details class="capbox">
+      <summary>上市母公司市值比較</summary>
+      <div class="sum" id="bsum"></div>
+    </details>
+
+    <div class="btools">
+      <label class="search small" for="bq">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="bq" type="search" placeholder="搜尋品牌、母公司或創辦人" autocomplete="off" aria-label="搜尋品牌">
+      </label>
+      <div class="filters" role="group" aria-label="母公司類型">
+        <button class="chip" data-own="all" aria-pressed="true" type="button">全部</button>
+        <button class="chip" data-own="public" aria-pressed="false" type="button">上市集團</button>
+        <button class="chip" data-own="private" aria-pressed="false" type="button">私人公司或投資機構</button>
+        <button class="chip" data-own="founder" aria-pressed="false" type="button">創辦人或獨立品牌</button>
+      </div>
+      <label class="sort" for="bsort">排序
+        <select id="bsort">
+          <option value="cap">母公司市值（高到低）</option>
+          <option value="az">品牌名稱 A–Z</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="btable">
+        <thead><tr><th scope="col">品牌</th><th scope="col">母公司／創辦人</th><th scope="col" class="num">母公司市值</th><th scope="col" class="num">百分位</th></tr></thead>
+        <tbody id="groups"></tbody>
+      </table>
+    </div>
+    <p class="bcount" id="bcount"></p>
+
+    <div class="notes">
+      <h4>怎麼讀這張表</h4>
+      <ul>
+        <li><b>母公司市值</b>：只有上市公司才有，以美元計。大多數為 2026 年 11 月中旬的資料；部分公司只查到較早的數字，會在市值下方標註日期。韓元與英鎊市值依 2026 年 11 月 20 日匯率換算。市值每天變動，僅供比較規模。</li>
+        <li><b>授權經營</b>：許多時尚精品的香水與彩妝是授權給美妝集團生產，例如 Prada 香水由 L'Oréal 經營。表中列出的是實際經營美妝線的公司。</li>
+        <li><b>百分位</b>：只比較本表中有市值資料的上市母公司（共 <span id="npub">0</span> 家）。數字代表市值高於表中多少比例的其他上市母公司，100 表示最大、0 表示最小。私人公司與獨立品牌不列入排名。</li>
+        <li>品牌清單依照 Sephora 美國網站的品牌列表截圖整理，所有權查核日期為 2026 年 11 月 20 日。有來源連結的品牌已查證；沒有連結的依一般公開資料整理，「獨立品牌（私人）」表示沒有查到被集團收購的紀錄，未逐一查證創辦人。</li>
+      </ul>
+      <p class="src">市值來源：<a href="https://companiesmarketcap.com/l-oreal/marketcap/" target="_blank" rel="noopener">CompaniesMarketCap</a>、<a href="https://stockanalysis.com/quote/otc/STCB/market-cap/" target="_blank" rel="noopener">StockAnalysis</a>。所有權來源見各品牌列。</p>
+    </div>
+  </section>
+
+
+  <div style="height: 48px" aria-hidden="true"></div>
+</div>
+
+<script>
+const GROUPS = {
+  loreal: { name: "萊雅集團", en: "L'Oréal", brands: ["蘭蔻 Lancôme","契爾氏 Kiehl's","YSL Beauty","Giorgio Armani Beauty","植村秀 Shu Uemura","Urban Decay","IT Cosmetics","NYX","媚比琳 Maybelline","卡尼爾 Garnier","理膚寶水 La Roche-Posay","Valentino Beauty","伊索 Aesop"] },
+  el: { name: "雅詩蘭黛集團", en: "Estée Lauder Companies", brands: ["雅詩蘭黛 Estée Lauder","倩碧 Clinique","MAC","芭比波朗 Bobbi Brown","海洋拉娜 La Mer","肯夢 Aveda","品木宣言 Origins","Smashbox","Tom Ford Beauty","Too Faced","祖瑪瓏 Jo Malone London","Le Labo"] },
+  lvmh: { name: "LVMH 集團", en: "LVMH", brands: ["迪奧 Dior","紀梵希 Givenchy","嬌蘭 Guerlain","Benefit","Fresh","Make Up For Ever","寶格麗 Bulgari","Fenty Beauty","絲芙蘭 Sephora"] },
+  shiseido: { name: "資生堂集團", en: "Shiseido", brands: ["資生堂 Shiseido","NARS","肌膚之鑰 Clé de Peau Beauté","怡麗絲爾 ELIXIR","IPSA","Drunk Elephant"] },
+  unilever: { name: "聯合利華", en: "Unilever", brands: ["清揚 Clear","多芬 Dove","力士 Lux","凡士林 Vaseline","Hourglass","Dermalogica"] },
+  markwins: { name: "Markwins", en: "Markwins", brands: ["Wet n Wild","Physicians Formula"] },
+  natura: { name: "Natura & Co", en: "Natura & Co", brands: ["雅芳 Avon","The Body Shop（2017–2023）"] },
+  tapestry: { name: "Tapestry", en: "Tapestry", brands: ["Coach"] },
+  capri: { name: "Capri Holdings", en: "Capri Holdings", brands: ["凡賽斯 Versace"] },
+  puig: { name: "Puig", en: "Puig", brands: ["Charlotte Tilbury","Byredo"] },
+  loccitane: { name: "歐舒丹集團", en: "L'Occitane Group", brands: ["歐舒丹 L'Occitane","Elemis"] }
+};
+
+const EVENTS = [
+  {
+    brand: "蘭蔻", en: "Lancôme", alias: ["lancome"], group: "loreal", year: "2016", cat: "sov", where: ["香港"],
+    tags: ["藝人合作"],
+    what: "Lancôme 邀請曾支持 2014 年佔領運動、並與達賴喇嘛會面的香港歌手何韻詩參與宣傳音樂會。《環球時報》在微博點名後，Lancôme 發文澄清何韻詩不是代言人，並以「安全理由」取消活動。",
+    resp: "Lancôme 在微博與 Facebook 發聲明，表示邀請原意為音樂分享，不涉及代言合作，若造成誤解深表歉意。",
+    after: "香港民眾到專櫃抗議，Lancôme 關閉香港主要門市一天；法國民眾發起聯署呼籲抵制，簽署人數超過八萬。何韻詩於 6 月 19 日自辦免費音樂會，約三千人到場。",
+    src: [["關鍵評論網","https://www.thenewslens.com/article/41368"],["NBC News","https://www.nbcnews.com/business/business-news/lancome-shuts-hong-kong-stores-amid-accusations-censorship-n588126"],["自由時報","https://news.ltn.com.tw/amp/news/world/breakingnews/1735000"],["三立新聞","https://www.setn.com/news/156214"]]
+  },
+  {
+    brand: "MAC", en: "MAC", alias: ["mac","魅可"], group: "el", year: "2019", cat: "sov", where: ["台灣"],
+    tags: ["地圖"],
+    what: "MAC 美國客服在國際婦女節寄出的宣傳郵件中，所附中國地圖沒有包含台灣，引起中國網民不滿。",
+    resp: "MAC 中國在微博道歉，表示將內部調查問責，並稱「一貫尊重並支持一個中國原則」。",
+    after: "MAC 中國代言人張藝興在微博回應，要求「問責到底」。",
+    src: [["中央社","https://www.cna.com.tw/news/acn/201903100033.aspx"],["Global Cosmetics News","https://www.globalcosmeticsnews.com/mac-issues-apology-for-missing-taiwan-off-the-map-in-marketing-email/"]]
+  },
+  {
+    brand: "迪奧", en: "Dior", alias: ["christian dior"], group: "lvmh", year: "2019", cat: "sov", where: ["台灣"],
+    tags: ["地圖"],
+    what: "Dior 人資人員在浙江工商大學招聘宣講中使用的中國地圖未包含台灣，被學生當場質疑，影片在微博流傳。",
+    resp: "Dior 在微博道歉，稱事件為員工個人失當，並表示「始終尊重並維護一個中國原則」。",
+    after: "相關微博話題瀏覽數超過 2.5 億。台灣外交部表達遺憾，強調台灣不是中國的一部分，並透過駐法國代表處向 Dior 總部表達立場。",
+    src: [["中央社（外交部回應）","https://www.cna.com.tw/news/firstnews/201910170215.aspx"],["中央社","https://www.cna.com.tw/news/acn/201910170179.aspx"],["BBC","https://bbc.in/2MLJbaB"]]
+  },
+  {
+    brand: "凡賽斯", en: "Versace", alias: [], group: "capri", year: "2019", cat: "sov", where: ["香港","澳門"], ext: true,
+    tags: ["產品標示"],
+    what: "一款 T 恤將城市與國家配對，印有「Hong Kong, Hong Kong」「Macau, Macau」，被認為將港澳列為國家。",
+    resp: "品牌在微博道歉，表示「尊重中國領土與國家主權」；創意總監 Donatella Versace 也在 Instagram 致歉。",
+    after: "中國代言人楊冪宣布與品牌解約。",
+    src: [["CNBC","https://www.cnbc.com/2019/08/12/versace-givenchy-and-coach-say-sorry-over-chinese-t-shirt-anger.html"],["關鍵評論網","https://www.thenewslens.com/article/123415"]]
+  },
+  {
+    brand: "Coach", en: "Coach", alias: ["蔻馳"], group: "tapestry", year: "2019", cat: "sov", where: ["台灣","香港"], ext: true,
+    tags: ["產品標示"],
+    what: "一款 T 恤將台灣列為國家，與「北京－中國」等並列。",
+    resp: "Coach 在 Twitter 道歉，表示已於 2018 年 5 月發現「嚴重錯誤」並將該款下架。",
+    after: "中國代言人劉雯宣布終止合作，在微博寫下「我愛我的祖國，堅決維護中國主權」。",
+    src: [["CNBC","https://www.cnbc.com/2019/08/12/versace-givenchy-and-coach-say-sorry-over-chinese-t-shirt-anger.html"],["關鍵評論網","https://www.thenewslens.com/article/123415"]]
+  },
+  {
+    brand: "紀梵希", en: "Givenchy", alias: [], group: "lvmh", year: "2019", cat: "sov", where: ["香港","台灣"], ext: true,
+    tags: ["產品標示"],
+    what: "被發現一款 T 恤將香港等地與國家並列標示，被認為將其列為國家。",
+    resp: "Givenchy 在微博道歉。",
+    after: "中國代言人易烊千璽宣布終止與品牌合作。",
+    src: [["CNBC","https://www.cnbc.com/2019/08/12/versace-givenchy-and-coach-say-sorry-over-chinese-t-shirt-anger.html"],["關鍵評論網","https://www.thenewslens.com/article/123415"]]
+  },
+  {
+    brand: "清揚", en: "Clear", alias: ["clear 洗髮"], group: "unilever", year: "2021", cat: "sov", where: ["台灣"],
+    tags: ["藝人代言","洗髮"],
+    what: "東京奧運期間，徐熙娣（小S）在社群稱台灣選手為「國手」，遭中國網友批評。",
+    resp: "Unilever 旗下洗髮品牌 Clear（中國名稱「清揚」），與大人糖、壽全齋等中國品牌一同終止與她的代言合作。",
+    after: "徐熙娣沉默四天後於 8 月 5 日在微博發文，表示「我不是台獨」。",
+    src: [["台灣英文新聞","https://www.taiwannews.com.tw/zh/news/4264906"],["Yahoo News","https://news.yahoo.com/chinese-brands-sever-ties-taiwanese-124426204.html"]]
+  },
+  {
+    brand: "寶格麗", en: "Bulgari", alias: ["bvlgari"], group: "lvmh", year: "2023", cat: "sov", where: ["台灣"], ext: true,
+    tags: ["官網標示"],
+    what: "Bulgari 非中國地區官網將台灣與其他亞洲國家並列，和「中國」「中國香港特別行政區」「中國澳門特別行政區」分開列出。",
+    resp: "7 月 11 日在微博道歉，稱是海外官網管理疏忽造成店鋪地址與地圖標示錯誤，已更正，並表示「尊重中國主權和領土完整」。",
+    after: "微博相關話題瀏覽數超過 1,200 萬；部分網友與中國官媒《中國日報》要求品牌在國際帳號也發布道歉。",
+    src: [["自由時報","https://news.ltn.com.tw/news/world/breakingnews/4361119"],["Al Jazeera","https://www.aljazeera.com/news/2023/7/12/bulgari-apologises-to-china-after-taiwan-listing-sparks-fury"]]
+  },
+  {
+    brand: "Amor Fati", en: "Amor Fati", alias: [], group: null, groupText: "保養品牌", year: "2025", cat: "sov", where: ["台灣"],
+    tags: ["網紅言論"],
+    what: "美妝網紅蔡潔米在影片中稱「中華民國已經不存在，台灣只是中國的一個省分」。",
+    resp: "保養品牌 Amor Fati 在 Threads 宣布取消原訂的業配合作，表示不與不尊重台灣主權的對象合作。",
+    after: "和其他事件方向相反：品牌是因為合作對象否定台灣主權而終止合作。",
+    src: [["三立新聞","https://star.setn.com/news/1620352"]]
+  },
+
+  {
+    brand: "雅詩蘭黛、雅芳、玫琳凱", en: "Estée Lauder, Avon, Mary Kay", alias: ["estee lauder","avon","mary kay","雅詩蘭黛","雅芳","玫琳凱"], group: "el", groupsExtra: ["natura"], year: "2012", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "三家公司列在 PETA 無動物實驗名單上數十年，被揭露為了在中國販售，付費讓產品依中國規定進行動物測試。",
+    resp: "Estée Lauder、Mary Kay 表示除非「法律要求」，否則不進行動物實驗；Avon 表示其政策二十多年來一致，並稱對遵守當地法律一事保持透明。",
+    after: "PETA 將三家降級到「有測試」名單並發起請願；三家公司也因宣稱「零殘忍」卻進行動物實驗，被提起集體訴訟。",
+    src: [["TriplePundit","https://triplepundit.com/2012/03/three-major-cosmetic-companies-reinstate-animal-testing"],["CosmeticsDesign","https://cosmeticsdesign.com/Article/2012/03/13/Avon-as-transparent-as-a-black-blanket-says-PETA-VP-in-response-to-misleading-China-animal-testing-policy"]]
+  },
+  {
+    brand: "MAC、露華濃", en: "MAC, Revlon", alias: ["mac","revlon","露華濃","魅可"], group: "el", groupNote: "MAC 屬 Estée Lauder Companies；Revlon 為獨立公司", year: "2012", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "兩個品牌開始在中國販售，產品須依當時規定進行上市前動物測試。",
+    resp: "MAC 改為「法律要求時」才進行動物測試。",
+    after: "兩個品牌被動保網站移出無動物實驗名單。",
+    src: [["Cruelty-Free Kitty","https://www.crueltyfreekitty.com/cruelty-free-101/brands-no-longer-cruelty-free/"]]
+  },
+  {
+    brand: "Urban Decay", en: "Urban Decay", alias: ["衰敗城市"], group: "loreal", year: "2012", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "長期標榜無動物實驗的 Urban Decay 宣布將進軍中國，並稱想在中國推動動物權對話，引發消費者強烈反彈。",
+    resp: "與 PETA 討論並收到大量支持者郵件後，宣布取消在中國販售的計畫。",
+    after: "重新列入 PETA 無動物實驗名單，並獲 PETA「Courage in Commerce」獎。",
+    src: [["PETA UK","https://peta.org.uk/?p=15617"],["Musings of a Muse","https://www.musingsofamuse.com/2012/07/urban-decay-decides-not-to-sell-in-china.html"]]
+  },
+  {
+    brand: "Juice Beauty", en: "Juice Beauty", alias: [], group: null, groupText: "有機保養品牌", year: "2013", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "有機保養品牌 Juice Beauty 與 PETA 討論中國強制動物測試的規定。",
+    resp: "宣布停止在中國販售，直到相關測試規定取消為止。",
+    after: "獲 PETA「Courage in Commerce」獎。",
+    src: [["PETA","https://www.peta.org/news/juice-beauty-pulls-china/"]]
+  },
+  {
+    brand: "The Body Shop", en: "The Body Shop", alias: ["美體小舖"], group: "natura", groupsExtra: ["loreal"], year: "2006", cat: "ani", where: [],
+    tags: ["收購爭議"],
+    what: "原本獨立經營、以反對動物實驗聞名的 The Body Shop，被當時仍進行動物實驗的 L'Oréal 以超過 6.5 億英鎊收購。",
+    resp: "動保團體 Naturewatch 發起抵制，要求停止動物實驗。",
+    after: "2017 年轉售給巴西 Natura，同年 12 月 Natura 訂出禁用 2013 年 3 月後經動物測試原料的政策，抵制於 2018 年結束。2023 年再被轉售給私募基金，2024 年由 Auréa 集團收購。",
+    src: [["Ethical Consumer","https://www.ethicalconsumer.org/health-beauty/body-shop-boycott"]]
+  },
+  {
+    brand: "Too Faced", en: "Too Faced", alias: [], group: "el", year: "2016", cat: "ani", where: [],
+    tags: ["收購疑慮"],
+    what: "Estée Lauder Companies 收購無動物實驗品牌 Too Faced，因集團在中國販售，消費者擔心品牌立場改變。",
+    resp: "PETA 表示 Too Faced 承諾維持創立時的無動物實驗原則，不進入要求動物實驗的市場。",
+    after: "收購當時仍維持 PETA 認證。",
+    src: [["PETA","https://www.peta.org/living/personal-care-fashion/too-faced-cosmetics-bought-by-estee-lauder/"]]
+  },
+  {
+    brand: "NARS", en: "NARS", alias: [], group: "shiseido", year: "2017", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "一直標榜無動物實驗的 NARS 宣布進軍中國市場。",
+    resp: "品牌在 Instagram 表示「除非法律要求」不進行動物實驗，並支持非動物測試方法的研究機構 IIVS。",
+    after: "社群出現 #boycottnars 抵制聲浪，相關請願累積約 6.5 萬人連署。",
+    src: [["Cosmetics Business","https://cosmeticsbusiness.com/nars-china-animal-testing-petition-gains-65-000-signatures--131885"],["Refinery29","https://www.refinery29.com/2017/06/161208/nars-china-animal-testing-cosmetics"]]
+  },
+  {
+    brand: "Wet n Wild、Physicians Formula", en: "Wet n Wild, Physicians Formula", alias: [], group: "markwins", year: "2019", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "Wet n Wild 被確認在中國屈臣氏販售，同集團的 Physicians Formula 不久後也被發現在中國販售。",
+    resp: "未確認是否進行上市前測試。",
+    after: "動保網站將兩個品牌列為「灰色地帶」，不再視為無動物實驗。",
+    src: [["Cruelty-Free Kitty","https://www.crueltyfreekitty.com/cruelty-free-101/brands-no-longer-cruelty-free/"]]
+  },
+  {
+    brand: "Charlotte Tilbury", en: "Charlotte Tilbury", alias: ["ct"], group: "puig", year: "2019", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "品牌在中國開設快閃店並陳列產品，2020 年仍持續。",
+    resp: "—",
+    after: "動保網站認為有上市後抽檢的風險，列為「灰色地帶」。",
+    src: [["Cruelty-Free Kitty","https://www.crueltyfreekitty.com/cruelty-free-101/brands-no-longer-cruelty-free/"]]
+  },
+  {
+    brand: "Elemis", en: "Elemis", alias: [], group: "loccitane", year: "2020", cat: "ani", where: [],
+    tags: ["中國市場"],
+    what: "Elemis 開始在中國販售。",
+    resp: "政策改為「法律要求時」進行動物測試。",
+    after: "被動保網站移出無動物實驗名單。",
+    src: [["Cruelty-Free Kitty","https://www.crueltyfreekitty.com/cruelty-free-101/brands-no-longer-cruelty-free/"]]
+  },
+  {
+    brand: "多芬", en: "Dove", alias: ["dove"], group: "unilever", year: "2020", cat: "ani", where: [],
+    tags: ["認證標準爭議"],
+    what: "Dove 取得 PETA 無動物實驗認證，但同時在中國販售，引發動保圈對認證標準的爭論。",
+    resp: "PETA 表示品牌已停止向中國進口非中國製造的產品；Dove 官網表示在中國推出的新產品不會由中國當局進行測試。",
+    after: "Cruelty-Free Kitty 等網站認為無法排除上市後抽檢，不將 Dove 列為無動物實驗，並指出 PETA 標準比 Leaping Bunny 寬鬆。",
+    src: [["Cruelty-Free Kitty","https://www.crueltyfreekitty.com/cruelty-free-101/peta-brands-sell-china/"]]
+  }
+];
+
+const $ = s => document.querySelector(s);
+const norm = s => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[\s·'’.\-、,，]/g, "");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const CAT = { sov: "主權爭議", ani: "動物實驗" };
+
+let state = { q: "", cat: "all", ext: true };
+try {
+  const saved = JSON.parse(localStorage.getItem("bg-state") || "null");
+  if (saved && typeof saved === "object") state = Object.assign(state, saved, { q: "" });
+} catch (e) {}
+
+// 「蘭蔻 Lancôme」→「Lancôme」；中文名只用於搜尋
+function enName(b) {
+  const clean = b.replace(/（.*?）/, "");
+  const m = clean.match(/^[㐀-鿿]+\s+(.+)$/);
+  return m ? m[1] : clean;
+}
+
+function groupsOf(ev) { return [ev.group, ...(ev.groupsExtra || [])].filter(Boolean); }
+
+function groupLabel(ev) {
+  if (ev.groupNote) return ev.groupNote;
+  if (!ev.group) return ev.groupText || "";
+  const g = GROUPS[ev.group];
+  const extra = (ev.groupsExtra || []).map(k => GROUPS[k].en);
+  return g.en + (extra.length ? "；相關：" + extra.join("、") : "");
+}
+
+function match(ev, q) {
+  if (!q) return { ok: true };
+  const own = [ev.brand, ev.en, ...(ev.alias || []), ev.what, ev.resp, ev.after, ...(ev.tags || []), ...(ev.where || []), CAT[ev.cat], ev.year, ev.groupText || ""];
+  for (const k of groupsOf(ev)) own.push(GROUPS[k].name, GROUPS[k].en);
+  if (own.some(t => norm(t).includes(q))) return { ok: true };
+  for (const k of groupsOf(ev)) {
+    const hit = GROUPS[k].brands.find(b => norm(b).includes(q));
+    if (hit) return { ok: true, via: enName(hit), group: GROUPS[k].en };
+  }
+  return { ok: false };
+}
+
+function hl(text, raw) {
+  const t = esc(text);
+  const r = raw.trim();
+  if (!r) return t;
+  const re = new RegExp(r.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+  return t.replace(re, m => "<mark>" + m + "</mark>");
+}
+
+function render() {
+  const raw = state.q;
+  const q = norm(raw);
+  const rows = [];
+  for (const ev of EVENTS) {
+    if (state.cat !== "all" && ev.cat !== state.cat) continue;
+    if (!state.ext && ev.ext) continue;
+    const m = match(ev, q);
+    if (m.ok) rows.push([ev, m]);
+  }
+  rows.sort((a, b) => (a[0].cat === b[0].cat ? b[0].year - a[0].year : a[0].cat === "sov" ? -1 : 1));
+
+  $("#count").innerHTML = "顯示 <b>" + rows.length + "</b> 筆";
+  $("#clear").hidden = !raw;
+
+  if (!rows.length) {
+    $("#list").innerHTML = '<div class="empty">找不到符合「' + esc(raw) + '」的事件。<br>可以試試品牌英文名、集團名稱，或切換篩選條件。<br><button class="chip" type="button" id="reset">清除搜尋與篩選</button></div>';
+    $("#reset").onclick = () => { state.q = ""; state.cat = "all"; state.ext = true; $("#q").value = ""; sync(); };
+    return;
+  }
+
+  $("#list").innerHTML = rows.map(([ev, m]) => {
+    const tags = [
+      '<span class="tag ' + ev.cat + '">' + CAT[ev.cat] + '</span>',
+      ...(ev.where || []).map(w => '<span class="tag ' + ev.cat + '">' + w + '</span>'),
+      ev.ext ? '<span class="tag ext">延伸品牌</span>' : "",
+      ...(ev.tags || []).map(t => '<span class="tag plain">' + esc(t) + '</span>')
+    ].join("");
+    return '<article class="card">' +
+      '<div class="card-head"><div class="brand"><h2>' + hl(ev.en, raw) + '</h2>' +
+      (groupLabel(ev) ? '<div class="group">' + hl(groupLabel(ev), raw) + '</div>' : "") + '</div>' +
+      '<div class="year">' + ev.year + '</div></div>' +
+      '<div class="tags">' + tags + '</div>' +
+      (m.via ? '<div class="hitnote">因為「' + esc(m.via) + '」屬於 ' + esc(m.group) + ' 而列出</div>' : "") +
+      '<dl class="facts"><dt>事件</dt><dd>' + hl(ev.what, raw) + '</dd><dt>品牌回應</dt><dd>' + hl(ev.resp, raw) + '</dd><dt>後續</dt><dd>' + hl(ev.after, raw) + '</dd></dl>' +
+      '<div class="sources"><span>來源</span>' + ev.src.map(([n, u]) => '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(n) + '</a>').join("") + '</div>' +
+      '</article>';
+  }).join("");
+}
+
+function sync() {
+  document.querySelectorAll(".chip[data-cat]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === state.cat)));
+  $("#ext").checked = state.ext;
+  try { localStorage.setItem("bg-state", JSON.stringify({ cat: state.cat, ext: state.ext })); } catch (e) {}
+  render();
+}
+
+/* ---------- Sephora 品牌所有權 ---------- */
+// 上市母公司市值（十億美元）。d = 資料日期；未標註者為 2026 年 11 月中旬（11/9–11/19）
+const PARENTS = {
+  pg:       { name: "Procter & Gamble", ticker: "PG", cap: 389.03 },
+  loreal:   { name: "L'Oréal", ticker: "OR.PA", cap: 254.54 },
+  lvmh:     { name: "LVMH", ticker: "MC.PA", cap: 205.61 },
+  hermes:   { name: "Hermès", ticker: "RMS.PA", cap: 143.59 },
+  unilever: { name: "Unilever", ticker: "ULVR", cap: 135.89 },
+  henkel:   { name: "Henkel", ticker: "HEN3", cap: 39.73 },
+  el:       { name: "Estée Lauder Companies", ticker: "EL", cap: 37.69 },
+  shark:    { name: "SharkNinja", ticker: "SN", cap: 29.97 },
+  chd:      { name: "Church & Dwight", ticker: "CHD", cap: 26.27 },
+  kao:      { name: "Kao", ticker: "4452.T", cap: 21.21, d: "2026/11/4" },
+  puig:     { name: "Puig", ticker: "PUIG", cap: 12.63 },
+  shiseido: { name: "Shiseido", ticker: "4911.T", cap: 9.55 },
+  amore:    { name: "Amorepacific", ticker: "090430.KS", cap: 7.15 },
+  elf:      { name: "e.l.f. Beauty", ticker: "ELF", cap: 6.97, d: "2026/11/13" },
+  ipar:     { name: "Interparfums", ticker: "IPAR", cap: 3.79 },
+  coty:     { name: "Coty", ticker: "COTY", cap: 3.71 },
+  lghh:     { name: "LG H&H", ticker: "051900.KS", cap: 3.19, d: "2026/10/15，韓元換算" },
+  pharma:   { name: "PharmaResearch", ticker: "214450.KQ", cap: 2.64, d: "2026/9/10，韓元換算" },
+  kose:     { name: "KOSÉ", ticker: "4922.T", cap: 2.10 },
+  edgewell: { name: "Edgewell Personal Care", ticker: "EPC", cap: 1.31 },
+  hele:     { name: "Helen of Troy", ticker: "HELE", cap: 0.86, d: "2026/11/12" },
+  thg:      { name: "THG", ticker: "THG.L", cap: 0.565, d: "2026/9/11，英鎊換算" },
+  pzc:      { name: "PZ Cussons", ticker: "PZC.L", cap: 0.534, d: "2026/9/21，英鎊換算" },
+  nus:      { name: "Nu Skin", ticker: "NUS", cap: 0.18 },
+  starco:   { name: "Starco Brands", ticker: "STCB", cap: 0.02007, d: "2026/11/5" },
+  ff:       { name: "F&F", ticker: "383220.KS", cap: null },
+  cj:       { name: "CJ 集團", ticker: "001040.KS", cap: null },
+  wald:     { name: "Waldencast", ticker: "WALD", cap: null }
+};
+
+// own: public（上市集團）/ private（私人公司或投資機構）/ founder（創辦人或獨立品牌）
+const P = (n, p, note, src, extra) => Object.assign({ n, own: "public", p, note, src: src || [] }, extra || {});
+const V = (n, who, note, src, extra) => Object.assign({ n, own: "private", who, note, src: src || [] }, extra || {});
+const F = (n, who, note, src, extra) => Object.assign({ n, own: "founder", who: who || "獨立品牌（私人）", note, src: src || [] }, extra || {});
+const LIC = "授權經營";
+
+const BRANDS = [
+  // A
+  F("AAVRANI", "創辦人 Rooshy Roy"),
+  F("Abib", "韓國品牌（私人）"),
+  F("Act+Acre", "創辦人 Helen Reavey"),
+  F("adwoa beauty", "創辦人 Julian Addo", null, ["https://finance.yahoo.com/markets/stocks/articles/adwoa-beauty-moves-liquidation-following-144500723.html"], { status: "2026 年 5 月破產轉清算" }),
+  P("AESTURA", "amore"),
+  F("AKT London", "創辦人 Andy Coxall、Kristian Lavercombe"),
+  F("ALPYN"),
+  P("ALTERNA Haircare", "henkel", "2014 年收購", ["https://www.cosmeticsdesign.com/Article/2014/06/02/Henkel-to-acquire-three-hair-care-brands-as-part-of-North-America-expansion-plan"]),
+  F("Ami Colé", "創辦人 Diarrha N'Diaye-Mbaye", "L'Oréal 創投 BOLD 曾少數投資", ["https://www.cosmeticsbusiness.com/loreal-backed-ami-cole-closing-down-diarrha-n-diaye-mbaye"], { status: "2025 年 7 月宣布停業" }),
+  V("amika", "Bansk Group（私募，2022 年取得多數股權）", null, ["https://www.beautymatter.com/articles/bansk-group-to-acquire-a-majority-stake-in-amika-and-eva-nyc"]),
+  F("Anastasia Beverly Hills", "創辦人 Anastasia Soare", "TPG 曾取得少數股權"),
+  V("Anecdotes by Artists", "Maesa（私人）", "2026 年 9 月推出", ["https://retailboss.co/maesa-enters-sephora-with-perfumers-led-brand-anecdotes-by-artists/"]),
+  F("AORA México", "墨西哥獨立品牌", null, ["https://mexiconewsdaily.com/lifestyle/mexican-beauty-brand-aora/"]),
+  F("Arencia", "韓國品牌（私人）"),
+  V("Ariana Grande", "Luxe Brands（私人，授權經營）", "歌手 Ariana Grande 的香水"),
+  P("Armani Beauty", "loreal", LIC),
+  F("Augustinus Bader", "創辦人 Augustinus Bader、Charles Rosier"),
+  P("Azzaro", "loreal", LIC),
+  // B
+  V("BaBylissPRO", "Conair（私人）"),
+  P("BANILA CO", "ff", "F&F 創立的韓國品牌", ["https://en.wikipedia.org/wiki/Banila_Co."]),
+  F("banu"),
+  V("bareMinerals", "Orveon Global（Advent International 私募）", "2021 年由 Shiseido 售出"),
+  F("BASMA"),
+  V("Beauty of Joseon", "Goodai Global（韓國，私人）"),
+  P("BeautyBio", "nus", "由 Nu Skin 旗下 Rhyz 收購", ["https://dallasinnovates.com/dallas-skincare-beauty-device-company-beautybio-acquired-by-utah-based-rhyz/"]),
+  F("Beautyblender", "創辦人 Rea Ann Silva"),
+  P("belif", "lghh"),
+  P("Benefit Cosmetics", "lvmh"),
+  F("beplain", "韓國品牌（私人）"),
+  F("Bio Ionic"),
+  V("Biodance", "Beauty Selection（韓國，私人）", null, ["https://www.epickor.com/business/biodance-beauty-selection-company-deep-dive"]),
+  F("BIOHEAL BOH", "韓國品牌"),
+  P("Biossance", "thg", "2023 年從破產的 Amyris 收購", ["https://www.retailgazette.co.uk/blog/2023/12/thg-buys-biossance/"]),
+  P("Bobbi Brown", "el"),
+  V("BondiBoost", "Gauge Capital（私募，2022 年收購）", null, ["https://www.beautymatter.com/articles/australian-haircare-brand-bondi-boost-acquired-by-gauge-capital"]),
+  F("BORNTOSTANDOUT"),
+  F("Bounce Curl"),
+  F("Boy Smells", "創辦人 Matthew Herman、David Kien"),
+  F("BREAD BEAUTY SUPPLY", "創辦人 Maeva Heim"),
+  V("Briogeo", "Wella Company（KKR 私募）", "2022 年收購", ["https://www.businessoffashion.com/news/beauty/wella-company-acquires-hair-care-brand-briogeo/"]),
+  F("BROWN GIRL Jane"),
+  P("Bumble and bumble", "el"),
+  P("BURBERRY", "coty", LIC),
+  F("By Rosie Jane", "創辦人 Rosie Jane Johnston"),
+  P("BYREDO", "puig"),
+  // C
+  F("caliray"),
+  F("CANOPY"),
+  P("Carolina Herrera", "puig"),
+  F("Caudalie", "創辦人 Mathilde Thomas、Bertrand Thomas（家族經營）"),
+  F("CAY SKIN", "名人 Winnie Harlow"),
+  F("Cell Fusion C", "韓國品牌（私人）"),
+  F("Ceremonia", "創辦人 Babba Rivera"),
+  V("CHANEL", "Chanel（私人，Wertheimer 家族）"),
+  P("Charlotte Tilbury", "puig"),
+  P("Chloé", "coty", LIC),
+  F("Chris McMillan", "髮型師 Chris McMillan"),
+  F("Chunks"),
+  F("ciele"),
+  F("Cinema Secrets"),
+  V("Clarins", "Clarins 集團（私人，Courtin 家族）"),
+  F("CLEAN RESERVE"),
+  P("CLINIQUE", "el"),
+  P("COACH", "ipar", LIC),
+  P("COLOR WOW", "loreal", "2025 年 6 月宣布收購；創辦人 Gail Federici", ["https://www.loreal.com/en/press-release/finance/loreal-signs-an-agreement-to-acquire-color-wow-one-of-the-worlds-fastest-growing-and-most-innovative-professional-haircare-brands/", "https://www.beautyindependent.com/loreal-color-wow-buy/"], { val: "約 10 億美元（媒體估計，2025）" }),
+  F("Commodity"),
+  F("Community Sixty-Six"),
+  V("COOLA", "SC Johnson（私人，2019 年取得多數股權）", null, ["https://cosmeticsbusiness.com/sun-care-brand-coola-sells-majority-stake-to-sc-johnson--159767"]),
+  F("Crown Affair", "創辦人 Dianna Cohen", "Stride Consumer Partners 投資", ["https://www.beautyindependent.com/crown-affair-series-c-stride-consumer-partners/"]),
+  F("Cult Gaia", "創辦人 Jasmin Larian"),
+  P("Curlsmith", "hele", "2022 年收購", ["https://www.pressreader.com/usa/wwd-digital-daily/20220426/281814287426473"]),
+  F("CYKLAR"),
+  // D
+  F("dae"),
+  F("DAMDAM"),
+  F("Danessa Myricks Beauty", "化妝師 Danessa Myricks"),
+  V("Davines", "Davines 集團（私人，Bollati 家族）"),
+  F("DedCool", "創辦人 Carina Chaz"),
+  F("DEREK LAM 10 CROSBY"),
+  F("DERMAFLASH"),
+  P("Dermalogica", "unilever"),
+  F("Dezi Skin", "網紅 Desi Perkins", null, ["https://www.glossy.co/beauty/desi-perkins-launches-first-beauty-line-dezi-skin/"]),
+  F("Dieux"),
+  P("DIOR", "lvmh"),
+  F("Dolce Glow"),
+  V("Dolce&Gabbana", "Dolce&Gabbana 集團（私人）", "2022 年從 Shiseido 收回美妝授權自行經營", ["https://www.businessoffashion.com/news/beauty/dolce-gabbana-takes-perfumes-and-cosmetics-business-in-house/"]),
+  F("DOMINIQUE COSMETICS"),
+  P("Donna Karan", "ipar", LIC + "（2022 年取得授權）", ["https://hk.fashionnetwork.com/news/Inter-parfums-inks-exclusive-fragrance-license-with-donna-karan-dkny-brands,1425909.html"]),
+  F("Dr. Barbara Sturm", "創辦人 Barbara Sturm 醫師"),
+  F("Dr. Dennis Gross Skincare", "創辦人 Dennis Gross 醫師"),
+  P("Dr. Groot", "lghh"),
+  F("Dr. Idriss", "創辦人 Shereene Idriss 醫師"),
+  P("Dr. Jart+", "el"),
+  F("Dr.FORHAIR", "韓國品牌（私人）"),
+  P("Drunk Elephant", "shiseido"),
+  P("Drybar", "hele"),
+  V("DUO", "American International Industries（私人）"),
+  V("Dyson", "Dyson（私人，James Dyson 持有）"),
+  // E
+  F("EADEM"),
+  F("Ebb Ocean Club"),
+  F("EILISH FRAGRANCES", "歌手 Billie Eilish"),
+  F("Element Eight"),
+  V("Elemis", "L'Occitane 集團（2024 年下市，私人）"),
+  F("Ellis Brooklyn", "創辦人 Bee Shapiro"),
+  F("Emi Jay"),
+  V("Erborian", "L'Occitane 集團（私人）"),
+  P("Estée Lauder", "el"),
+  F("Evereden"),
+  F("Experiment"),
+  // F
+  F("Fable & Mane", "創辦人 Akash Mehta、Nikita Mehta"),
+  F("Facile"),
+  F("Fara Homidi", "化妝師 Fara Homidi"),
+  P("Farmacy", "pg", null, ["https://www.beautymatter.com/articles/tag:skincare?page=44"]),
+  F("FATION", "韓國品牌（私人）"),
+  F("fel beauty"),
+  P("Fenty Beauty by Rihanna", "lvmh", "Rihanna 與 LVMH（Kendo）各持 50%；2026 年 10 月報導 MarcyPen Capital 洽購 LVMH 持股", ["https://thegrio.com/2026/10/06/jay-z-marcypen-fenty-beauty-lvmh-stake/"], { val: "10–20 億美元（Reuters，2025 年 10 月）" }),
+  F("Fig.1"),
+  P("First Aid Beauty", "pg", "2018 年收購"),
+  F("Flora + Bast"),
+  F("FlutterHabit", null, null, ["https://www.beautyindependent.com/flutterhabit-lands-sephora-diy-lash-extensions/"]),
+  F("FORVR MOOD", "網紅 Jackie Aina"),
+  V("Freck Beauty", "未具名投資人（2025 年收購）", null, ["https://beautymatter.com/articles/freck-beauty-founder-remi-brixton-sells-brand"]),
+  P("fresh", "lvmh"),
+  F("FROMLABS"),
+  F("FUGAZZI"),
+  F("FULLY"),
+  // G
+  V("ghd", "Wella Company（KKR 私募）"),
+  F("Gisou", "創辦人 Negin Mirsalehi"),
+  P("Givenchy", "lvmh"),
+  F("Glamnetic"),
+  F("Glossier", "創辦人 Emily Weiss（創投持股）", null, ["https://puck.news/fashion/2026/11/what-happened-to-glossier-a-year-into-its-turnaround"]),
+  F("Glow Recipe", "創辦人 Sarah Lee、Christine Chang", "North Castle Partners 少數股權", ["https://beautymatter.com/articles/north-castle-takes-a-minority-stake-in-glow-recipe"]),
+  F("Grande Cosmetics"),
+  P("Gucci", "coty", "目前由 Coty 授權經營；L'Oréal 已取得日後的授權"),
+  P("GUERLAIN", "lvmh"),
+  // H
+  F("Hanni"),
+  P("Hanyul", "amore"),
+  F("Harlem Perfume Co."),
+  F("Haus Labs", "歌手 Lady Gaga"),
+  F("Hello Sunday"),
+  F("Henry Rose", "演員 Michelle Pfeiffer"),
+  P("HERMÈS", "hermes"),
+  F("HEVEBLUE"),
+  F("HigherDOSE"),
+  P("Hourglass", "unilever"),
+  F("House of Lashes", "創辦人 Jenn（家族私人公司）", null, ["https://houseoflashes.com/pages/our-story"]),
+  F("HUDA BEAUTY", "創辦人 Huda Kattan"),
+  P("Hugo Boss", "coty", LIC),
+  F("HUNG VANNGO BEAUTY", "化妝師 Hung Vanngo"),
+  F("Hyper Skin", "創辦人 Desiree Verdejo"),
+  // I
+  V("Iconic London", "BlueGem Capital（私募，2018 年收購）", null, ["https://www.bluegemcp.com/news/bluegem-ii-lp-acquires-instagram-native-makeup-brand-iconic-london"]),
+  V("IGK", "Luxury Brand Partners（私人）"),
+  V("ILIA", "Famille C（Clarins 的 Courtin 家族，2022 年收購）", null, ["https://cosmeticsbusiness.com/famille-c-wraps-up-acquisition-of-beauty-brand-ilia--199750"]),
+  F("indē wild"),
+  F("INFLUXIOUS"),
+  F("The INKEY List", "創辦人 Colette Laxton、Mark Curry", "Aria Growth Partners 少數股權", ["https://beautymatter.com/articles/aria-growth-partners-takes-a-minority-stake-in-the-inkey-list"]),
+  F("INNBEAUTY PROJECT", "創辦人 Alisa Metzger、Jen Shane", "有少數股權投資", ["https://www.beautymatter.com/articles/innbeauty-project-lands-minority-investment"]),
+  P("innisfree", "amore"),
+  P("IOPE", "amore"),
+  F("Iris&Romeo", "創辦人 Michele Gough Baril", "True Beauty Ventures 投資", ["https://www.retaildive.com/news/iris-and-romeo-sephora-series-a-true-beauty-ventures/703322/"]),
+  F("ISAMAYA", "化妝師 Isamaya Ffrench"),
+  P("ISDIN", "puig", "Puig 與 Esteve 各持 50% 的合資公司"),
+  F("Isle of Paradise"),
+  P("IT Cosmetics", "loreal"),
+  // J
+  P("Jack Black", "edgewell", "2020 年收購"),
+  P("Jean Paul Gaultier", "puig"),
+  P("JIMMY CHOO", "ipar", LIC),
+  P("Jo Malone London", "el"),
+  F("JOSIE MARAN", "創辦人 Josie Maran"),
+  F("Juicy Couture", "授權經營的香水"),
+  F("Juliette Has a Gun", "創辦人 Romano Ricci"),
+  F("JUNG SAEM MOOL", "韓國化妝師鄭粹美"),
+  V("JVN", "Windsong Global（私人，2024 年收購）", null, ["https://fashionunited.com/news/business/windsong-global-acquires-jvn-hair-and-pipette/2024021558409"]),
+  // K
+  F("K18 Biomimetic Hairscience"),
+  V("Kaja", "Memebox（MBX，私人）", "與 Sephora 共同開發", ["https://www.cosmeticsbusiness.com/sephora-and-memebox-launch-k-beauty-make-up-line-147305"]),
+  F("Kate McLeod"),
+  V("Kate Somerville", "Rare Beauty Brands（私人，2025 年向 Unilever 收購）", null, ["https://www.cosmeticsbusiness.com/unilever-sells-kate-somerville-as-new-owner-promises"]),
+  F("Katini Skin"),
+  F("KAYALI", "創辦人 Mona Kattan"),
+  P("Kenra Professional", "henkel", "2014 年收購"),
+  P("Kérastase", "loreal"),
+  F("Khloé Kardashian Fragrances", "名人 Khloé Kardashian"),
+  P("Kiehl's Since 1851", "loreal"),
+  P("KILIAN Paris", "el"),
+  F("KJH.brand by Katie Jane Hughes", "化妝師 Katie Jane Hughes"),
+  F("KORA Organics", "名人 Miranda Kerr"),
+  F("KORRES"),
+  F("Kosas", "創辦人 Sheena Yaitanes", "有創投投資", ["https://www.beautyindependent.com/kosas-clean-beauty-brand-secures-series-b-funding/"]),
+  F("Kulfi"),
+  V("KVD Beauty", "Windsong Global（私人，向 LVMH 旗下 Kendo 收購）", null, ["https://beautymatter.com/articles/windsong-global-scoops-up-kvd-beauty-from-kendo"]),
+  // L
+  V("L'Occitane", "L'Occitane 集團（2024 年下市，私人）"),
+  P("L'Oréal Professionnel", "loreal"),
+  P("L'Oréal Professionnel Steampod", "loreal"),
+  P("La Mer", "el"),
+  F("Laka", "韓國品牌（私人）"),
+  P("Lancôme", "loreal"),
+  P("LANEIGE", "amore"),
+  F("Laura Geller"),
+  V("Laura Mercier", "Orveon Global（Advent International 私募）"),
+  F("LAWLESS"),
+  F("Lilly Lashes"),
+  F("Lion Pose"),
+  P("Living Proof", "unilever", "2017 年收購", ["https://cosmeticsbusiness.com/unilever-acquires-living-proof-124056"]),
+  F("LIXR Beauty"),
+  F("LORE"),
+  F("LoveShackFancy"),
+  F("Luna Daily"),
+  F("Lux Unfiltered"),
+  F("LYS Beauty"),
+  // M
+  F("m.ph by Mary Phillips", "化妝師 Mary Phillips"),
+  F("ma:nyo", "韓國品牌"),
+  P("MAC Cosmetics", "el"),
+  F("MAED"),
+  F("Maison Louis Marie"),
+  P("Maison Margiela", "loreal", LIC),
+  F("make p:rem", "韓國品牌（私人）"),
+  P("MAKE UP FOR EVER", "lvmh"),
+  F("The Maker", "Fresh 創辦人 Lev Glazman、Alina Roytberg", null, ["https://www.beautyindependent.com/?p=199026"], { status: "已停止電商與批發營運" }),
+  F("MAKEUP BY MARIO", "化妝師 Mario Dedivanovic"),
+  F("Mane"),
+  F("Mango People"),
+  F("manucurist"),
+  F("MARA"),
+  P("Marc Jacobs Beauty", "coty", LIC + "，2026 年重新推出", ["https://jingdaily.com/intels/2026-05/21/marc-jacobs-beauty-returns-with-coty-partnership"]),
+  F("Mario Badescu"),
+  F("MATTER OF FACT"),
+  F("maude"),
+  P("Medik8", "loreal", "2025 年收購", ["https://jingdaily.com/intels/2025-07/03/loreal-buys-color-wow-after-medik8-acquisition"]),
+  F("Melanin Haircare"),
+  F("Melt Cosmetics"),
+  F("MENOKIN", "韓國品牌（私人）"),
+  F("MERIT"),
+  F("Messy by Alli Webb", "Alli Webb（Drybar 創辦人）"),
+  P("Milk Makeup", "wald", "Waldencast 已申請從 Nasdaq 下市並改名 Milk Makeup plc", ["https://fortune.com/2026/10/04/former-loreal-execs-milk-makeup-sales-waldencast/"]),
+  P("Miu Miu", "loreal", LIC),
+  P("Mizani", "loreal"),
+  F("Montale"),
+  P("Montblanc", "ipar", LIC),
+  F("Moon Juice"),
+  F("Moroccanoil", "Carmen Tal、Ofer Tal 夫婦（私人）", null, ["https://en.wikipedia.org/wiki/Moroccanoil"]),
+  F("Mother Science"),
+  P("Mugler", "loreal"),
+  P("Murad", "unilever"),
+  // N
+  P("NARS", "shiseido"),
+  F("NATASHA DENONA", "化妝師 Natasha Denona"),
+  F("Naturally Serious"),
+  F("Nécessaire"),
+  F("NEST New York"),
+  F("Nette"),
+  P("NIOD", "el", "DECIEM 旗下品牌"),
+  V("NUDESTIX", "未具名的美國私人集團（2025 年收購）", "創辦人 Jenny、Ally、Taylor Frankel 母女", ["https://beautymatter.com/articles/canadian-color-brand-nudestix-has-a-new-owner"]),
+  F("NuFACE"),
+  // O
+  F("Obart"),
+  F("Ogee", "創辦人 Mark Rice、Abbott Stark、Alex Stark", "有創投投資", ["https://beautymatter.com/articles/future50-2026-ogee"]),
+  P("Olaplex", "henkel", "2026 年 7 月完成收購，約 14 億美元", ["https://www.henkel-northamerica.com/press/press-releases-and-kits/2026-07-07-henkel-successfully-closes-acquisition-of-premium-hair-care-brand-olaplex-2193832"]),
+  P("OLEHENRIKSEN", "lvmh", "旗下 Kendo 品牌孵化器"),
+  P("OLIVE YOUNG Collection", "cj", "韓國美妝通路 CJ Olive Young 的自有品牌"),
+  F("OLIVIAUMMA"),
+  F("Omnilux"),
+  V("ONE/SIZE by Patrick Starrr", "Luxury Brand Partners 與網紅 Patrick Starrr", null, ["https://www.cosmeticsdesign.com/Article/2020/07/21/LBP-launches-ONE-SIZE-makeup-for-the-underrepresented"]),
+  P("The Ordinary", "el", "DECIEM 旗下品牌"),
+  P("Oribe", "kao"),
+  F("The Original MakeUp Eraser"),
+  P("Origins", "el"),
+  P("OUAI", "pg", "2021 年收購"),
+  F("OUI the People"),
+  V("Ouidad", "Beauty by Imagination（私人）", null, ["https://www.beautyindependent.com/curls-partners-beauty-by-imagination-accelerate-growth/"]),
+  // P
+  F("PAT McGRATH LABS", "化妝師 Pat McGrath", "Eurazeo 投資"),
+  F("PATRICK TA", "化妝師 Patrick Ta"),
+  F("PATTERN by Tracee Ellis Ross", "演員 Tracee Ellis Ross"),
+  V("Paul Mitchell", "John Paul Mitchell Systems（私人）"),
+  P("Paula's Choice", "unilever", "2021 年收購", ["https://www.ta.com/news/unilever-to-acquire-paulas-choice-from-ta-associates/"]),
+  F("Peace Out"),
+  F("Peter Thomas Roth"),
+  F("PHLUR"),
+  F("PHYLA"),
+  F("point of view."),
+  P("Prada", "loreal", LIC),
+  P("Pureology", "loreal"),
+  // R
+  P("Rabanne", "puig"),
+  F("Rahua"),
+  P("Ralph Lauren", "loreal", LIC),
+  F("RANAVAT", "創辦人 Michelle Ranavat"),
+  F("Range Beauty", "創辦人 Alicia Scott", "曾獲《Shark Tank》投資", ["https://www.beautyindependent.com/range-beauty-first-black-woman-owned-makeup-brand-score-shark-tank-deal/"]),
+  F("Rare Beauty by Selena Gomez", "歌手 Selena Gomez（Rare Beauty Brands）", null, ["https://tribune.net.ph/2025/10/27/selena-gomezs-rare-beauty-hits-a-stunning-27-billion-value"], { val: "約 27 億美元（媒體估計，2025 年 10 月）" }),
+  F("REFY"),
+  P("Rejuran", "pharma"),
+  P("rhode", "elf", "2025 年以約 10 億美元收購；創辦人 Hailey Bieber", ["https://puck.news/fashion/2025/5/haileys-bieber-is-selling-rhode-in-1-billion-deal"]),
+  F("RIES"),
+  F("ROSE Ingleton MD", "創辦人 Rose Ingleton 醫師"),
+  F("Rosebud Perfume Co."),
+  F("Rossano Ferretti Parma", "髮型師 Rossano Ferretti"),
+  F("RŌZ"),
+  F("RUHVEDA"),
+  F("Ruka Hair"),
+  // S
+  F("S.NATURE", "韓國品牌（私人）"),
+  F("Saie"),
+  F("Saint Jane"),
+  V("Salt & Stone", "Advent International（私募，2026 年取得多數股權）", null, ["https://finance.yahoo.com/markets/stocks/articles/advent-international-acquires-majority-stake-124800361.html"]),
+  F("Sarah Creal"),
+  P("SEPHORA COLLECTION", "lvmh", "Sephora 自有品牌"),
+  P("Sephora Favorites", "lvmh", "Sephora 的多品牌組合禮盒"),
+  P("SEPHORA The Merch Shop", "lvmh", "Sephora 周邊商品"),
+  F("Shani Darden Skin Care", "創辦人 Shani Darden"),
+  P("Shark Beauty", "shark"),
+  F("SHAZ & KIKS"),
+  P("Shiseido", "shiseido"),
+  P("shu uemura", "loreal"),
+  F("Sienna Naturals"),
+  F("SIMIHAZE BEAUTY"),
+  F("Sincerely Yours"),
+  P("SK-II", "pg"),
+  F("Skinfix", "創辦人 Amy Gordinier", "Stride Consumer Partners 少數股權", ["https://www.beautymatter.com/articles/skinfix-lands-minority-investment-from-stride-consumer-partners"]),
+  P("Skylar", "starco", "2023 年收購；創辦人 Cat Chen", ["https://fashionunited.com/news/business/starco-brands-to-acquire-clean-beauty-brand-skylar/2023010951559"]),
+  F("Slip"),
+  F("Smile Makers"),
+  F("SOFIE PAVITT FACE"),
+  F("Soft Services"),
+  V("Sol de Janeiro", "L'Occitane 集團（私人）"),
+  P("St. Tropez", "pzc", "PZ Cussons 2025 年曾試圖出售，後決定保留", ["https://cosmeticsbusiness.com/pz-cussons-uturns-st-tropez-sale-new-strategic-plan"]),
+  F("THE STEAM BAR"),
+  F("stila"),
+  F("Stripes", "演員 Naomi Watts"),
+  V("StriVectin", "Crown Laboratories（私人）"),
+  P("Sulwhasoo", "amore"),
+  F("Summer Fridays", "創辦人 Marianna Hewitt、Lauren Ireland", "TSG Consumer Partners 投資"),
+  F("SUNDAY II SUNDAY"),
+  F("Sunday Riley", "創辦人 Sunday Riley"),
+  F("SUNGBOON EDITOR", "韓國品牌（私人）"),
+  V("Supergoop!", "Blackstone（私募，2021 年取得多數股權）"),
+  F("superzero"),
+  // T
+  F("T3", "創辦人 Julie Chung、Kent Yu（100% 持有）", null, ["https://www.glossy.co/beauty/t3-founders-dr-julie-chung-and-kent-yu-on-creating-the-luxury-hair-tool-category-plus-news/"]),
+  F("Tabu"),
+  P("tarte", "kose"),
+  F("Tata Harper", "創辦人 Tata Harper"),
+  P("Tatcha", "unilever"),
+  F("Then I Met You", "Soko Glam 創辦人 Charlotte Cho"),
+  V("Therabody", "Therabody（私人）"),
+  F("THOME"),
+  P("TOM FORD", "el", "2023 年收購 Tom Ford 品牌"),
+  P("Too Faced", "el"),
+  F("Topicals", "創辦人 Olamide Olowe"),
+  F("Torriden", "韓國品牌（私人）"),
+  P("Touchland", "chd", "2025 年以最高 8.8 億美元收購", ["https://www.personalcareinsights.com/news/church-dwight-touchland-acquisition-880m.html"]),
+  F("Tower 28 Beauty", "創辦人 Amy Liu"),
+  V("TWEEZERMAN", "Zwilling（私人）"),
+  // U
+  F("U Beauty", "創辦人 Tina Craig"),
+  F("Ultra Violette", "創辦人 Rebecca Jefferd、Ava Chen", "Aria Growth Partners 少數股權", ["https://www.beautyindependent.com/aria-growth-partners-australian-sun-care-brand-ultra-violette-north-american-expansion/"]),
+  F("UNITE Hair"),
+  F("UNOVE", "韓國品牌（私人）"),
+  P("Urban Decay", "loreal"),
+  // V
+  F("Vacation"),
+  P("Valentino", "loreal", LIC, ["https://fashionunited.in/news/fashion/l-oreal-signs-worldwide-license-agreement-with-valentino/2018052817755"]),
+  V("Vegamour", "Belle Brands（Windsong Global 旗下，私人）", null, ["https://www.globalcosmeticsnews.com/belle-brands-acquires-hair-wellness-brand-vegamour/"]),
+  F("Velour Lashes", "創辦人 Mabel Lee"),
+  F("Verb"),
+  V("Versace", "Euroitalia（私人，授權經營香水）", "Versace 時尚品牌 2025 年已由 Prada 集團收購"),
+  P("Viktor&Rolf", "loreal"),
+  F("VIOLETTE_FR", "化妝師 Violette Serrat"),
+  F("Viori"),
+  V("Virtue", "Combe（私人，2020 年取得多數股權）", null, ["https://www.businesswire.com/news/home/20201201006137/en/Combe-Inc.-Announces-Majority-Investment-in-Prestige-Hair-Care-Brand-Virtue-Labs"]),
+  F("VOLUSPA"),
+  // W
+  V("Wander Beauty", "Nameless CPG（私人）", null, ["https://beautymatter.com/articles/nameless-cpg-buys-wander-beauty"]),
+  F("WELLAGE", "韓國品牌（私人）"),
+  F("Westman Atelier", "化妝師 Gucci Westman"),
+  F("Whipped"),
+  F("Wonderskin"),
+  F("World of Chris Collins", "創辦人 Chris Collins"),
+  // Y
+  F("Yepoda"),
+  F("YISE Beauty", "名人 Molly Sims", "推測為 Molly Sims 的 YSE Beauty（L Catterton 等投資）", ["https://www.beautymatter.com/articles/molly-sims-yse-beauty-closes-15-million-funding"]),
+  P("Youth To The People", "loreal", "2023 年收購"),
+  P("Yves Saint Laurent", "loreal", LIC),
+  // #
+  F("5 SENS"),
+  F("54 Thrones"),
+  F("The 7 Virtues")
+];
+
+// 百分位：在表中上市母公司之間的位置（0 = 最小，100 = 最大）
+const pubKeys = Object.keys(PARENTS).filter(k => PARENTS[k].cap != null).sort((a, b) => PARENTS[a].cap - PARENTS[b].cap);
+pubKeys.forEach((k, i) => { PARENTS[k].pr = Math.round(i / (pubKeys.length - 1) * 100); });
+
+const fmtCap = v => v >= 1 ? "$" + v.toFixed(1) + "B" : "$" + Math.round(v * 1000) + "M";
+const OWN = { public: "上市集團", private: "私人公司", founder: "創辦人／獨立品牌" };
+let bstate = { q: "", own: "all", sort: "cap" };
+
+function hasEvents(name) {
+  const q = norm(name);
+  return EVENTS.some(ev => match(ev, q).ok);
+}
+
+function renderGroups() {
+  const q = norm(bstate.q);
+  let rows = BRANDS.filter(b => {
+    if (bstate.own !== "all" && b.own !== bstate.own) return false;
+    if (!q) return true;
+    const p = b.p ? PARENTS[b.p] : null;
+    return [b.n, b.who, b.note, b.status, p && p.name, p && p.ticker].some(t => norm(t).includes(q));
+  });
+  rows.sort((a, b) => {
+    if (bstate.sort === "cap") {
+      const ca = a.p ? (PARENTS[a.p].cap ?? 0) : -1, cb = b.p ? (PARENTS[b.p].cap ?? 0) : -1;
+      if (ca !== cb) return cb - ca;
+    }
+    return a.n.localeCompare(b.n, "en", { sensitivity: "base" });
+  });
+
+  $("#bcount").textContent = "顯示 " + rows.length + " / " + BRANDS.length + " 個品牌";
+  if (!rows.length) {
+    $("#groups").innerHTML = '<tr><td colspan="4" class="tempty">找不到符合的品牌。</td></tr>';
+    return;
+  }
+  $("#groups").innerHTML = rows.map(b => {
+    const p = b.p ? PARENTS[b.p] : null;
+    // 品牌本身有事件就搜品牌；否則若母集團有事件，就搜母集團
+    const gk = b.p && GROUPS[b.p] ? b.p : null;
+    const term = hasEvents(b.n) ? b.n : (gk && hasEvents(GROUPS[gk].en) ? GROUPS[gk].en : null);
+    const name = term
+      ? '<button type="button" class="blink" data-q="' + esc(term) + '">' + esc(b.n) + '</button>'
+      : '<span class="bname">' + esc(b.n) + '</span>';
+    const who = p
+      ? '<span class="pname">' + esc(p.name) + '</span> <span class="tick">' + esc(p.ticker) + '</span>' + (b.who ? '<div class="sub2">' + esc(b.who) + '</div>' : "")
+      : '<span class="pname">' + esc(b.who) + '</span>';
+    const extra = [b.note ? '<div class="sub2">' + esc(b.note) + '</div>' : "",
+      b.status ? '<span class="flag">' + esc(b.status) + '</span>' : "",
+      b.src.length ? '<div class="sub2 srcs">' + b.src.map((u, i) => '<a href="' + esc(u) + '" target="_blank" rel="noopener">來源' + (b.src.length > 1 ? i + 1 : "") + '</a>').join(" ") + '</div>' : ""].join("");
+    return '<tr>' +
+      '<td class="c-brand">' + name + '<div class="own own-' + b.own + '">' + OWN[b.own] + '</div></td>' +
+      '<td class="c-who">' + who + extra + '</td>' +
+      '<td class="num" data-label="母公司市值">' + (p ? (p.cap != null ? fmtCap(p.cap) + (p.d ? '<div class="na asof">' + esc(p.d) + '</div>' : '') : '<span class="na">未取得</span>') : '<span class="na">非上市</span>') + '</td>' +
+      '<td class="num" data-label="百分位">' + (p && p.pr != null ? '<span class="pr"><i style="width:' + p.pr + '%"></i></span>' + p.pr : '<span class="na">—</span>') + '</td>' +
+      '</tr>';
+  }).join("");
+}
+
+function renderSummary() {
+  const counts = { public: 0, private: 0, founder: 0 };
+  BRANDS.forEach(b => counts[b.own]++);
+  const byParent = {};
+  BRANDS.forEach(b => { if (b.p) byParent[b.p] = (byParent[b.p] || 0) + 1; });
+  $("#npub").textContent = pubKeys.length;
+  document.querySelector(".capbox summary").textContent = "上市母公司市值比較（" + pubKeys.length + " 家）";
+  $("#bsum").innerHTML =
+    '<div class="bars" aria-label="上市母公司市值比較">' +
+    pubKeys.slice().reverse().map(k => {
+      const p = PARENTS[k], w = Math.max(p.cap / PARENTS[pubKeys[pubKeys.length - 1]].cap * 100, 0.6);
+      return '<div class="bar"><span class="bl-name">' + esc(p.name) + '</span><span class="bl-track"><i style="width:' + w.toFixed(1) + '%"></i></span><span class="bl-val">' + fmtCap(p.cap) + '<small>' + (byParent[k] || 0) + ' 個品牌</small></span></div>';
+    }).join("") + '</div>';
+}
+
+function bsync() {
+  document.querySelectorAll(".chip[data-own]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.own === bstate.own)));
+  renderGroups();
+}
+$("#bq").addEventListener("input", e => { bstate.q = e.target.value; renderGroups(); });
+$("#bsort").addEventListener("change", e => { bstate.sort = e.target.value; renderGroups(); });
+document.querySelectorAll(".chip[data-own]").forEach(c => c.addEventListener("click", () => { bstate.own = c.dataset.own; bsync(); }));
+renderSummary();
+
+function bindGroups() {
+  $("#groups").addEventListener("click", e => {
+    const b = e.target.closest("button[data-q]");
+    if (!b) return;
+    const term = b.dataset.q;
+    state.q = term; state.cat = "all"; state.ext = true;
+    $("#q").value = term; sync(); setTab("events");
+    window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+}
+
+const TABS = ["groups", "events"];
+function setTab(name, focus) {
+  if (!TABS.includes(name)) name = "groups";
+  document.querySelectorAll(".tab").forEach(t => {
+    const on = t.dataset.tab === name;
+    t.setAttribute("aria-selected", String(on));
+    t.tabIndex = on ? 0 : -1;
+    if (on && focus) t.focus();
+  });
+  TABS.forEach(n => { $("#panel-" + n).hidden = n !== name; });
+  $("#events-bar").hidden = name !== "events";
+  try { history.replaceState(null, "", "#" + name); } catch (e) {}
+}
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => setTab(t.dataset.tab));
+  t.addEventListener("keydown", e => {
+    const i = TABS.indexOf(t.dataset.tab);
+    if (e.key === "ArrowRight") { e.preventDefault(); setTab(TABS[(i + 1) % TABS.length], true); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); setTab(TABS[(i + TABS.length - 1) % TABS.length], true); }
+  });
+});
+setTab((location.hash || "").slice(1));
+
+$("#q").addEventListener("input", e => { state.q = e.target.value; render(); });
+$("#clear").addEventListener("click", () => { state.q = ""; $("#q").value = ""; render(); $("#q").focus(); });
+document.querySelectorAll(".chip[data-cat]").forEach(c => c.addEventListener("click", () => { state.cat = c.dataset.cat; sync(); }));
+$("#ext").addEventListener("change", e => { state.ext = e.target.checked; sync(); });
+renderGroups();
+bindGroups();
+sync();
+</script>
+
+</body>
+</html>
