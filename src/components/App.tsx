@@ -261,8 +261,7 @@ function RecipeView({ recipe, scale, onScaleChange, onBack, onEdit, onDelete, se
 
           {/* Tags */}
           {Object.entries(recipe.tags || {}).some(([,v]) => v?.length) && (
-            <div className={styles.sectionBlock}>
-              <div className={styles.sectionTitle}><TagIcon /> 標籤</div>
+            <div className={styles.tagBlock}>
               {Object.entries(recipe.tags || {}).map(([type, vals]) =>
                 vals?.length ? (
                   <div key={type} className={styles.tagGroupRow}>
@@ -275,6 +274,7 @@ function RecipeView({ recipe, scale, onScaleChange, onBack, onEdit, onDelete, se
           )}
 
           <div className={styles.servingScaler}>
+            <span className={styles.servingLabel}>份量</span>
             <button type="button" className={styles.servingBtn} aria-label="減少份量" onClick={() => changeScale(-1)}>−</button>
             <span>{displayServings} 人份</span>
             <button type="button" className={styles.servingBtn} aria-label="增加份量" onClick={() => changeScale(1)}>＋</button>
@@ -444,8 +444,6 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
     <div>
       <div className={styles.subbar}>
         <div className={styles.subbarTitle}>{isEdit ? '編輯食譜' : '新增食譜'}</div>
-        <button type="button" className={`${styles.btn} ${styles.btnSm}`} onClick={onCancel}>取消</button>
-        <button type="button" className={`${styles.btn} ${styles.btnSm} ${styles.btnPrimary}`} onClick={() => onSave(r)}><CheckIcon /> 儲存</button>
       </div>
         <div className={styles.card}>
 
@@ -508,7 +506,7 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
                           <button key={di}
                             className={`${styles.detectedIngChip} ${alreadyAdded ? styles.detectedIngChipAdded : ''}`}
                             onClick={() => !alreadyAdded && addDetectedIng(ing)}>
-                            {alreadyAdded ? '✓ ' : ''}{ing.name}{ing.amount ? ` ${ing.amount}${ing.unit}` : ''}
+                            {ing.name}{ing.amount ? ` ${ing.amount}${ing.unit}` : ''}
                           </button>
                         )
                       })}
@@ -535,7 +533,7 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
                       <button key={name}
                         className={`${styles.commonIngChip} ${added ? styles.commonIngChipAdded : ''}`}
                         onClick={() => !added && addIngByName(cat, name)}>
-                        {added ? '✓' : '+'} {name}
+                        {added ? name : `+ ${name}`}
                       </button>
                     )
                   })}
@@ -579,6 +577,10 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
               onChange={e => setField('note', e.target.value)} style={{minHeight:180}} />
           </div>
 
+        </div>
+        <div className={styles.formActions}>
+          <button type="button" className={styles.btn} onClick={onCancel}>取消</button>
+          <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => onSave(r)}>儲存</button>
         </div>
     </div>
   )
