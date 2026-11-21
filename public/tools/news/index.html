@@ -40,7 +40,7 @@
   .header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .header-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 750; font-size: clamp(30px, 6vw, 44px); line-height: 1.2; letter-spacing: .01em; color: var(--text-primary); min-width: 0; }
   .header-text { min-width: 0; }
-  .article-count { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-secondary); margin-top: 2px; }
+  .article-count { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-secondary); } /* 已讀／總數，放在 Feed 分頁旁 */
   .article-count:empty { display: none; }
   @media (max-width: 420px) { .shuffle-btn .btn-label { display: none; } .shuffle-btn { padding: 4px 9px; } } /* 窄螢幕只顯示圖示 */
 
@@ -194,7 +194,6 @@
   <div class="header-row">
     <div class="header-text">
       <h1 class="header-title">newsfeed</h1>
-      <div id="article-count" class="article-count"></div>
     </div>
     <div class="header-buttons">
       <button class="shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle" aria-label="Shuffle">
@@ -209,7 +208,7 @@
   </div>
 </div></header>
 <nav class="tabs-bar" aria-label="newsfeed 分頁"><div class="wrap tabs">
-    <button class="tab active" onclick="showTab('feed')">Feed</button>
+    <button class="tab active" onclick="showTab('feed')">Feed <span id="article-count" class="article-count"></span></button>
     <button class="tab" onclick="showTab('keep')">Keep <span id="keep-count" class="cnt"></span></button>
     <button class="tab" onclick="showTab('revisit')">Revisit <span id="revisit-count" class="cnt"></span></button>
 </div></nav>
