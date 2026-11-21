@@ -19,7 +19,7 @@ export default function Page() {
           <small>收藏、搜尋與調整份量</small>
         </Link>
         <Link href="/news/" className="tool-card tool-news">
-          <span className="tool-icon tool-icon-news"><ToolIcon kind="news" size={32} /></span><span>newsfeed</span>
+          <span className="tool-icon tool-icon-news"><ToolIcon kind="news" size={32} /></span><span className="tool-title-playfair">newsfeed</span>
           <small>閱讀、保留與稍後查看</small>
         </Link>
       </div>

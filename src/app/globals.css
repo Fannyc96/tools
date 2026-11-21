@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:wght@400..900&display=swap');
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -51,11 +51,12 @@ body {
 .nav-icon-symbol { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 10px; }
 
 .home-page { max-width: 900px; margin: 0 auto; padding: 13vh 24px 90px; }
-.home-page h1 { font: 500 clamp(48px,9vw,78px)/1 'Playfair Display', Georgia, serif; letter-spacing: -.045em; }
+.home-page h1 { font: 750 clamp(48px,9vw,78px)/1 'Playfair Display', Georgia, serif; letter-spacing: -.045em; }
 .tool-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 42px; }
 .tool-card { min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px; border-radius: 22px; text-decoration: none; border: 1px solid rgba(0,0,0,.06); box-shadow: 0 12px 35px rgba(30,50,70,.08); transition: transform .18s ease, box-shadow .18s ease; }
 .tool-card:hover { transform: translateY(-4px); box-shadow: 0 18px 42px rgba(30,50,70,.14); }
 .tool-card > span:not(.tool-icon) { font: 800 23px/1.2 var(--font-display); }
+.tool-card > span.tool-title-playfair { font-family: 'Playfair Display', Georgia, serif; font-weight: 750; } /* newsfeed 卡片與其頁首同字型 */
 .tool-card small { margin-top: 7px; color: rgba(20,35,50,.64); }
 .tool-icon { margin-bottom: auto; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 13px; color: var(--accent); }
 /* 卡片顏色依位置輪替：藍、白、黃 */
