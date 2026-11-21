@@ -53,13 +53,13 @@ body {
 button { font-family: inherit; }
 
 .wrap {
-  max-width: 640px; margin: 0 auto;
+  max-width: 880px; margin: 0 auto; /* 與美妝避雷針同寬 */
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
 /* ── Header ── */
-.hdr { padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: 14px; }
+.hdr { padding-top: max(46px, env(safe-area-inset-top)); padding-bottom: 16px; } /* 留白比照美妝避雷針 */
 .hdr-title {
   font-family: var(--f-display);
   font-weight: 800;
@@ -107,7 +107,7 @@ button { font-family: inherit; }
 .tab.active .cnt { background: var(--brown); color: #fff; }
 
 /* ── Main ── */
-.main { padding-top: 14px; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+.main { padding-top: 36px; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
 
 /* ── Category card ── */
 .cat-card {
