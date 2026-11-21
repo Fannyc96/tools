@@ -5,14 +5,8 @@ import { Recipe, AppSettings, Ingredient, RecipeUrl } from '@/types'
 import styles from './App.module.css'
 
 // ── SVG Line Icons ──
-const BookIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-const HeartIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-const ClockIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
 const SearchIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-const SettingsIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-const MenuIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
 const ChevronLeftIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-const FavHeartIcon = ({ filled }: { filled: boolean }) => <svg width="17" height="17" viewBox="0 0 24 24" fill={filled ? '#E24B4A' : 'none'} stroke={filled ? '#E24B4A' : 'currentColor'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
 const LinkIcon = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
 const PencilIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
 const TrashIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
@@ -45,25 +39,29 @@ const DEFAULT_SETTINGS: AppSettings = {
   },
 }
 
-type View = 'list' | 'favorites' | 'search' | 'settings'
+type View = 'search' | 'list' | 'settings'
+
+const TABS: { v: View; label: string }[] = [
+  { v: 'search', label: '搜尋' },
+  { v: 'list', label: '所有食譜' },
+  { v: 'settings', label: '設定' },
+]
+
+const EMPTY_SEARCH = { query: '', ingredients: [] as string[], tagFilters: {} as Record<string,string[]>, mode: 'OR' as 'OR'|'AND' }
+export type SearchState = typeof EMPTY_SEARCH
 
 export default function App() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS)
   const [loading, setLoading] = useState(true)
-  const [view, setView] = useState<View>('list')
+  const [view, setView] = useState<View>('search')
   const [currentId, setCurrentId] = useState<number | null>(null)
   const [editRecipe, setEditRecipe] = useState<Recipe | null>(null)
   const [scales, setScales] = useState<Record<number, number>>({})
   const [toast, setToast] = useState<{ msg: string; undoId?: number } | null>(null)
   const [deletedRecipes, setDeletedRecipes] = useState<Recipe[]>([])
   const [confirmDelete, setConfirmDelete] = useState<Recipe | null>(null)
-  const [searchState, setSearchState] = useState({
-    query: '', ingredients: [] as string[], tagFilters: {} as Record<string,string[]>, mode: 'OR' as 'OR'|'AND', favOnly: false
-  })
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
+  const [searchState, setSearchState] = useState<SearchState>(EMPTY_SEARCH)
 
   // ── Data loading ──
   const loadData = useCallback(async () => {
@@ -86,14 +84,23 @@ export default function App() {
     return () => clearTimeout(t)
   }, [toast])
 
-  // ── Recipe CRUD ──
-  const openRecipe = (id: number) => {
-    setCurrentId(id)
-    setEditRecipe(null)
-    setSidebarOpen(false)
-    if (view === 'search') setView('list')
+  const toTop = () => window.scrollTo(0, 0)
+
+  // ── Navigation ──
+  const goTab = (v: View) => { setView(v); setEditRecipe(null); setCurrentId(null); toTop() }
+  const openRecipe = (id: number) => { setCurrentId(id); setEditRecipe(null); toTop() }
+  const startNew = () => {
+    setEditRecipe({
+      id: 0, name: '', servings: 2, favorite: false, last_used: null,
+      tags: {}, ingredients: Object.fromEntries(settings.ingredient_categories.map(c=>[c,[]])),
+      urls: [], note: ''
+    })
+    setCurrentId(null)
+    if (view === 'settings') setView('list')
+    toTop()
   }
 
+  // ── Recipe CRUD ──
   const saveRecipe = async (r: Recipe) => {
     if (!r.name.trim()) { setToast({ msg: '請填寫食譜名稱' }); return }
     if (r.id && recipes.find(x => x.id === r.id)) {
@@ -106,6 +113,7 @@ export default function App() {
     }
     setEditRecipe(null)
     setToast({ msg: '已儲存' })
+    toTop()
   }
 
   const deleteRecipe = async (r: Recipe) => {
@@ -130,13 +138,6 @@ export default function App() {
     }
   }
 
-  const toggleFav = async (id: number) => {
-    const r = recipes.find(x => x.id === id)
-    if (!r) return
-    await supabase.from('recipes').update({ favorite: !r.favorite }).eq('id', id)
-    setRecipes(prev => prev.map(x => x.id === id ? { ...x, favorite: !x.favorite } : x))
-  }
-
   // ── Settings CRUD ──
   const saveSettings = async (next: AppSettings) => {
     setSettings(next)
@@ -145,87 +146,48 @@ export default function App() {
 
   const currentRecipe = recipes.find(r => r.id === currentId) || null
 
-  if (loading) return (
-    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:'var(--text3)', fontFamily:'var(--font-body)' }}>
-      載入中…
-    </div>
-  )
-
   return (
     <div className={styles.app}>
-      {sidebarOpen && <div className={styles.sidebarOverlay} onClick={() => setSidebarOpen(false)} />}
-      {!sidebarOpen && (
-        <div className={styles.edgeSwipeZone}
-          onTouchStart={e => { touchStartX.current = e.touches[0].clientX; touchStartY.current = e.touches[0].clientY }}
-          onTouchEnd={e => {
-            const dx = e.changedTouches[0].clientX - touchStartX.current
-            const dy = Math.abs(e.changedTouches[0].clientY - touchStartY.current)
-            if (dx > 50 && dy < 80) setSidebarOpen(true)
-          }}
-        />
-      )}
-      {/* SIDEBAR */}
-      <aside className={`${styles.sidebar} ${sidebarOpen ? '' : styles.sidebarCollapsed}`}
-        onTouchStart={e => { touchStartX.current = e.touches[0].clientX; touchStartY.current = e.touches[0].clientY }}
-        onTouchEnd={e => {
-          const dx = e.changedTouches[0].clientX - touchStartX.current
-          const dy = Math.abs(e.changedTouches[0].clientY - touchStartY.current)
-          if (dx < -50 && dy < 80) setSidebarOpen(false)
-        }}
-      >
-        <div className={styles.sidebarHeader}>
-          <div className={styles.sidebarTitle}>食譜本</div>
-          <button className={styles.sidebarToggleBtn} onClick={() => setSidebarOpen(false)} title="收合側欄">
-            <ChevronLeftIcon />
-          </button>
+      <header className={styles.hdr}><div className={styles.wrap}>
+        <h1 className={styles.hdrTitle}>食譜本</h1>
+        <div className={styles.hdrActions}>
+          <button type="button" className={styles.hbtn} onClick={startNew}><PlusIcon /> 新增</button>
         </div>
-        <nav className={styles.sidebarNav}>
-          {([
-            { v: 'list', label: '所有食譜', icon: <BookIcon /> },
-            { v: 'favorites', label: '我的最愛', icon: <HeartIcon /> },
-            { v: 'search', label: '搜尋', icon: <SearchIcon /> },
-          ] as { v: View; label: string; icon: React.ReactNode }[]).map(({ v, label, icon }) => (
-            <button key={v} className={`${styles.navItem} ${view===v?styles.navActive:''}`} onClick={() => { setView(v); setEditRecipe(null); setCurrentId(null); setSidebarOpen(false) }}>
-              <span className={styles.navIcon}>{icon}</span>
-              {label}
-            </button>
-          ))}
-          <div className={styles.divider} />
-          <button className={`${styles.navItem} ${view==='settings'?styles.navActive:''}`} onClick={() => { setView('settings'); setEditRecipe(null); setSidebarOpen(false) }}>
-            <span className={styles.navIcon}><SettingsIcon /></span> 設定
-          </button>
-        </nav>
-        <button className={styles.addBtn} onClick={() => {
-          setSidebarOpen(false)
-          const blank: Recipe = {
-            id: 0, name: '', servings: 2, favorite: false, last_used: null,
-            tags: {}, ingredients: Object.fromEntries(settings.ingredient_categories.map(c=>[c,[]])),
-            urls: [], note: ''
-          }
-          setEditRecipe(blank)
-          setCurrentId(null)
-          setView('list')
-        }}>＋ 新增食譜</button>
-        <div className={styles.recipeList}>
-          {recipes.map(r => (
-            <button key={r.id} className={`${styles.recipeItem} ${currentId===r.id?styles.recipeItemActive:''}`} onClick={() => openRecipe(r.id)}>
-              <div className={styles.recipeItemName}>{r.name}</div>
-            </button>
-          ))}
-        </div>
-      </aside>
+      </div></header>
 
-      {/* MAIN */}
-      <main className={styles.main}>
-        {editRecipe ? (
+      <nav className={styles.tabsBar} aria-label="食譜本分頁">
+        <div className={`${styles.wrap} ${styles.tabs}`}>
+          {TABS.map(t => (
+            <button key={t.v} type="button" className={`${styles.tab} ${view===t.v ? styles.tabActive : ''}`}
+              aria-current={view===t.v ? 'page' : undefined} onClick={() => goTab(t.v)}>
+              {t.label}{t.v === 'list' && !loading && <span className={styles.cnt}>{recipes.length}</span>}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <main className={`${styles.wrap} ${styles.main}`}>
+        {loading ? (
+          <div className={styles.hint}>載入中…</div>
+        ) : editRecipe ? (
           <RecipeForm
             recipe={editRecipe}
             settings={settings}
             onSave={saveRecipe}
-            onCancel={() => { setEditRecipe(null); if(currentId) openRecipe(currentId) }}
+            onCancel={() => { setEditRecipe(null); toTop() }}
           />
         ) : view === 'settings' ? (
           <SettingsPanel settings={settings} onSave={saveSettings} />
+        ) : currentRecipe ? (
+          <RecipeView
+            recipe={currentRecipe}
+            scale={scales[currentRecipe.id] || 1}
+            onScaleChange={(s) => setScales(prev => ({ ...prev, [currentRecipe.id]: s }))}
+            onBack={() => { setCurrentId(null); toTop() }}
+            onEdit={() => { setEditRecipe(JSON.parse(JSON.stringify(currentRecipe))); toTop() }}
+            onDelete={() => setConfirmDelete(currentRecipe)}
+            settings={settings}
+          />
         ) : view === 'search' ? (
           <SearchPanel
             recipes={recipes}
@@ -234,21 +196,8 @@ export default function App() {
             onSearchChange={setSearchState}
             onOpen={openRecipe}
           />
-        ) : currentRecipe ? (
-          <RecipeView
-            recipe={currentRecipe}
-            scale={scales[currentRecipe.id] || 1}
-            onScaleChange={(s) => setScales(prev => ({ ...prev, [currentRecipe.id]: s }))}
-            onEdit={() => setEditRecipe(JSON.parse(JSON.stringify(currentRecipe)))}
-            onDelete={() => setConfirmDelete(currentRecipe)}
-            onToggleFav={() => toggleFav(currentRecipe.id)}
-            settings={settings}
-          />
         ) : (
-          <RecipeGrid
-            recipes={view === 'favorites' ? recipes.filter(r => r.favorite) : recipes}
-            onOpen={openRecipe}
-          />
+          <RecipeGrid recipes={recipes} onOpen={openRecipe} />
         )}
       </main>
 
@@ -275,13 +224,6 @@ export default function App() {
           )}
         </div>
       )}
-
-      {/* SIDEBAR OPEN BUTTON */}
-      {!sidebarOpen && (
-        <button className={styles.sidebarOpenBtn} onClick={() => setSidebarOpen(true)} title="展開側欄">
-          <MenuIcon />
-        </button>
-      )}
     </div>
   )
 }
@@ -289,9 +231,9 @@ export default function App() {
 // ──────────────────────────────────────────────
 // RECIPE VIEW
 // ──────────────────────────────────────────────
-function RecipeView({ recipe, scale, onScaleChange, onEdit, onDelete, onToggleFav, settings }: {
+function RecipeView({ recipe, scale, onScaleChange, onBack, onEdit, onDelete, settings }: {
   recipe: Recipe, scale: number, onScaleChange: (s:number)=>void,
-  onEdit: ()=>void, onDelete: ()=>void, onToggleFav: ()=>void, settings: AppSettings
+  onBack: ()=>void, onEdit: ()=>void, onDelete: ()=>void, settings: AppSettings
 }) {
   const displayServings = Math.round(recipe.servings * scale)
 
@@ -308,21 +250,19 @@ function RecipeView({ recipe, scale, onScaleChange, onEdit, onDelete, onToggleFa
 
   return (
     <div>
-      <div className={styles.topbar}>
-        <div className={styles.topbarTitle}>{recipe.name}</div>
-        <button className={styles.btn} onClick={onEdit}><PencilIcon /> 編輯</button>
-        <button className={`${styles.btn} ${styles.btnDanger}`} onClick={onDelete}><TrashIcon /> 刪除</button>
+      <div className={styles.subbar}>
+        <button type="button" className={styles.backBtn} onClick={onBack}><ChevronLeftIcon /> 返回</button>
+        <span className={styles.spacer} />
+        <button type="button" className={`${styles.btn} ${styles.btnSm}`} onClick={onEdit}><PencilIcon /> 編輯</button>
+        <button type="button" className={`${styles.btn} ${styles.btnSm} ${styles.btnDanger}`} onClick={onDelete}><TrashIcon /> 刪除</button>
       </div>
-      <div className={styles.content}>
         <div className={styles.card}>
-          <div className={styles.recipeHeader}>
-            <h1 className={styles.recipeName}>{recipe.name}</h1>
-          </div>
+          <h2 className={styles.recipeName}>{recipe.name}</h2>
 
           {/* Tags */}
           {Object.entries(recipe.tags || {}).some(([,v]) => v?.length) && (
             <div className={styles.sectionBlock}>
-              <div className={styles.sectionTitle}>Tags</div>
+              <div className={styles.sectionTitle}><TagIcon /> 標籤</div>
               {Object.entries(recipe.tags || {}).map(([type, vals]) =>
                 vals?.length ? (
                   <div key={type} className={styles.tagGroupRow}>
@@ -335,13 +275,10 @@ function RecipeView({ recipe, scale, onScaleChange, onEdit, onDelete, onToggleFa
           )}
 
           <div className={styles.servingScaler}>
-            <button className={styles.servingBtn} onClick={() => changeScale(-1)}>−</button>
+            <button type="button" className={styles.servingBtn} aria-label="減少份量" onClick={() => changeScale(-1)}>−</button>
             <span>{displayServings} 人份</span>
-            <button className={styles.servingBtn} onClick={() => changeScale(1)}>＋</button>
+            <button type="button" className={styles.servingBtn} aria-label="增加份量" onClick={() => changeScale(1)}>＋</button>
             {scale !== 1 && <button className={styles.resetLink} onClick={() => onScaleChange(1)}>重設</button>}
-            <button className={styles.favBtn} onClick={onToggleFav} title={recipe.favorite ? '取消最愛' : '加入最愛'}>
-              <FavHeartIcon filled={recipe.favorite} />
-            </button>
           </div>
 
           {(recipe.urls || []).length > 0 && (
@@ -388,7 +325,6 @@ function RecipeView({ recipe, scale, onScaleChange, onEdit, onDelete, onToggleFa
             </div>
           )}
         </div>
-      </div>
     </div>
   )
 }
@@ -506,12 +442,11 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
 
   return (
     <div>
-      <div className={styles.topbar}>
-        <div className={styles.topbarTitle}>{isEdit ? '編輯食譜' : '新增食譜'}</div>
-        <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => onSave(r)}>✓ 儲存</button>
-        <button className={styles.btn} onClick={onCancel}>✕ 取消</button>
+      <div className={styles.subbar}>
+        <div className={styles.subbarTitle}>{isEdit ? '編輯食譜' : '新增食譜'}</div>
+        <button type="button" className={`${styles.btn} ${styles.btnSm}`} onClick={onCancel}>取消</button>
+        <button type="button" className={`${styles.btn} ${styles.btnSm} ${styles.btnPrimary}`} onClick={() => onSave(r)}><CheckIcon /> 儲存</button>
       </div>
-      <div className={styles.content}>
         <div className={styles.card}>
 
           {/* BASIC */}
@@ -520,24 +455,17 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
             <label className={styles.formLabel}>食譜名稱 *</label>
             <input className={styles.formInput} value={r.name} placeholder="例：番茄炒蛋" onChange={e => setField('name', e.target.value)} />
           </div>
-          <div style={{display:'flex',gap:16,alignItems:'flex-end',flexWrap:'wrap'}}>
-            <div className={styles.formSection} style={{maxWidth:180}}>
-              <label className={styles.formLabel}>基準份量（人份）</label>
-              <select className={styles.formSelect} value={r.servings} onChange={e => setField('servings', parseInt(e.target.value))}>
-                {[1,2,3,4,5,6,7,8,10,12].map(n => <option key={n} value={n}>{n} 人份</option>)}
-              </select>
-            </div>
-            <div className={styles.formSection}>
-              <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:13,color:'var(--text2)'}}>
-                <input type="checkbox" checked={r.favorite} onChange={e => setField('favorite', e.target.checked)} /> 加入最愛
-              </label>
-            </div>
+          <div className={styles.formSection} style={{maxWidth:180}}>
+            <label className={styles.formLabel}>基準份量（人份）</label>
+            <select className={styles.formSelect} value={r.servings} onChange={e => setField('servings', parseInt(e.target.value))}>
+              {[1,2,3,4,5,6,7,8,10,12].map(n => <option key={n} value={n}>{n} 人份</option>)}
+            </select>
           </div>
 
           <div className={styles.formSectionGap} />
 
           {/* TAGS */}
-          <div className={styles.formSectionHeader}>Tags</div>
+          <div className={styles.formSectionHeader}>標籤</div>
           {Object.entries(settings.tag_types).map(([type, vals]) => (
             <div key={type} className={styles.formSection}>
               <label className={styles.formLabel}>{type}</label>
@@ -652,7 +580,6 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
           </div>
 
         </div>
-      </div>
     </div>
   )
 }
@@ -666,7 +593,6 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
 }) {
   const results = recipes.filter(r => {
     if(searchState.query && !r.name.includes(searchState.query)) return false
-    if(searchState.favOnly && !r.favorite) return false
     if(searchState.ingredients.length) {
       const all = Object.values(r.ingredients).flat().map((i:any)=>i.name)
       if(searchState.mode==='AND') { if(!searchState.ingredients.every((i:string)=>all.includes(i))) return false }
@@ -691,8 +617,6 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
 
   return (
     <div>
-      <div className={styles.topbar}><div className={styles.topbarTitle}>搜尋</div></div>
-      <div className={styles.content}>
         <div className={styles.searchPanel}>
           <input className={styles.searchInputBig} placeholder="搜尋食譜名稱…" value={searchState.query}
             onChange={e => onSearchChange({...searchState, query:e.target.value})} />
@@ -705,9 +629,6 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
                   onClick={() => onSearchChange({...searchState,mode:m})}>{m==='OR'?'OR（任一）':'AND（全部）'}</button>
               ))}
             </div>
-            <label style={{display:'flex',alignItems:'center',gap:5,fontSize:12,cursor:'pointer',color:'var(--text2)'}}>
-              <input type="checkbox" checked={searchState.favOnly} onChange={e=>onSearchChange({...searchState,favOnly:e.target.checked})} /> 只看最愛
-            </label>
           </div>
 
           {Object.entries(settings.tag_types).map(([type,vals])=>(
@@ -741,14 +662,14 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
 
         {(() => {
           const hasSearch = searchState.query || searchState.ingredients.length > 0 ||
-            Object.values(searchState.tagFilters).flat().length > 0 || searchState.favOnly
+            Object.values(searchState.tagFilters).flat().length > 0
           if (!hasSearch) return null
           if (results.length === 0) return (
             <div className={styles.emptyState}><div className={styles.emptyIcon}><SearchIcon /></div><p>沒有符合條件的食譜</p></div>
           )
           return results.map(r => (
             <div key={r.id} className={styles.resultCard} onClick={() => onOpen(r.id)}>
-              <div className={styles.resultCardName}>{r.name} {r.favorite ? <span style={{display:'inline-flex',alignItems:'center',verticalAlign:'middle'}}><FavHeartIcon filled={true} /></span> : null}</div>
+              <div className={styles.resultCardName}>{r.name}</div>
               <div className={styles.resultCardMeta}>
                 <span>{r.servings}人份</span>
                 {Object.values(r.tags||{}).flat().map(t=><span key={t} className={styles.tagBadge} style={{fontSize:11}}>{t}</span>)}
@@ -756,7 +677,6 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
             </div>
           ))
         })()}
-      </div>
     </div>
   )
 }
@@ -800,8 +720,6 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
 
   return (
     <div>
-      <div className={styles.topbar}><div className={styles.topbarTitle}>設定</div></div>
-      <div className={styles.content}>
 
         {/* TAG TYPES */}
         <div className={styles.settingsPanel}>
@@ -816,20 +734,20 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
               <div className={styles.tagGroupName}>
                 {editingType === type ? (
                   <div style={{display:'flex',gap:6,flex:1,alignItems:'center'}}>
-                    <input className={styles.formInput} style={{flex:1,fontSize:13,padding:'4px 8px'}}
+                    <input className={styles.formInput} style={{flex:1,padding:'4px 10px'}}
                       value={editingTypeVal} autoFocus
                       onChange={e=>setEditingTypeVal(e.target.value)}
                       onKeyDown={e=>{ if(e.key==='Enter') saveTypeName(type); if(e.key==='Escape') setEditingType(null) }} />
-                    <button className={`${styles.btn} ${styles.btnPrimary}`} style={{padding:'4px 8px',fontSize:11}} onClick={()=>saveTypeName(type)}>✓</button>
-                    <button className={styles.btn} style={{padding:'4px 8px',fontSize:11}} onClick={()=>setEditingType(null)}>✕</button>
+                    <button className={`${styles.btn} ${styles.btnSm} ${styles.btnPrimary}`} onClick={()=>saveTypeName(type)}>✓</button>
+                    <button className={`${styles.btn} ${styles.btnSm}`} onClick={()=>setEditingType(null)}>✕</button>
                   </div>
                 ) : (
                   <>
                     <span>{type}</span>
                     <div style={{display:'flex',gap:6}}>
-                      <button className={styles.btn} style={{padding:'4px 8px',fontSize:11}}
+                      <button className={`${styles.btn} ${styles.btnSm}`}
                         onClick={()=>{setEditingType(type);setEditingTypeVal(type)}}>改名</button>
-                      <button className={`${styles.btn} ${styles.btnDanger}`} style={{padding:'4px 8px',fontSize:11}}
+                      <button className={`${styles.btn} ${styles.btnSm} ${styles.btnDanger}`}
                         onClick={()=>{ const n={...s.tag_types}; delete n[type]; commit({...s,tag_types:n}) }}>刪除</button>
                     </div>
                   </>
@@ -870,20 +788,20 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
               <div className={styles.tagGroupName}>
                 {editingCat === cat ? (
                   <div style={{display:'flex',gap:6,flex:1,alignItems:'center'}}>
-                    <input className={styles.formInput} style={{flex:1,fontSize:13,padding:'4px 8px'}}
+                    <input className={styles.formInput} style={{flex:1,padding:'4px 10px'}}
                       value={editingCatVal} autoFocus
                       onChange={e=>setEditingCatVal(e.target.value)}
                       onKeyDown={e=>{ if(e.key==='Enter') saveCatName(cat); if(e.key==='Escape') setEditingCat(null) }} />
-                    <button className={`${styles.btn} ${styles.btnPrimary}`} style={{padding:'4px 8px',fontSize:11}} onClick={()=>saveCatName(cat)}>✓</button>
-                    <button className={styles.btn} style={{padding:'4px 8px',fontSize:11}} onClick={()=>setEditingCat(null)}>✕</button>
+                    <button className={`${styles.btn} ${styles.btnSm} ${styles.btnPrimary}`} onClick={()=>saveCatName(cat)}>✓</button>
+                    <button className={`${styles.btn} ${styles.btnSm}`} onClick={()=>setEditingCat(null)}>✕</button>
                   </div>
                 ) : (
                   <>
                     <span>{cat}</span>
                     <div style={{display:'flex',gap:6}}>
-                      <button className={styles.btn} style={{padding:'4px 8px',fontSize:11}}
+                      <button className={`${styles.btn} ${styles.btnSm}`}
                         onClick={()=>{setEditingCat(cat);setEditingCatVal(cat)}}>改名</button>
-                      <button className={`${styles.btn} ${styles.btnDanger}`} style={{padding:'4px 8px',fontSize:11}}
+                      <button className={`${styles.btn} ${styles.btnSm} ${styles.btnDanger}`}
                         onClick={()=>commit({...s,ingredient_categories:s.ingredient_categories.filter(c=>c!==cat)})}>刪除</button>
                     </div>
                   </>
@@ -913,7 +831,6 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
           </div>
         </div>
 
-      </div>
     </div>
   )
 }
@@ -951,31 +868,33 @@ function parseIngredientsFromText(text: string): { name: string; amount: string;
 }
 
 // ──────────────────────────────────────────────
-// RECIPE GRID (所有食譜 / 我的最愛 preview)
+// RECIPE LIST（所有食譜／搜尋結果共用卡片）
 // ──────────────────────────────────────────────
+function RecipeCard({ recipe: r, onOpen }: { recipe: Recipe, onOpen: (id: number) => void }) {
+  const tags = Object.values(r.tags || {}).flat()
+  return (
+    <button type="button" className={styles.recipeCard} onClick={() => onOpen(r.id)}>
+      <div className={styles.recipeCardName}>{r.name}</div>
+      <div className={styles.recipeCardMeta}>
+        <span>{r.servings} 人份</span>
+        {tags.map(t => <span key={t} className={styles.tagBadge}>{t}</span>)}
+      </div>
+    </button>
+  )
+}
+
 function RecipeGrid({ recipes, onOpen }: { recipes: Recipe[], onOpen: (id: number) => void }) {
   if (recipes.length === 0) {
     return (
       <div className={styles.emptyState}>
         <div className={styles.emptyIcon}><PotIcon /></div>
-        <p>還沒有食譜<br />點擊「新增食譜」開始建立</p>
+        <p>還沒有食譜<br />點上方「新增」開始建立</p>
       </div>
     )
   }
   return (
-    <div className={styles.content}>
-      <div className={styles.recipeGrid}>
-        {recipes.map(r => (
-          <div key={r.id} className={styles.recipeCard} onClick={() => onOpen(r.id)}>
-            <div className={styles.recipeCardName}>{r.name}</div>
-            <div className={styles.recipeCardTags}>
-              {Object.values(r.tags || {}).flat().map(t => (
-                <span key={t} className={styles.tagBadge} style={{fontSize:10}}>{t}</span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className={styles.recipeGrid}>
+      {recipes.map(r => <RecipeCard key={r.id} recipe={r} onOpen={onOpen} />)}
     </div>
   )
 }
