@@ -72,7 +72,7 @@ button { font-family: inherit; }
 .hbtn {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 14px; font-weight: 400; line-height: 1.5;
-  color: var(--txt); background: transparent;
+  color: var(--txt); background: var(--packed-bg);
   border: 1px solid var(--border-lt); border-radius: 999px;
   padding: 5px 14px; cursor: pointer; white-space: nowrap;
   transition: background .15s, border-color .15s;
@@ -111,7 +111,7 @@ button { font-family: inherit; }
 
 /* ── Category card ── */
 .cat-card {
-  background: var(--bg); border: 1px solid var(--border-lt); border-radius: 14px;
+  background: var(--card); border: 1px solid var(--border-lt); border-radius: 14px;
   margin-bottom: 14px; overflow: hidden;
 }
 @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -140,7 +140,7 @@ button { font-family: inherit; }
 /* ── Item row：名稱在左、圖示按鈕在右，一行 ── */
 .item-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px 10px 16px; border-bottom: 1px solid #EDE5D3;
+  padding: 10px 12px 10px 16px; border-bottom: 1px solid #F1EBDD;
   transition: background .1s;
 }
 .item-row:last-child { border-bottom: none; }
