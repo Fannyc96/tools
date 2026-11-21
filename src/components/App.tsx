@@ -148,7 +148,7 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <header className={styles.hdr}><div className={styles.wrap}>
+      <header className={styles.hdr}><div className={`${styles.wrap} ${styles.hdrRow}`}>
         <h1 className={styles.hdrTitle}>食譜本</h1>
         <div className={styles.hdrActions}>
           <button type="button" className={styles.hbtn} onClick={startNew}><PlusIcon /> 新增</button>
