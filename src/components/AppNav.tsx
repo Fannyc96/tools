@@ -7,9 +7,9 @@ import ToolIcon, { ToolIconKind } from './ToolIcon'
 const items: { href: string; label: string; icon: ToolIconKind }[] = [
   { href: '/', label: '首頁', icon: 'home' },
   { href: '/beauty/', label: '美妝避雷針', icon: 'beauty' },
-  { href: '/packing/', label: '家私備忘錄', icon: 'packing' },
+  { href: '/packing/', label: '家私集', icon: 'packing' },
   { href: '/recipes/', label: '食譜', icon: 'recipes' },
-  { href: '/news/', label: '新聞', icon: 'news' },
+  { href: '/news/', label: 'newsfeed', icon: 'news' },
 ]
 
 export default function AppNav() {

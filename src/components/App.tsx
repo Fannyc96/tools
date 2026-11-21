@@ -826,13 +826,10 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
           </div>
         </div>
 
-        {dirty && (
-          <div className={styles.saveBar} role="region" aria-label="未儲存的變更">
-            <span className={styles.saveBarText}>有尚未儲存的變更</span>
-            <button type="button" className={styles.btn} onClick={() => setS(JSON.parse(JSON.stringify(settings)))}>取消</button>
-            <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => onSave(s)}>儲存變更</button>
-          </div>
-        )}
+        <div className={styles.formActions}>
+          <button type="button" className={styles.btn} disabled={!dirty} onClick={() => setS(JSON.parse(JSON.stringify(settings)))}>取消</button>
+          <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} disabled={!dirty} onClick={() => onSave(s)}>儲存</button>
+        </div>
     </div>
   )
 }

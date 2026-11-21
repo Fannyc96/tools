@@ -2,8 +2,8 @@
 
 將 Newsfeed、Packing Tool 與 Recipe App 整合成同一個網站：
 
-- `/news/`：新聞閱讀、收藏與稍後查看
-- `/packing/`：家私備忘錄（行李清單與分類進度）
+- `/news/`：newsfeed（新聞閱讀、收藏與稍後查看）
+- `/packing/`：家私集（行李清單與分類進度）
 - `/recipes/`：食譜收藏、搜尋與份量調整
 - `/beauty/`：美妝避雷針，查品牌的主權、動物實驗爭議與所屬集團
 
@@ -14,8 +14,8 @@
 | 工具 | 頁面外殼 | 工具本體 | Supabase Function |
 |---|---|---|---|
 | 食譜 | `src/app/recipes/` | `src/components/App.tsx` | `fetch-url` |
-| 新聞 | `src/app/news/` | `public/tools/news/index.html` | `ebb` |
-| 家私備忘錄 | `src/app/packing/` | `public/tools/packing/index.html` | — |
+| newsfeed | `src/app/news/` | `public/tools/news/index.html` | `ebb` |
+| 家私集 | `src/app/packing/` | `public/tools/packing/index.html` | — |
 | 美妝避雷針 | `src/app/beauty/` | `public/tools/beauty/index.html` | — |
 
 舊的獨立版本已移到上層的 `_archive/`，不再維護，請只修改這裡的檔案。
@@ -68,6 +68,6 @@ npx supabase functions deploy fetch-url --no-verify-jwt
 
 - 食譜：Supabase `recipes`、`app_settings`
 - 新聞狀態：Supabase `article_states`，localStorage 作為備援
-- 家私備忘錄：Supabase `packing_state`，localStorage 作為離線備援
+- 家私集：Supabase `packing_state`，localStorage 作為離線備援
 
 目前沿用原工具「不登入、共同使用」的模式，所以知道網站網址的人可共用同一份資料。若網站要公開分享，下一步應加入 Supabase Auth，並將 RLS 政策改成依使用者隔離資料。

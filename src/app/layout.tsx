@@ -4,7 +4,7 @@ import AppNav from '@/components/AppNav'
 
 export const metadata: Metadata = {
   title: '生活工具箱',
-  description: '美妝避雷針、家私備忘錄、食譜與新聞工具',
+  description: '美妝避雷針、家私集、食譜本與 newsfeed',
 }
 
 // maximumScale 1：iPhone 點輸入框時不自動放大頁面（使用者仍可雙指縮放）

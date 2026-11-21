@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>News Feed</title>
+<title>newsfeed</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Playfair+Display:wght@500;600&family=Roboto:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@800&family=Playfair+Display:wght@500;600&family=Roboto:wght@400;500&display=swap');
 
   :root {
     --blue: #185FA5;
@@ -34,63 +34,51 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .header {
-    position: sticky; top: 0;
-    background: var(--header-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 10;
-    padding-top: env(safe-area-inset-top);
-    border-bottom: 0.5px solid var(--border);
+  /* 頁首與分頁列比照家私集、食譜本：奶油底大標題＋右側按鈕；分頁列往下滑時固定在頂端 */
+  .wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .header { background: var(--header-bg); padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: 16px; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .header-title { font-family: 'Noto Serif TC', 'Songti TC', serif; font-weight: 800; font-size: clamp(30px, 6vw, 44px); line-height: 1.2; letter-spacing: .01em; color: var(--text-primary); min-width: 0; }
+  .header-text { min-width: 0; }
+  .article-count { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 400; color: var(--text-secondary); margin-top: 2px; }
+  .article-count:empty { display: none; }
+  @media (max-width: 420px) { .shuffle-btn .btn-label { display: none; } .shuffle-btn { padding: 4px 9px; } } /* 窄螢幕只顯示圖示 */
+
+  .ebb-btn, .shuffle-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #E4EFFF;
+    font-size: 13px; font-weight: 400; line-height: 1.5;
+    color: var(--text-primary);
+    cursor: pointer; font-family: 'Noto Sans TC', sans-serif; white-space: nowrap;
   }
-
-  .header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px 0;
-  }
-
-  .header-title { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: baseline; gap: 8px; }
-  .article-count { font-size: 13px; font-weight: 400; color: var(--text-tertiary); }
-
-  .ebb-btn {
-    display: flex; align-items: center; gap: 5px;
-    padding: 6px 12px; border-radius: 16px;
-    border: 0.5px solid var(--border);
-    background: var(--white);
-    font-size: 12px; font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer; font-family: inherit;
-  }
-
+  .ebb-btn svg, .shuffle-btn svg { color: var(--blue); }
+  .ebb-btn:hover, .shuffle-btn:hover { border-color: var(--blue); }
   .ebb-btn.loading { color: var(--text-tertiary); }
-  .ebb-btn.done { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .ebb-btn.done, .shuffle-btn.active { border-color: var(--blue); color: #fff; background: var(--blue); }
+  .ebb-btn.done svg, .shuffle-btn.active svg { color: #fff; }
+  .header-buttons { display: flex; gap: 8px; align-items: center; flex: none; }
 
-  .shuffle-btn {
-    display: flex; align-items: center; gap: 5px;
-    padding: 6px 12px; border-radius: 16px;
-    border: 0.5px solid var(--border);
-    background: var(--white);
-    font-size: 12px; font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer; font-family: inherit;
-  }
-  .shuffle-btn.active { border-color: var(--blue); color: var(--blue); background: #E4EFFF; }
-  .header-buttons { display: flex; gap: 6px; align-items: center; }
-
-  .tabs { display: flex; padding: 0 18px; }
+  .tabs-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--header-bg); border-bottom: 1px solid var(--border); }
+  .tabs { display: flex; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
   .tab {
-    flex: 1; padding: 10px 0;
-    font-size: 13.5px; font-weight: 500;
-    text-align: center; color: var(--text-tertiary);
+    flex: none; display: flex; align-items: center; gap: 6px;
+    padding: 12px 10px 10px;
+    font-size: 15px; font-weight: 500;
+    color: var(--text-tertiary);
     cursor: pointer; border: none; background: none;
     border-bottom: 2px solid transparent;
-    font-family: inherit;
+    font-family: 'Noto Sans TC', sans-serif; white-space: nowrap;
   }
-  .tab.active { color: var(--text-primary); border-bottom: 2px solid var(--text-primary); }
+  .tab:first-child { padding-left: 2px; }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .cnt { font-size: 12px; font-weight: 700; line-height: 1.6; min-width: 22px; padding: 0 6px; border-radius: 999px; text-align: center; background: #E4EFFF; color: var(--text-secondary); }
+  .cnt:empty { display: none; }
+  .tab.active .cnt { background: var(--blue); color: #fff; }
 
-  .view { padding: 0 18px 32px; display: none; }
+  .view { max-width: 880px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px)); display: none; }
   .view.active { display: block; }
 
   .article { border-bottom: 0.5px solid var(--border); position: relative; overflow: hidden; }
@@ -204,13 +192,16 @@
 </head>
 <body>
 
-<div class="header">
+<header class="header"><div class="wrap">
   <div class="header-row">
-    <div class="header-title">News <span id="article-count" class="article-count"></span></div>
+    <div class="header-text">
+      <h1 class="header-title">newsfeed</h1>
+      <div id="article-count" class="article-count"></div>
+    </div>
     <div class="header-buttons">
-      <button class="shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+      <button class="shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle" aria-label="Shuffle">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-        Shuffle
+        <span class="btn-label">Shuffle</span>
       </button>
       <button class="ebb-btn" id="ebb-btn" onclick="fetchEBB()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
@@ -218,12 +209,12 @@
       </button>
     </div>
   </div>
-  <div class="tabs">
+</div></header>
+<nav class="tabs-bar" aria-label="newsfeed 分頁"><div class="wrap tabs">
     <button class="tab active" onclick="showTab('feed')">Feed</button>
-    <button class="tab" onclick="showTab('keep')">Keep <span id="keep-count"></span></button>
-    <button class="tab" onclick="showTab('revisit')">Revisit <span id="revisit-count"></span></button>
-  </div>
-</div>
+    <button class="tab" onclick="showTab('keep')">Keep <span id="keep-count" class="cnt"></span></button>
+    <button class="tab" onclick="showTab('revisit')">Revisit <span id="revisit-count" class="cnt"></span></button>
+</div></nav>
 
 <div id="feed-view" class="view active">
   <div class="loading-state">Loading...</div>
@@ -466,8 +457,8 @@ function updateCounts() {
   const feed = articles.filter(x => !x.savedOnly);
   const unread = feed.filter(x => !x.read).length;
   const total = feed.length;
-  document.getElementById('keep-count').textContent = kc > 0 ? `(${kc})` : '';
-  document.getElementById('revisit-count').textContent = rc > 0 ? `(${rc})` : '';
+  document.getElementById('keep-count').textContent = kc > 0 ? kc : '';
+  document.getElementById('revisit-count').textContent = rc > 0 ? rc : '';
   const countEl = document.getElementById('article-count');
   if (countEl && total > 0) countEl.textContent = `${total - unread}/${total}`;
 }
