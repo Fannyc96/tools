@@ -157,7 +157,7 @@ button { font-family: inherit; }
 
 .item-btns { display: flex; gap: 6px; flex-shrink: 0; }
 .ibtn {
-  width: 36px; height: 36px; border-radius: 9px; cursor: pointer;
+  width: 46px; height: 36px; border-radius: 9px; cursor: pointer; /* 按鈕加寬，名稱欄相應縮短 */
   display: inline-grid; place-items: center;
   border: 1.5px solid transparent; background: var(--card);
   transition: background .15s, color .15s, border-color .15s;
@@ -241,7 +241,7 @@ button { font-family: inherit; }
 @media (max-width: 400px) {
   .item-row { gap: 8px; padding-left: 12px; padding-right: 10px; }
   .item-btns { gap: 5px; }
-  .ibtn { width: 34px; height: 34px; }
+  .ibtn { width: 42px; height: 34px; }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
