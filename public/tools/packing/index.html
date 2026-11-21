@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="行李整理">
 <meta name="theme-color" content="#9DC4F0">
-<title>行李整理工具</title>
+<title>家私備忘錄</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap');
 
@@ -603,7 +603,10 @@ body {
   .bbtn { padding: 3px 7px; }
   .hbtn { padding: 5px 8px; font-size: 0.74rem; }
   .hdr { padding-left: 9px; padding-right: 9px; }
-  .hdr-title { font-size: 20px; }
+  .hdr-title { font-size: 30px; }
+}
+@media (max-width: 640px) {
+  .hdr-title { font-size: 30px; } /* 手機版頁首標題，與美妝避雷針一致 */
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -829,7 +832,7 @@ function hardReset() {
 
 // ── Static UI ──────────────────────────────────────────────────────────────
 function updateStaticUI() {
-  document.getElementById('hdrTitle').textContent = '行李整理工具';
+  document.getElementById('hdrTitle').textContent = '家私備忘錄';
   const eb = document.getElementById('editBtn');
   if (editMode) {
     eb.innerHTML = `${ic('checkdone',13)} 完成編輯`;

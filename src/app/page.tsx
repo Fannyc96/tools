@@ -11,7 +11,7 @@ export default function Page() {
           <small>查品牌爭議與所屬集團</small>
         </Link>
         <Link href="/packing/" className="tool-card tool-packing">
-          <span className="tool-icon tool-icon-packing"><ToolIcon kind="packing" size={32} /></span><span>行李整理</span>
+          <span className="tool-icon tool-icon-packing"><ToolIcon kind="packing" size={32} /></span><span>家私備忘錄</span>
           <small>分類行李與追蹤進度</small>
         </Link>
         <Link href="/recipes/" className="tool-card tool-recipes">
