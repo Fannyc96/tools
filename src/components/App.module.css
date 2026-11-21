@@ -56,10 +56,10 @@
 /* Recipe view */
 .recipeName { font-family: var(--font-display); font-size: 26px; font-weight: 800; line-height: 1.3; color: var(--text); margin-bottom: 14px; }
 .tagBlock { margin-bottom: 12px; }
-.servingScaler { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; font-size: 14px; color: var(--text2); } /* 份量：低調的一行 */
-.servingScaler span { min-width: 3.6em; text-align: center; }
+.servingScaler { display: flex; align-items: center; gap: 6px; margin-bottom: 22px; font-size: 14px; color: var(--text2); } /* 份量：低調的一行 */
+.servingScaler span { text-align: center; padding: 0 2px; }
 .servingScaler .servingLabel { min-width: 0; text-align: left; margin-right: 2px; }
-.servingBtn { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--text3); background: #fff; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--text3); line-height: 1; transition: background .15s, color .15s; }
+.servingBtn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--text3); background: #fff; cursor: pointer; font-size: 11px; padding: 0; display: flex; align-items: center; justify-content: center; color: var(--text3); line-height: 1; transition: background .15s, color .15s; }
 .servingBtn:hover { border-color: var(--accent); color: var(--accent); }
 .resetLink { font-size: 13px; color: var(--text2); background: none; border: none; cursor: pointer; text-decoration: underline; }
 .sectionBlock { margin-bottom: 22px; }
@@ -149,6 +149,9 @@
 .tagGroupBlock { border-radius: 12px; padding: 12px; margin-bottom: 10px; }
 .tagGroupName { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .settingChip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; font-size: 13px; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.chipList { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.settingChip { cursor: grab; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; transition: transform .12s, box-shadow .12s; }
+.settingChipDragging { cursor: grabbing; transform: scale(1.08); border-color: var(--accent); box-shadow: 0 4px 14px rgba(24,95,165,.25); position: relative; z-index: 2; } /* 長按拖曳中 */
 .xBtn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 12px; padding: 0 0 0 2px; line-height: 1; }
 .xBtn:hover { color: var(--danger); }
 .settingRow { display: flex; gap: 8px; align-items: center; margin-top: 10px; }

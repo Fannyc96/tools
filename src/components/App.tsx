@@ -748,14 +748,9 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
                   </>
                 )}
               </div>
-              <div style={{display:'flex',flexWrap:'wrap',gap:4,marginBottom:8}}>
-                {vals.map(v=>(
-                  <span key={v} className={styles.settingChip}>
-                    {v}
-                    <button className={styles.xBtn} onClick={()=>commit({...s,tag_types:{...s.tag_types,[type]:vals.filter(x=>x!==v)}})}>✕</button>
-                  </span>
-                ))}
-              </div>
+              <SortableChips items={vals}
+                onChange={next=>commit({...s,tag_types:{...s.tag_types,[type]:next}})}
+                onRemove={v=>commit({...s,tag_types:{...s.tag_types,[type]:vals.filter(x=>x!==v)}})} />
               <div className={styles.settingRow}>
                 <input className={styles.formInput} style={{flex:1}} placeholder="新增 tag 值…"
                   value={newTagVals[type]||''} onChange={e=>setNewTagVals(p=>({...p,[type]:e.target.value}))}
@@ -802,14 +797,9 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
                   </>
                 )}
               </div>
-              <div style={{display:'flex',flexWrap:'wrap',gap:4,marginBottom:8}}>
-                {(s.common_ingredients[cat]||[]).map(v=>(
-                  <span key={v} className={styles.settingChip}>
-                    {v}
-                    <button className={styles.xBtn} onClick={()=>commit({...s,common_ingredients:{...s.common_ingredients,[cat]:(s.common_ingredients[cat]||[]).filter(x=>x!==v)}})}>✕</button>
-                  </span>
-                ))}
-              </div>
+              <SortableChips items={s.common_ingredients[cat]||[]}
+                onChange={next=>commit({...s,common_ingredients:{...s.common_ingredients,[cat]:next}})}
+                onRemove={v=>commit({...s,common_ingredients:{...s.common_ingredients,[cat]:(s.common_ingredients[cat]||[]).filter(x=>x!==v)}})} />
               <div className={styles.settingRow}>
                 <input className={styles.formInput} style={{flex:1}} placeholder="新增常見食材…"
                   value={newIngs[cat]||''} onChange={e=>setNewIngs(p=>({...p,[cat]:e.target.value}))}
@@ -830,6 +820,88 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
           <button type="button" className={styles.btn} disabled={!dirty} onClick={() => setS(JSON.parse(JSON.stringify(settings)))}>取消</button>
           <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} disabled={!dirty} onClick={() => onSave(s)}>儲存</button>
         </div>
+    </div>
+  )
+}
+
+// ──────────────────────────────────────────────
+// 長按後拖曳調整順序的標籤列（設定頁的 tag 值、常見食材）
+// ──────────────────────────────────────────────
+const LONG_PRESS_MS = 350
+function SortableChips({ items, onChange, onRemove }: {
+  items: string[], onChange: (next: string[]) => void, onRemove: (v: string) => void
+}) {
+  const listRef = useRef<HTMLDivElement>(null)
+  const [dragIdx, setDragIdx] = useState<number | null>(null)
+  const dragRef = useRef<number | null>(null)
+  const itemsRef = useRef(items)
+  const timer = useRef<number | undefined>(undefined)
+  const startPt = useRef<{ x: number, y: number } | null>(null)
+  itemsRef.current = items
+
+  const setDrag = (i: number | null) => { dragRef.current = i; setDragIdx(i) }
+  const cancelPress = () => { window.clearTimeout(timer.current); startPt.current = null }
+
+  const moveTo = (x: number, y: number) => {
+    const from = dragRef.current
+    if (from === null) return
+    const el = document.elementFromPoint(x, y)?.closest('[data-chip-idx]') as HTMLElement | null
+    if (!el || !listRef.current?.contains(el)) return
+    const to = Number(el.dataset.chipIdx)
+    if (to === from) return
+    const next = [...itemsRef.current]
+    const [v] = next.splice(from, 1)
+    next.splice(to, 0, v)
+    onChange(next)
+    setDrag(to)
+  }
+
+  const press = (i: number, x: number, y: number) => {
+    cancelPress()
+    startPt.current = { x, y }
+    timer.current = window.setTimeout(() => { setDrag(i); try { navigator.vibrate?.(10) } catch {} }, LONG_PRESS_MS)
+  }
+
+  // 觸控：拖曳中要擋住頁面捲動，需要非 passive 的 touchmove
+  useEffect(() => {
+    const el = listRef.current
+    if (!el) return
+    const onMove = (e: TouchEvent) => {
+      const t = e.touches[0]
+      if (dragRef.current !== null) { e.preventDefault(); moveTo(t.clientX, t.clientY); return }
+      const st = startPt.current
+      if (st && Math.hypot(t.clientX - st.x, t.clientY - st.y) > 8) cancelPress() // 一開始就移動＝想捲動頁面
+    }
+    const onEnd = () => { cancelPress(); if (dragRef.current !== null) setDrag(null) }
+    el.addEventListener('touchmove', onMove, { passive: false })
+    el.addEventListener('touchend', onEnd)
+    el.addEventListener('touchcancel', onEnd)
+    return () => { el.removeEventListener('touchmove', onMove); el.removeEventListener('touchend', onEnd); el.removeEventListener('touchcancel', onEnd) }
+  })
+
+  // 滑鼠
+  useEffect(() => {
+    if (dragIdx === null) return
+    const onMove = (e: MouseEvent) => moveTo(e.clientX, e.clientY)
+    const onUp = () => setDrag(null)
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [dragIdx])
+
+  return (
+    <div ref={listRef} className={styles.chipList}>
+      {items.map((v, i) => (
+        <span key={v} data-chip-idx={i}
+          className={`${styles.settingChip} ${dragIdx === i ? styles.settingChipDragging : ''}`}
+          onTouchStart={e => { if ((e.target as HTMLElement).closest('button')) return; press(i, e.touches[0].clientX, e.touches[0].clientY) }}
+          onMouseDown={e => { if (e.button !== 0 || (e.target as HTMLElement).closest('button')) return; press(i, e.clientX, e.clientY) }}
+          onMouseUp={cancelPress} onMouseLeave={() => { if (dragRef.current === null) cancelPress() }}
+          onContextMenu={e => e.preventDefault()}>
+          {v}
+          <button type="button" className={styles.xBtn} aria-label={`刪除 ${v}`} onClick={() => onRemove(v)}>✕</button>
+        </span>
+      ))}
     </div>
   )
 }
