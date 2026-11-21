@@ -14,12 +14,11 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+# 建置與部署分成兩個 job（GitHub 官方範本的結構）。
+# 放在同一個 job 時，部署步驟有時會在上傳完成前就去找檔案而失敗（"No artifacts named github-pages"）。
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,6 +36,14 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
