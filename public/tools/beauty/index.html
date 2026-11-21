@@ -16,39 +16,25 @@ img{max-width:100%}
 <style>
 /* Layout: 單欄查詢工具。頂部標題 → 黏性搜尋列 → 事件卡片 → 集團對照 → 法規背景 */
 :root {
-  --bg: #f6f5f8;
-  --surface: #ffffff;
-  --ink: #1d1a24;
-  --muted: #615b6e;
-  --line: #e2dfe8;
-  --accent: #6b2d5c;          /* 深莓色：標題與互動 */
-  --accent-soft: #f3e8f0;
-  --sov: #2f4f8a;             /* 主權爭議 */
-  --sov-soft: #e7ecf6;
-  --ani: #2c6e5a;             /* 動物實驗 */
-  --ani-soft: #e3f0eb;
-  --ext: #8a5a1c;             /* 延伸品牌 */
-  --ext-soft: #f6ecdc;
-  --focus: #6b2d5c;
+  /* 與 toolbox 其他工具一致：奶油黃底、白卡片、藍色重點 */
+  --bg: #FFFBEF;
+  --surface: #FFFFFF;
+  --ink: #1A2A3C;
+  --muted: #3D5A78;
+  --line: #C8DCEF;
+  --accent: #185FA5;          /* 藍：標題與互動 */
+  --accent-soft: #E4EFFF;
+  --sov: #185FA5;             /* 主權爭議：藍 */
+  --sov-soft: #E4EFFF;
+  --ani: #8A6200;             /* 動物實驗：黃 */
+  --ani-soft: #FFF5CC;
+  --ext: #3D5A78;             /* 延伸品牌：灰藍 */
+  --ext-soft: #EEF3F9;
+  --focus: #185FA5;
   --f-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
   --f-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #15131a; --surface: #1e1b25; --ink: #ece9f1; --muted: #a59fb2; --line: #322e3c;
-    --accent: #e3a3cf; --accent-soft: #3a2535;
-    --sov: #9db8ec; --sov-soft: #1f2a40; --ani: #86cdb5; --ani-soft: #1a3029;
-    --ext: #e2b678; --ext-soft: #33281a; --focus: #e3a3cf;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #15131a; --surface: #1e1b25; --ink: #ece9f1; --muted: #a59fb2; --line: #322e3c;
-  --accent: #e3a3cf; --accent-soft: #3a2535;
-  --sov: #9db8ec; --sov-soft: #1f2a40; --ani: #86cdb5; --ani-soft: #1a3029;
-  --ext: #e2b678; --ext-soft: #33281a; --focus: #e3a3cf;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
