@@ -96,9 +96,6 @@ h1 {
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .chip.pchip { background: var(--accent); border-color: var(--accent); color: #fff; } /* 目前只看某母公司 */
 .btools { scroll-margin-top: 12px; }
-.sep { width: 1px; height: 18px; background: var(--line); }
-.toggle { font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-.toggle input { accent-color: var(--accent); }
 .count { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
 .count b { font-family: var(--f-mono); color: var(--ink); }
 
@@ -192,7 +189,11 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 .brow .filters { flex-wrap: nowrap; flex: none; }
 .brow .chip, .brow .sort { flex: none; white-space: nowrap; }
 .sort { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
-.sort select { font: inherit; font-size: 16px; line-height: 1.2; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; height: 32px; }
+.sort-box { position: relative; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; line-height: 1.6; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+.sort-box::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: translateY(-2px) rotate(45deg); }
+.sort-box:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* 真正的選單透明地疊在上面；保持 16px，iOS 點選時才不會放大頁面 */
+.sort-box select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 16px; cursor: pointer; border: 0; }
 
 .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .btable { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 14px; }
@@ -285,8 +286,6 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
       <button class="chip" data-cat="all" aria-pressed="true" type="button">全部</button>
       <button class="chip" data-cat="sov" aria-pressed="false" type="button">主權爭議</button>
       <button class="chip" data-cat="ani" aria-pressed="false" type="button">動物實驗</button>
-      <span class="sep" aria-hidden="true"></span>
-      <label class="toggle" for="ext"><input type="checkbox" id="ext" checked> 包含延伸品牌（時尚精品）</label>
       <span class="count" id="count" aria-live="polite"></span>
     </div>
   </div>
@@ -318,10 +317,11 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
         <button class="chip" data-own="founder" aria-pressed="false" type="button">創辦人或獨立品牌</button>
       </div>
       <label class="sort" for="bsort">排序
+        <span class="sort-box"><span id="bsort-label" aria-hidden="true">母公司市值（高到低）</span>
         <select id="bsort">
           <option value="cap">母公司市值（高到低）</option>
           <option value="az">品牌名稱 A–Z</option>
-        </select>
+        </select></span>
       </label>
       </div>
     </div>
@@ -534,7 +534,7 @@ const norm = s => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const CAT = { sov: "主權爭議", ani: "動物實驗" };
 
-let state = { q: "", cat: "all", ext: true };
+let state = { q: "", cat: "all" };
 try {
   const saved = JSON.parse(localStorage.getItem("bg-state") || "null");
   if (saved && typeof saved === "object") state = Object.assign(state, saved, { q: "" });
@@ -583,7 +583,6 @@ function render() {
   const rows = [];
   for (const ev of EVENTS) {
     if (state.cat !== "all" && ev.cat !== state.cat) continue;
-    if (!state.ext && ev.ext) continue;
     const m = match(ev, q);
     if (m.ok) rows.push([ev, m]);
   }
@@ -594,7 +593,7 @@ function render() {
 
   if (!rows.length) {
     $("#list").innerHTML = '<div class="empty">找不到符合「' + esc(raw) + '」的事件。<br>可以試試品牌英文名、集團名稱，或切換篩選條件。<br><button class="chip" type="button" id="reset">清除搜尋與篩選</button></div>';
-    $("#reset").onclick = () => { state.q = ""; state.cat = "all"; state.ext = true; $("#q").value = ""; sync(); };
+    $("#reset").onclick = () => { state.q = ""; state.cat = "all"; $("#q").value = ""; sync(); };
     return;
   }
 
@@ -617,8 +616,7 @@ function render() {
 
 function sync() {
   document.querySelectorAll(".chip[data-cat]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === state.cat)));
-  $("#ext").checked = state.ext;
-  try { localStorage.setItem("bg-state", JSON.stringify({ cat: state.cat, ext: state.ext })); } catch (e) {}
+  try { localStorage.setItem("bg-state", JSON.stringify({ cat: state.cat })); } catch (e) {}
   render();
 }
 
@@ -1139,7 +1137,7 @@ function bsync() {
   renderGroups();
 }
 $("#bq").addEventListener("input", e => { bstate.q = e.target.value; renderGroups(); });
-$("#bsort").addEventListener("change", e => { bstate.sort = e.target.value; renderGroups(); });
+$("#bsort").addEventListener("change", e => { bstate.sort = e.target.value; $("#bsort-label").textContent = e.target.selectedOptions[0].textContent; renderGroups(); });
 function setParent(k) {
   bstate.parent = k && PARENTS[k] ? k : null;
   const chip = $("#bparent");
@@ -1164,7 +1162,7 @@ function bindGroups() {
     const b = e.target.closest("button[data-q]");
     if (!b) return;
     const term = b.dataset.q;
-    state.q = term; state.cat = "all"; state.ext = true;
+    state.q = term; state.cat = "all";
     $("#q").value = term; sync(); setTab("events");
     window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   });
@@ -1196,7 +1194,6 @@ setTab((location.hash || "").slice(1));
 $("#q").addEventListener("input", e => { state.q = e.target.value; render(); });
 $("#clear").addEventListener("click", () => { state.q = ""; $("#q").value = ""; render(); $("#q").focus(); });
 document.querySelectorAll(".chip[data-cat]").forEach(c => c.addEventListener("click", () => { state.cat = c.dataset.cat; sync(); }));
-$("#ext").addEventListener("change", e => { state.ext = e.target.checked; sync(); });
 renderGroups();
 bindGroups();
 sync();
