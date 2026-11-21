@@ -59,7 +59,7 @@
 .servingScaler { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; font-size: 14px; color: var(--text2); } /* 份量：低調的一行 */
 .servingScaler span { min-width: 3.6em; text-align: center; }
 .servingScaler .servingLabel { min-width: 0; text-align: left; margin-right: 2px; }
-.servingBtn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border2); background: #fff; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: var(--text2); line-height: 1; transition: background .15s, color .15s; }
+.servingBtn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--text3); background: #fff; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: var(--text3); line-height: 1; transition: background .15s, color .15s; }
 .servingBtn:hover { border-color: var(--accent); color: var(--accent); }
 .resetLink { font-size: 13px; color: var(--text2); background: none; border: none; cursor: pointer; text-decoration: underline; }
 .sectionBlock { margin-bottom: 22px; }
@@ -89,8 +89,10 @@
 .formActions .btn { padding: 8px 22px; font-size: 15px; }
 .formSection { margin-bottom: 14px; }
 .formLabel { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 6px; display: block; }
-.formInput, .formSelect, .formTextarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border2); border-radius: 10px; background: var(--surface); font-family: var(--font-body); font-size: 16px; color: var(--text); outline: none; transition: border-color .15s; }
-.formTextarea { resize: vertical; min-height: 140px; line-height: 1.7; }
+.formInput, .formSelect, .formTextarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border2); border-radius: 10px; background: var(--surface); font-family: var(--font-body); font-size: 15px; color: var(--text); outline: none; transition: border-color .15s; }
+.formTextarea { resize: vertical; min-height: 120px; line-height: 1.7; }
+.formSelect { font-size: 14px; padding: 6px 10px; }
+.ingFormRow .formInput { font-size: 14px; padding: 6px 10px; }
 .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: var(--accent); }
 .chipRow, .tagSelectGrid { display: flex; flex-wrap: wrap; gap: 6px; }
 .commonIngsRow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
@@ -151,6 +153,9 @@
 .settingRow { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
 .settingRow .formInput, .tagGroupName .formInput { padding: 5px 12px; }
 .settingRow .btn { padding: 5px 12px; font-size: 13px; }
+
+.saveBar { position: sticky; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 30; display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 10px 12px 10px 16px; background: var(--surface); border: 1px solid var(--accent-light); border-radius: 14px; box-shadow: 0 6px 24px rgba(24,95,165,.15); }
+.saveBarText { flex: 1; font-size: 14px; color: var(--text2); }
 
 /* Modal */
 .modalOverlay { position: fixed; inset: 0; background: rgba(44,44,42,.4); display: flex; align-items: center; justify-content: center; z-index: 100; }

@@ -43,7 +43,7 @@ type View = 'search' | 'list' | 'settings'
 
 const TABS: { v: View; label: string }[] = [
   { v: 'search', label: '搜尋' },
-  { v: 'list', label: '所有食譜' },
+  { v: 'list', label: '食譜' },
   { v: 'settings', label: '設定' },
 ]
 
@@ -261,15 +261,8 @@ function RecipeView({ recipe, scale, onScaleChange, onBack, onEdit, onDelete, se
 
           {/* Tags */}
           {Object.entries(recipe.tags || {}).some(([,v]) => v?.length) && (
-            <div className={styles.tagBlock}>
-              {Object.entries(recipe.tags || {}).map(([type, vals]) =>
-                vals?.length ? (
-                  <div key={type} className={styles.tagGroupRow}>
-                    <span className={styles.tagTypeLabel}>{type}</span>
-                    {vals.map(v => <span key={v} className={styles.tagBadge}>{v}</span>)}
-                  </div>
-                ) : null
-              )}
+            <div className={`${styles.tagBlock} ${styles.tagGroupRow}`}>
+              {Object.values(recipe.tags || {}).flat().map(v => <span key={v} className={styles.tagBadge}>{v}</span>)}
             </div>
           )}
 
@@ -448,7 +441,6 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
         <div className={styles.card}>
 
           {/* BASIC */}
-          <div className={styles.formSectionHeader}>基本資料</div>
           <div className={styles.formSection}>
             <label className={styles.formLabel}>食譜名稱 *</label>
             <input className={styles.formInput} value={r.name} placeholder="例：番茄炒蛋" onChange={e => setField('name', e.target.value)} />
@@ -463,7 +455,6 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
           <div className={styles.formSectionGap} />
 
           {/* TAGS */}
-          <div className={styles.formSectionHeader}>標籤</div>
           {Object.entries(settings.tag_types).map(([type, vals]) => (
             <div key={type} className={styles.formSection}>
               <label className={styles.formLabel}>{type}</label>
@@ -533,7 +524,7 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
                       <button key={name}
                         className={`${styles.commonIngChip} ${added ? styles.commonIngChipAdded : ''}`}
                         onClick={() => !added && addIngByName(cat, name)}>
-                        {added ? name : `+ ${name}`}
+                        {name}
                       </button>
                     )
                   })}
@@ -574,7 +565,7 @@ function RecipeForm({ recipe, settings, onSave, onCancel }: {
           <div className={styles.formSection}>
             <textarea className={styles.formTextarea} value={r.note}
               placeholder="步驟、心得、注意事項…"
-              onChange={e => setField('note', e.target.value)} style={{minHeight:180}} />
+              onChange={e => setField('note', e.target.value)} style={{minHeight:120}} />
           </div>
 
         </div>
@@ -718,7 +709,9 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
     setEditingCat(null)
   }
 
-  const commit = (next: AppSettings) => { setS(next); onSave(next) }
+  // 變更先暫存在畫面上，按「儲存變更」才寫入，避免誤觸
+  const commit = (next: AppSettings) => setS(next)
+  const dirty = JSON.stringify(s) !== JSON.stringify(settings)
 
   return (
     <div>
@@ -833,6 +826,13 @@ function SettingsPanel({ settings, onSave }: { settings: AppSettings, onSave: (s
           </div>
         </div>
 
+        {dirty && (
+          <div className={styles.saveBar} role="region" aria-label="未儲存的變更">
+            <span className={styles.saveBarText}>有尚未儲存的變更</span>
+            <button type="button" className={styles.btn} onClick={() => setS(JSON.parse(JSON.stringify(settings)))}>取消</button>
+            <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => onSave(s)}>儲存變更</button>
+          </div>
+        )}
     </div>
   )
 }
