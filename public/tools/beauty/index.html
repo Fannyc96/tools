@@ -117,8 +117,6 @@ main { padding-block: 20px 8px; }
 .tag { font-size: 12px; padding: 1px 8px; border-radius: 4px; line-height: 1.8; font-weight: 500; }
 .tag.sov { background: var(--sov-soft); color: var(--sov); }
 .tag.ani { background: var(--ani-soft); color: var(--ani); }
-.tag.ext { background: var(--ext-soft); color: var(--ext); }
-.tag.plain { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
 .hitnote { margin-top: 10px; font-size: 13px; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 6px; display: inline-block; }
 dl.facts { margin: 14px 0 0; display: grid; grid-template-columns: 4.5em 1fr; gap: 6px 14px; }
 dl.facts dt { font-size: 13px; color: var(--muted); font-weight: 500; padding-top: 2px; }
@@ -182,10 +180,10 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 
 .btools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
 .search.small { flex: 1 1 240px; }
-.search.small input { padding: 8px 0; font-size: 15px; }
+.search.small input { padding: 8px 0; font-size: 16px; } /* 小於 16px 時 iOS 會在聚焦時放大頁面 */
 .btools .filters { margin-top: 0; }
 .sort { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
-.sort select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.sort select { font: inherit; font-size: 16px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
 
 .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .btable { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 14px; }
@@ -592,9 +590,7 @@ function render() {
   $("#list").innerHTML = rows.map(([ev, m]) => {
     const tags = [
       '<span class="tag ' + ev.cat + '">' + CAT[ev.cat] + '</span>',
-      ...(ev.where || []).map(w => '<span class="tag ' + ev.cat + '">' + w + '</span>'),
-      ev.ext ? '<span class="tag ext">延伸品牌</span>' : "",
-      ...(ev.tags || []).map(t => '<span class="tag plain">' + esc(t) + '</span>')
+      ...(ev.where || []).map(w => '<span class="tag ' + ev.cat + '">' + w + '</span>')
     ].join("");
     return '<article class="card">' +
       '<div class="card-head"><div class="brand"><h2>' + hl(ev.en, raw) + '</h2>' +
