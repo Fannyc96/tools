@@ -671,8 +671,8 @@ function SearchPanel({ recipes, settings, searchState, onSearchChange, onOpen }:
             <div key={r.id} className={styles.resultCard} onClick={() => onOpen(r.id)}>
               <div className={styles.resultCardName}>{r.name}</div>
               <div className={styles.resultCardMeta}>
-                <span>{r.servings}人份</span>
-                {Object.values(r.tags||{}).flat().map(t=><span key={t} className={styles.tagBadge} style={{fontSize:11}}>{t}</span>)}
+                <span>{r.servings} 人份</span>
+                {Object.values(r.tags||{}).flat().map(t=><span key={t} className={styles.tagBadge}>{t}</span>)}
               </div>
             </div>
           ))
