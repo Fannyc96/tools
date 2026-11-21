@@ -160,7 +160,7 @@ export default function App() {
           {TABS.map(t => (
             <button key={t.v} type="button" className={`${styles.tab} ${view===t.v ? styles.tabActive : ''}`}
               aria-current={view===t.v ? 'page' : undefined} onClick={() => goTab(t.v)}>
-              {t.label}{t.v === 'list' && !loading && <span className={styles.cnt}>{recipes.length}</span>}
+              {t.label}
             </button>
           ))}
         </div>
