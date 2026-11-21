@@ -36,6 +36,8 @@ body {
 }
 
 .app-content { padding-bottom: 68px; min-height: 100dvh; }
+/* 嵌入工具時多留 1px 讓外層可捲動，見 EmbeddedTool.tsx */
+.embedded-active .app-content { min-height: calc(100dvh + 1px); }
 
 .global-nav {
   position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom));

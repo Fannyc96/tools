@@ -318,7 +318,7 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
     <div class="tbl-wrap">
       <table class="btable">
         <thead><tr><th scope="col">品牌</th><th scope="col">母公司／創辦人</th><th scope="col" class="num">母公司市值</th><th scope="col" class="num">百分位</th></tr></thead>
-        <tbody id="groups"></tbody>
+        <tbody id="brand-rows"></tbody>
       </table>
     </div>
     <p class="bcount" id="bcount"></p>
@@ -1081,10 +1081,10 @@ function renderGroups() {
 
   $("#bcount").textContent = "顯示 " + rows.length + " / " + BRANDS.length + " 個品牌";
   if (!rows.length) {
-    $("#groups").innerHTML = '<tr><td colspan="4" class="tempty">找不到符合的品牌。</td></tr>';
+    $("#brand-rows").innerHTML = '<tr><td colspan="4" class="tempty">找不到符合的品牌。</td></tr>';
     return;
   }
-  $("#groups").innerHTML = rows.map(b => {
+  $("#brand-rows").innerHTML = rows.map(b => {
     const p = b.p ? PARENTS[b.p] : null;
     // 品牌本身有事件就搜品牌；否則若母集團有事件，就搜母集團
     const gk = b.p && GROUPS[b.p] ? b.p : null;
@@ -1132,7 +1132,7 @@ document.querySelectorAll(".chip[data-own]").forEach(c => c.addEventListener("cl
 renderSummary();
 
 function bindGroups() {
-  $("#groups").addEventListener("click", e => {
+  $("#brand-rows").addEventListener("click", e => {
     const b = e.target.closest("button[data-q]");
     if (!b) return;
     const term = b.dataset.q;
@@ -1172,6 +1172,13 @@ $("#ext").addEventListener("change", e => { state.ext = e.target.checked; sync()
 renderGroups();
 bindGroups();
 sync();
+
+// 每次打開都從頁面最上方開始（不沿用上次的捲動位置）
+try { history.scrollRestoration = "manual"; } catch (e) {}
+const toTop = () => window.scrollTo(0, 0);
+toTop();
+window.addEventListener("load", toTop);
+window.addEventListener("pageshow", toTop);
 </script>
 
 </body>
