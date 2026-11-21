@@ -169,7 +169,7 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 @media (max-width: 520px) { .sum-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .bars { display: grid; grid-template-columns: fit-content(62%) minmax(3em, 1fr) max-content; column-gap: 12px; row-gap: 6px; align-items: center; font-size: 13px; }
 .bar { display: contents; }
-.bl-name { min-width: 0; line-height: 1.3; }
+.bl-name { min-width: 0; line-height: 1.3; font-size: 15px; }
 .bl-name button { font: inherit; color: var(--ink); background: none; border: 0; padding: 2px 0; text-align: left; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(26,42,60,.25); text-underline-offset: 3px; }
 .bl-name button:hover { text-decoration-color: currentColor; }
 .bl-track { height: 10px; background: var(--surface); border-radius: 3px; overflow: hidden; }
@@ -236,7 +236,6 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 .pname { font-weight: 500; }
 .tick { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .sub2 { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-.srcs a { margin-right: 6px; }
 .flag { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--accent); background: var(--accent-soft); padding: 0 6px; border-radius: 4px; line-height: 1.8; }
 .na { color: var(--muted); font-family: var(--f-body); font-size: 12.5px; }
 .val { font-family: var(--f-body); font-size: 12.5px; white-space: normal; display: inline-block; max-width: 13em; text-align: right; }
@@ -351,9 +350,9 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
         <li><b>母公司市值</b>：只有上市公司才有，以美元計。大多數為 2026 年 11 月中旬的資料；部分公司只查到較早的數字，會在市值下方標註日期。韓元與英鎊市值依 2026 年 11 月 20 日匯率換算。市值每天變動，僅供比較規模。</li>
         <li><b>授權經營</b>：許多時尚精品的香水與彩妝是授權給美妝集團生產，例如 Prada 香水由 L'Oréal 經營。表中列出的是實際經營美妝線的公司。</li>
         <li><b>百分位</b>：只比較本表中有市值資料的上市母公司（共 <span id="npub">0</span> 家）。數字代表市值高於表中多少比例的其他上市母公司，100 表示最大、0 表示最小。私人公司與獨立品牌不列入排名。</li>
-        <li>品牌清單依照 Sephora 美國網站的品牌列表截圖整理，所有權查核日期為 2026 年 11 月 21 日。有來源連結的品牌已查證；沒有連結的依一般公開資料整理，「獨立品牌（私人）」表示沒有查到被集團收購的紀錄，未逐一查證創辦人。</li>
+        <li>品牌清單依照 Sephora 美國網站的品牌列表截圖整理，所有權查核日期為 2026 年 11 月 21 日。所有權依公開報導與公司資料整理，「獨立品牌（私人）」表示沒有查到被集團收購的紀錄，未逐一查證創辦人。</li>
       </ul>
-      <p class="src">市值來源：<a href="https://companiesmarketcap.com/l-oreal/marketcap/" target="_blank" rel="noopener">CompaniesMarketCap</a>、<a href="https://stockanalysis.com/quote/otc/STCB/market-cap/" target="_blank" rel="noopener">StockAnalysis</a>。所有權來源見各品牌列。</p>
+      <p class="src">市值來源：<a href="https://companiesmarketcap.com/l-oreal/marketcap/" target="_blank" rel="noopener">CompaniesMarketCap</a>、<a href="https://stockanalysis.com/quote/otc/STCB/market-cap/" target="_blank" rel="noopener">StockAnalysis</a>。</p>
     </div>
   </section>
 
@@ -1117,8 +1116,7 @@ function renderGroups() {
       ? '<span class="pname">' + esc(p.name) + '</span> <span class="tick">' + esc(p.ticker) + '</span>' + (b.who ? '<div class="sub2">' + esc(b.who) + '</div>' : "")
       : '<span class="pname">' + esc(b.who) + '</span>';
     const extra = [b.note ? '<div class="sub2">' + esc(b.note) + '</div>' : "",
-      b.status ? '<span class="flag">' + esc(b.status) + '</span>' : "",
-      b.src.length ? '<div class="sub2 srcs">' + b.src.map((u, i) => '<a href="' + esc(u) + '" target="_blank" rel="noopener">來源' + (b.src.length > 1 ? i + 1 : "") + '</a>').join(" ") + '</div>' : ""].join("");
+      b.status ? '<span class="flag">' + esc(b.status) + '</span>' : ""].join("");
     return '<tr>' +
       '<td class="c-brand">' + name + '<div class="own own-' + b.own + '">' + OWN[b.own] + '</div></td>' +
       '<td class="c-who">' + who + extra + '</td>' +
