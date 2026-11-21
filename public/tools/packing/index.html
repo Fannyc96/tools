@@ -71,8 +71,8 @@ button { font-family: inherit; }
 .hdr-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 .hbtn {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 14px; font-weight: 500; line-height: 1.5;
-  color: var(--txt); background: var(--card);
+  font-size: 14px; font-weight: 400; line-height: 1.5;
+  color: var(--txt); background: transparent;
   border: 1px solid var(--border-lt); border-radius: 999px;
   padding: 5px 14px; cursor: pointer; white-space: nowrap;
   transition: background .15s, border-color .15s;
@@ -87,11 +87,11 @@ button { font-family: inherit; }
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
   background: var(--bg); border-bottom: 1px solid var(--border-lt);
 }
-.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.tabs { display: flex; gap: 2px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   flex: none; display: flex; align-items: center; gap: 6px;
-  padding: 12px 10px 10px; margin-bottom: -1px;
+  padding: 12px 10px 10px;
   font-size: 15px; font-weight: 500; color: var(--txt-muted);
   border-bottom: 2px solid transparent; white-space: nowrap;
   cursor: pointer; user-select: none; transition: color .15s;
@@ -109,17 +109,9 @@ button { font-family: inherit; }
 /* ── Main ── */
 .main { padding-top: 14px; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
 
-.legend {
-  display: flex; flex-wrap: wrap; gap: 4px 16px;
-  font-size: 13px; color: var(--txt-mid); margin: 0 2px 12px;
-}
-.legend span { display: inline-flex; align-items: center; gap: 5px; }
-.legend .lp { color: var(--packed); } .legend .ll { color: var(--later); } .legend .ls { color: var(--skip); }
-.legend .lh { color: #3F5A24; } .legend .lt { color: #6B4B20; }
-
 /* ── Category card ── */
 .cat-card {
-  background: var(--card); border: 1px solid var(--border-lt); border-radius: 14px;
+  background: var(--bg); border: 1px solid var(--border-lt); border-radius: 14px;
   margin-bottom: 14px; overflow: hidden;
 }
 @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -148,7 +140,7 @@ button { font-family: inherit; }
 /* ── Item row：名稱在左、圖示按鈕在右，一行 ── */
 .item-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px 10px 16px; border-bottom: 1px solid #F1EBDD;
+  padding: 10px 12px 10px 16px; border-bottom: 1px solid #EDE5D3;
   transition: background .1s;
 }
 .item-row:last-child { border-bottom: none; }
@@ -239,9 +231,6 @@ button { font-family: inherit; }
 }
 .add-cat-btn { padding: 12px; border-radius: 12px; font-size: 15px; margin-top: 4px; }
 .add-item-btn:hover, .add-cat-btn:hover { border-color: var(--brown); color: var(--brown); background: var(--card-alt); }
-.danger-zone { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-lt); }
-.danger-btn { background: none; border: 1.5px solid #E0A898; color: #B05840; padding: 7px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
-.danger-btn:hover { background: #B05840; color: #fff; }
 
 /* ── Empty state ── */
 .empty-state { text-align: center; padding: 52px 20px; color: var(--txt-muted); }
@@ -462,20 +451,21 @@ function moveItem(cid,iid,direction) {
 }
 function addItem(cid) {
   const c=cats.find(c=>c.id===cid); if(!c) return;
-  c.items.push({ id:cid+'_'+Date.now(), name:'', status:S.P, home:null });
+  const id = cid+'_'+Date.now();
+  c.items.push({ id, name:'', status:S.P, home:null });
   save(); render();
-  queueMicrotask(()=>{ const el=document.querySelectorAll('.edit-item-input'); el[el.length-1]?.focus(); });
+  queueMicrotask(()=>{
+    // 聚焦在這個分類剛新增的那一格（原本會跳到整份清單最後一格，畫面因此捲到最下面）
+    const el=document.querySelector(`.edit-item-input[data-iid="${id}"]`);
+    if (!el) return;
+    el.focus({ preventScroll:true });
+    el.scrollIntoView({ block:'nearest' });
+  });
 }
 function addCat() {
   cats.push({ id:'cat_'+Date.now(), name:'', items:[] });
   save(); render();
   queueMicrotask(()=>{ const el=document.querySelectorAll('.edit-cat-input'); el[el.length-1]?.focus(); });
-}
-function hardReset() {
-  if(!confirm('確定要清除所有資料並還原成預設清單嗎？')) return;
-  localStorage.removeItem(KEY);
-  cats=mkDefault(); editMode=false; catView=false;
-  updateStaticUI(); save(); render();
 }
 
 // ── Static UI ──────────────────────────────────────────────────────────────
@@ -524,10 +514,7 @@ function render() {
     return;
   }
 
-  let html = `<div class="legend" aria-hidden="true">
-    <span class="lp">${ic('check',16)} 已收起</span><span class="ll">${ic('clock',16)} 待收起</span><span class="ls">${ic('ban',16)} 不需要</span>
-    ${isPackedTab ? `<span class="lh">${ic('home',16)} 已帶回家</span><span class="lt">${ic('hourglass',16)} 稍後帶回家</span>` : ''}
-  </div>`;
+  let html = '';
 
   if (isPackedTab) {
     const packedAll = cats.flatMap(c=>c.items.filter(i=>i.status===S.K));
@@ -629,7 +616,7 @@ function renderEdit() {
       </div>
       <div class="edit-items-list">
         ${c.items.map((i,index)=>`<div class="edit-item-row">
-          <input class="edit-item-input" value="${esc(i.name)}" placeholder="物品名稱"
+          <input class="edit-item-input" data-iid="${esc(i.id)}" value="${esc(i.name)}" placeholder="物品名稱"
             oninput="updItem('${c.id}','${i.id}',this.value)" />
           <div class="move-controls" aria-label="調整物品順序">
             <button class="movebtn" onclick="moveItem('${c.id}','${i.id}',-1)" title="上移" ${index===0?'disabled':''}>↑</button>
@@ -643,9 +630,6 @@ function renderEdit() {
   });
 
   html += `<button class="add-cat-btn" onclick="addCat()">＋ 新增分類</button>
-    <div class="danger-zone">
-      <button class="danger-btn" onclick="hardReset()">${ic('warning',15)} 還原預設清單</button>
-    </div>
   </div>`;
   return html;
 }
