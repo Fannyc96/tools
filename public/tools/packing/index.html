@@ -70,11 +70,11 @@ button { font-family: inherit; }
 }
 .hdr-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 .hbtn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 14px; font-weight: 400; line-height: 1.5;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 400; line-height: 1.5;
   color: var(--txt); background: var(--packed-bg);
   border: 1px solid var(--border-lt); border-radius: 999px;
-  padding: 5px 14px; cursor: pointer; white-space: nowrap;
+  padding: 4px 12px; cursor: pointer; white-space: nowrap;
   transition: background .15s, border-color .15s;
 }
 .hbtn svg { color: var(--packed); }
@@ -473,13 +473,13 @@ function updateStaticUI() {
   document.getElementById('hdrTitle').textContent = '家私備忘錄';
   const eb = document.getElementById('editBtn');
   if (editMode) {
-    eb.innerHTML = `${ic('checkdone',16)} 完成編輯`;
+    eb.innerHTML = `${ic('checkdone',14)} 完成`;
     eb.classList.add('active');
   } else {
-    eb.innerHTML = `${ic('pencil',16)} 編輯清單`;
+    eb.innerHTML = `${ic('pencil',14)} 編輯`;
     eb.classList.remove('active');
   }
-  document.getElementById('resetBtn').innerHTML = `${ic('refresh',16)} 重置狀態`;
+  document.getElementById('resetBtn').innerHTML = `${ic('refresh',14)} 重置`;
 }
 
 // ── Render ──────────────────────────────────────────────────────────────────
