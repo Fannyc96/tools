@@ -183,8 +183,13 @@ section.block > p.sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; 
 .search.small { flex: 1 1 240px; }
 .search.small input { padding: 8px 0; font-size: 16px; } /* 小於 16px 時 iOS 會在聚焦時放大頁面 */
 .btools .filters { margin-top: 0; }
+.btools .search.small { flex: 1 1 100%; }
+.brow { display: flex; align-items: center; gap: 8px; width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+.brow::-webkit-scrollbar { display: none; }
+.brow .filters { flex-wrap: nowrap; flex: none; }
+.brow .chip, .brow .sort { flex: none; white-space: nowrap; }
 .sort { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
-.sort select { font: inherit; font-size: 16px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.sort select { font: inherit; font-size: 16px; line-height: 1.2; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; height: 32px; }
 
 .tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .btable { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 14px; }
@@ -301,6 +306,7 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="bq" type="search" placeholder="搜尋品牌、母公司或創辦人" autocomplete="off" aria-label="搜尋品牌">
       </label>
+      <div class="brow">
       <div class="filters" role="group" aria-label="母公司類型">
         <button class="chip" data-own="all" aria-pressed="true" type="button">全部</button>
         <button class="chip" data-own="public" aria-pressed="false" type="button">上市集團</button>
@@ -313,6 +319,7 @@ mark { background: var(--accent-soft); color: inherit; border-radius: 2px; paddi
           <option value="az">品牌名稱 A–Z</option>
         </select>
       </label>
+      </div>
     </div>
 
     <div class="tbl-wrap">
