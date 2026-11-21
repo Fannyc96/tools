@@ -56,7 +56,7 @@ body {
 .tool-card > span:not(.tool-icon) { font: 600 23px/1.2 var(--font-display); }
 .tool-card small { margin-top: 7px; color: rgba(20,35,50,.64); }
 .tool-icon { margin-bottom: auto; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 13px; color: var(--accent); }
-.tool-news { background: var(--accent-bg); } .tool-packing { background: var(--surface); border-color: var(--border); } .tool-recipes { background: var(--surface2); } .tool-beauty { background: var(--surface); border-color: var(--border); }
+.tool-beauty { background: var(--surface); border-color: var(--border); } .tool-packing { background: var(--surface2); } .tool-recipes { background: var(--accent-bg); } .tool-news { background: var(--surface); border-color: var(--border); }
 .embedded-page { width: 100%; height: calc(100dvh - 68px); border: 0; display: block; background: #fafafa; }
 
 @media (max-width: 680px) {
